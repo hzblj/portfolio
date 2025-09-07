@@ -1,53 +1,6 @@
-import {Card} from '@/components'
-import {Entries, Entry} from '@/db'
+import {CardContact, CardCV, CardGallery, CardMap, CardProfile, CardShot, CardTechnologies} from '@/components'
+import {Entries} from '@/db'
 import {CameraProvider} from '@/providers'
-
-const renderCard = (props: Entry) => {
-  switch (props.variant) {
-    case 'contact':
-      return (
-        <Card>
-          <div>Contact</div>
-        </Card>
-      )
-    case 'profile':
-      return (
-        <Card>
-          <div>Profile</div>
-        </Card>
-      )
-    case 'map':
-      return (
-        <Card>
-          <div>Map</div>
-        </Card>
-      )
-    case 'cv':
-      return (
-        <Card>
-          <div>CV</div>
-        </Card>
-      )
-    case 'shot':
-      return (
-        <Card>
-          <div>Shot {props.title}</div>
-        </Card>
-      )
-    case 'gallery':
-      return (
-        <Card>
-          <div>Gallery</div>
-        </Card>
-      )
-    case 'technologies':
-      return (
-        <Card>
-          <div>Technologies</div>
-        </Card>
-      )
-  }
-}
 
 export default async function Home() {
   const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`)
@@ -55,15 +8,24 @@ export default async function Home() {
 
   return (
     <CameraProvider>
-      {res.data.map(entry => (
-        <div
-          key={entry.area}
-          className="w-full shrink-0 flex h-full contain-intrinsic bg-white rounded-xl ring-1 ring-black/5 overflow-hidden"
-          style={{gridArea: entry.area, transformStyle: 'preserve-3d'}}
-        >
-          {renderCard(entry)}
-        </div>
-      ))}
+      {res.data.map(entry => {
+        switch (entry.variant) {
+          case 'contact':
+            return <CardContact key={entry.area} {...entry} />
+          case 'cv':
+            return <CardCV key={entry.area} {...entry} />
+          case 'gallery':
+            return <CardGallery key={entry.area} {...entry} />
+          case 'map':
+            return <CardMap key={entry.area} {...entry} />
+          case 'profile':
+            return <CardProfile key={entry.area} {...entry} />
+          case 'shot':
+            return <CardShot key={entry.area} {...entry} />
+          case 'technologies':
+            return <CardTechnologies key={entry.area} {...entry} />
+        }
+      })}
     </CameraProvider>
   )
 }
