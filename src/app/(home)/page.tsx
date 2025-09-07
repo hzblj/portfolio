@@ -1,7 +1,12 @@
 import {Config} from '@/config'
 import {CameraProvider} from '@/providers'
 
-export default function Home() {
+export default async function Home() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`)
+  const data = await res.json()
+
+  console.log('DATA', data)
+
   return (
     <CameraProvider>
       {Config.areas.map(area => (
