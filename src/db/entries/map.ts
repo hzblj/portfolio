@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryMap} from '../types'
 
-const map: Entry = {
+const map: EntryMap = {
+  area: 'map',
   variant: 'map',
 }
 

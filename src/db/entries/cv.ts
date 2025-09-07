@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryCV} from '../types'
 
-const cv: Entry = {
+const cv: EntryCV = {
+  area: 'cv',
   variant: 'cv',
 }
 

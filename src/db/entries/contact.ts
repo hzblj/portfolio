@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryContact} from '../types'
 
-const contact: Entry = {
+const contact: EntryContact = {
+  area: 'contact',
   variant: 'contact',
 }
 

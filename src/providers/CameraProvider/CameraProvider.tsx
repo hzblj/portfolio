@@ -1,10 +1,13 @@
 'use client'
 
-import {type ReactNode} from 'react'
+import dynamic from 'next/dynamic'
+import {type ReactNode, useMemo} from 'react'
 
-import {Grid, Viewport} from './components'
-import {Context, useCameraState} from './context'
+import {Viewport} from './components'
+import {Context, createCameraState, useCameraState} from './context'
 import {KeyboardControls, ScrollControls, ToucheControls} from './controls'
+
+const Grid = dynamic(() => import('./components/Grid'), {ssr: false})
 
 export type CameraProviderProps = {
   children: ReactNode
@@ -23,11 +26,15 @@ const Provider = ({children}: CameraProviderProps) => {
   )
 }
 
-export const CameraProvider = (props: CameraProviderProps) => (
-  <Context>
-    <Provider {...props} />
-    <ScrollControls />
-    <KeyboardControls />
-    <ToucheControls friction={0.9} speed={2.0} />
-  </Context>
-)
+export const CameraProvider = (props: CameraProviderProps) => {
+  const camera = useMemo(() => createCameraState(), [])
+
+  return (
+    <Context defaultState={camera}>
+      <Provider {...props} />
+      <ScrollControls />
+      <KeyboardControls />
+      <ToucheControls friction={0.9} speed={2.0} />
+    </Context>
+  )
+}

@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryTechnologies} from '../types'
 
-const technologies: Entry = {
+const technologies: EntryTechnologies = {
+  area: 'technologies',
   variant: 'technologies',
 }
 

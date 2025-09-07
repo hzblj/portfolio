@@ -45,13 +45,14 @@ body {
 }
 
 .content-grid {
-  grid-template-columns: repeat(8, 360px);
-  grid-template-rows: repeat(6, 360px);
+  grid-template-columns: repeat(8, 290px);
+  grid-template-rows: repeat(7, 218px);
   grid-template-areas:
-    "g1 g2 g3 g28 g28 g6 g7 g7"
-    "g9 g9 g3 g28 g28 g14 g7 g7"
-    "g17 g18 info g27 g30 stories g23 g24"
-    "g17 g26 g20 g20 g30 g21 g23 g22"
-    "g4 g4 g20 g20 g15 g29 g29 g8"
-    "g12 g12 g33 g32 g34 g29 g29 g8";
+    "s1 s2 l1 l1 s3 s4 s5 s6"
+    "gallery gallery l1 l1 contact contact s7 S8"
+    "gallery gallery s9 s10 s11 s12 cv s13"
+    "s14 s15 s16 profile profile s17 cv s18"
+    "map map s19 s20 s21 s22 cv s23"
+    "s24 l2 l2 technologies technologies s25 l3 l3"
+    "s26 l2 l2 s27 s28 s29 l3 l3";
 }

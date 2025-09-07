@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryGallery} from '../types'
 
-const gallery: Entry = {
+const gallery: EntryGallery = {
+  area: 'gallery',
   variant: 'gallery',
 }
 

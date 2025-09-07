@@ -35,10 +35,12 @@ files.forEach(f => {
 })
 
 const content = `${imports}
-import type {Entry} from './types'
+import type {Entries} from './types'
 
-export const entries: Entry[] = [
+export const entries: Entries[] = [
 ${arrayItems}]
+
+export * from './types'
 `
 
 await fs.writeFile(indexFile, content, 'utf8')

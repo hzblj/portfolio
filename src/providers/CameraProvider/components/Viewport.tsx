@@ -8,10 +8,7 @@ type ViewportProps = {
 export const Viewport = ({children, transform}: ViewportProps) => (
   <div
     className="flex justify-center shrink-0 items-center w-full h-full relative"
-    style={{
-      transform: transform,
-      willChange: 'transform',
-    }}
+    style={{transform: transform, willChange: 'transform'}}
   >
     <div className="flex justify-center items-center w-full h-full">{children}</div>
   </div>

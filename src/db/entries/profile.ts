@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryProfile} from '../types'
 
-const profile: Entry = {
+const profile: EntryProfile = {
+  area: 'profile',
   variant: 'profile',
 }
 

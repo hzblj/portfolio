@@ -11,6 +11,7 @@ export type CameraState = {
   x2: string
   x3: string
   x4: string
+  origin: {x: number; y: number}
   scrollBehavior?: CameraScrollBehavior
 }
 

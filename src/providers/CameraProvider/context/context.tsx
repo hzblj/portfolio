@@ -2,29 +2,57 @@
 
 import {createContext, type ReactNode, useContext, useState} from 'react'
 
+import {Config} from '@/config'
 import {toPx} from '@/utils'
 
-import {HEIGHT, ORIGIN_X, ORIGIN_Y, WIDTH} from '../const'
+import {calculateScale, HEIGHT, WIDTH} from '../const'
 import {CameraAction, CameraState} from './types'
 
-const defaultState: CameraState = {
-  camera: {x: 0, y: 0},
-  scrollBehavior: 'natural',
-  viewport: 'translate3d(0px, 0px, 0px)',
-  x1: `translate3d(${toPx(ORIGIN_X)}, ${toPx(ORIGIN_Y)}, 0px)`,
-  x2: `translate3d(${toPx(WIDTH + ORIGIN_X)}, ${toPx(ORIGIN_Y)}, 0px)`,
-  x3: `translate3d(${toPx(ORIGIN_X)}, ${toPx(HEIGHT + ORIGIN_Y)}, 0px)`,
-  x4: `translate3d(${toPx(WIDTH + ORIGIN_X)}, ${toPx(HEIGHT + ORIGIN_Y)}, 0px)`,
+const calculateCenterOfViewport = () => {
+  if (typeof window === 'undefined') {
+    return {x: 0, y: 0}
+  }
+
+  const height = window?.visualViewport?.height || window?.innerHeight
+  const width = window?.visualViewport?.width || window?.innerWidth
+
+  const scale = calculateScale(width)
+  const scaledWidth = width / scale
+  const scaledHeight = height / scale
+
+  const x = -((Config.viewport.width - scaledWidth) / 2)
+  const y = -((Config.viewport.height - scaledHeight) / 2)
+
+  return {
+    x,
+    y,
+  }
 }
 
-const CameraStateContext = createContext<CameraState>(defaultState)
+export const createCameraState = (): CameraState => {
+  const {x, y} = calculateCenterOfViewport()
+
+  return {
+    camera: {x: 0, y: 0},
+    origin: {x, y},
+    scrollBehavior: 'natural',
+    viewport: 'translate3d(0px, 0px, 0px)',
+    x1: `translate3d(${toPx(x)}, ${toPx(y)}, 0px)`,
+    x2: `translate3d(${toPx(WIDTH + x)}, ${toPx(y)}, 0px)`,
+    x3: `translate3d(${toPx(x)}, ${toPx(HEIGHT + y)}, 0px)`,
+    x4: `translate3d(${toPx(WIDTH + x)}, ${toPx(HEIGHT + y)}, 0px)`,
+  }
+}
+
+const CameraStateContext = createContext<CameraState | undefined>(undefined)
 const CameraDispatchContext = createContext<CameraAction | undefined>(undefined)
 
 export type CameraProviderProps = {
   children: ReactNode
+  defaultState: CameraState
 }
 
-export const Context = ({children}: CameraProviderProps) => {
+export const Context = ({children, defaultState}: CameraProviderProps) => {
   const [state, dispatch] = useState<CameraState>(defaultState)
 
   return (

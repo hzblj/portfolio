@@ -1,6 +1,7 @@
-import type {Entry} from '../types'
+import type {EntryShot} from '../types'
 
-const shot: Entry = {
+const shot: EntryShot = {
+  area: 's19',
   title: 'Shot Small 19',
   variant: 'shot',
 }

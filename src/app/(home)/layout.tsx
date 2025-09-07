@@ -11,11 +11,11 @@ export default function RootLayout({children}: Props) {
   return (
     <main>
       <div
-        className="overflow-hidden scale-[0.7] md:scale-100"
+        className="overflow-hidden"
         style={{
-          height: toPx(Config.height),
+          height: toPx(Config.layout.height),
           transformOrigin: 'left top 0px',
-          width: toPx(Config.width),
+          width: toPx(Config.layout.width),
         }}
       >
         {children}

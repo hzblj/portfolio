@@ -1,8 +1,8 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
-  area: 's11',
-  title: 'Shot Small 11',
+  area: 's29',
+  title: 'Shot Small 29',
   variant: 'shot',
 }
 

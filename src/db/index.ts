@@ -34,11 +34,12 @@ import small25 from './entries/shot-small-25'
 import small26 from './entries/shot-small-26'
 import small27 from './entries/shot-small-27'
 import small28 from './entries/shot-small-28'
+import small29 from './entries/shot-small-29'
 import technologies from './entries/technologies'
 
-import type {Entry} from './types'
+import {Entries} from './types'
 
-export const entries: Entry[] = [
+export const entries: Entries = [
   contact,
   cv,
   gallery,
@@ -75,5 +76,8 @@ export const entries: Entry[] = [
   small7,
   small8,
   small9,
+  small29,
   technologies,
 ]
+
+export * from './types'
