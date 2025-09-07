@@ -4,8 +4,7 @@ import type {Metadata} from 'next'
 import {type ReactNode} from 'react'
 
 export const metadata: Metadata = {
-  description: 'Portfolio of Hobl',
-  title: 'Hobl',
+  title: 'Jan Blazej - Lead Mobile Developer & Founder',
 }
 
 type Props = Readonly<{
