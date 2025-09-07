@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+html {
+  width: 100%;
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*,
+* > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+html,
+body {
+  overflow: hidden;
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
+  overscroll-behavior: none;
+}
+
+:root {
+  display: block;
+  unicode-bidi: isolate;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.content-grid {
+  grid-template-columns: repeat(8, 360px);
+  grid-template-rows: repeat(6, 360px);
+  grid-template-areas:
+    "g1 g2 g3 g28 g28 g6 g7 g7"
+    "g9 g9 g3 g28 g28 g14 g7 g7"
+    "g17 g18 info g27 g30 stories g23 g24"
+    "g17 g26 g20 g20 g30 g21 g23 g22"
+    "g4 g4 g20 g20 g15 g29 g29 g8"
+    "g12 g12 g33 g32 g34 g29 g29 g8";
+}
