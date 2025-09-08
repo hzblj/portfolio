@@ -3,9 +3,19 @@ export type EntryVariant = 'shot' | 'contact' | 'map' | 'cv' | 'profile' | 'gall
 export type ShotSize = 's' | 'l'
 export type ShotArea = `${ShotSize}${number}`
 
+export type EntryShotProperty = {
+  name: string
+  value: string
+}
+
+export type EntryShotProperties = EntryShotProperty[]
+
 export type EntryShot = {
   title: string
+  description: string
+  image: string
   area: ShotArea
+  properties: EntryShotProperties
   variant: Extract<EntryVariant, 'shot'>
 }
 

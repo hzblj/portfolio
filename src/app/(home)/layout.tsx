@@ -9,7 +9,7 @@ type Props = Readonly<{
 
 export default function RootLayout({children}: Props) {
   return (
-    <main className="bg-black">
+    <main id="main" className="bg-black">
       <div
         className="overflow-hidden"
         style={{
