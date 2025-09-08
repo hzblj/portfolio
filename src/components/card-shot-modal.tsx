@@ -20,7 +20,7 @@ const ShotProperty: FC<EntryShotProperty> = ({name, value}) => (
       <span className="text-[15px] font-normal tracking-normal align-middle text-white/50 leading-[100%]">{name}</span>
     </div>
     <div>
-      <span className="text-[15px] font-normal tracking-normal align-middle text-white leading-[100%]">{value}</span>
+      <span className="text-[15px] font-normal tracking-normal align-middle text-white/90 leading-[100%]">{value}</span>
     </div>
   </div>
 )
