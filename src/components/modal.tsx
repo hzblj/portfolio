@@ -28,9 +28,10 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children}) => {
   }
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-40 w-screen h-screen overflow-auto block bg-black/50" onClick={onClose}>
+    <div className="fixed inset-0 z-40 w-screen h-screen overflow-auto block">
       <div className="flex justify-center items-center w-full min-h-full mx-auto py-10 relative">
-        <div className="flex flex-col w-full max-w-[512px] rounded-[52px] bg-black">{children}</div>
+        <div className="flex flex-col w-full max-w-[512px] rounded-[52px] bg-black z-40">{children}</div>
+        <div className="absolute bg-black/50 inset-0" onClick={onClose} />
       </div>
     </div>,
     modalRoot
