@@ -36,7 +36,15 @@ export const CardShotModal: FC<CardShotModalProps> = ({
   <Modal isOpen={isModalOpen} onClose={onClose}>
     <div className="px-8 pt-8 pb-2">
       <div className="w-full h-[336px] rounded-[20px] flex justify-center items-center relative overflow-hidden">
-        <Image src={image} alt="alt" fill objectFit="cover" />
+        <Image
+          src={image}
+          alt="alt"
+          fill
+          sizes="288px"
+          style={{
+            objectFit: 'cover',
+          }}
+        />
       </div>
       <div>
         <div>

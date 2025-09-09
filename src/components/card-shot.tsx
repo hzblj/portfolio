@@ -1,13 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import {Fragment, useCallback, useState} from 'react'
+import {FC, Fragment, useCallback, useState} from 'react'
 
 import {EntryShot} from '@/db'
 
 import {CardShotModal} from './card-shot-modal'
 
-export const CardShot = ({area, properties, title, description, image}: EntryShot) => {
+export const CardShot: FC<EntryShot> = ({area, properties, title, description, image}) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const onOpen = useCallback(() => setIsModalOpen(true), [])
@@ -24,7 +24,16 @@ export const CardShot = ({area, properties, title, description, image}: EntrySho
           className="flex flex-col w-full grow overflow-hidden relative items-center justify-center rounded-2xl cursor-pointer"
         >
           <div className="w-full h-full flex justify-center items-center relative overflow-hidden">
-            <Image src={image} alt="alt" fill objectFit="cover" />
+            <Image
+              priority
+              src={image}
+              alt="alt"
+              fill
+              sizes="288px"
+              style={{
+                objectFit: 'cover',
+              }}
+            />
           </div>
         </div>
       </div>

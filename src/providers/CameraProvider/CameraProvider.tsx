@@ -1,4 +1,8 @@
 'use client'
+import {gsap} from 'gsap'
+import {CustomEase} from 'gsap/CustomEase'
+import {ScrollSmoother} from 'gsap/ScrollSmoother'
+import {SplitText} from 'gsap/SplitText'
 
 import dynamic from 'next/dynamic'
 import {type ReactNode, useMemo} from 'react'
@@ -8,6 +12,10 @@ import {Context, createCameraState, useCameraState} from './context'
 import {KeyboardControls, ScrollControls, ToucheControls} from './controls'
 
 const Grid = dynamic(() => import('./components/Grid'), {ssr: false})
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollSmoother, CustomEase, SplitText)
+}
 
 export type CameraProviderProps = {
   children: ReactNode
