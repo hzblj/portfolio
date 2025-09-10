@@ -4,7 +4,7 @@ const shot: EntryShot = {
   area: 's9',
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
-  image: 'https://picsum.photos/450/450',
+  image: '/jpg/shot-small-9.jpg',
   properties: [
     {
       name: 'Product',

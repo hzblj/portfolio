@@ -10,10 +10,15 @@ export type EntryShotProperty = {
 
 export type EntryShotProperties = EntryShotProperty[]
 
+export type EntryShotVideoType = 'mp4' | 'webm'
+
+export type EntryShotVideos = Record<EntryShotVideoType, string>
+
 export type EntryShot = {
   title: string
   description: string
   image: string
+  videos?: EntryShotVideos
   area: ShotArea
   properties: EntryShotProperties
   variant: Extract<EntryVariant, 'shot'>
