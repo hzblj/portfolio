@@ -80,4 +80,5 @@ export const entries: Entries = [
   technologies,
 ]
 
+export * from './cv'
 export * from './types'

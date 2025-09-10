@@ -52,3 +52,33 @@ export type EntryTechnologies = {
 export type Entry = EntryShot | EntryContact | EntryMap | EntryCV | EntryProfile | EntryGallery | EntryTechnologies
 
 export type Entries = Entry[]
+
+export type CVSectionProject = {
+  name: string
+  position: string
+  technologies: string[]
+  paragraphs: string[]
+}
+
+export type CVSectionLink = {
+  name: string
+  url: string
+}
+
+export type CVSection = {
+  year: string
+  positions: string[]
+  location: string | null
+  technologies: string[]
+  paragraphs: string[]
+  projects?: CVSectionProject[]
+  links: CVSectionLink[]
+}
+
+export type CVSections = CVSection[]
+
+export type CV = {
+  workExperience: CVSections
+  sideProjects: CVSections
+  education: CVSections
+}
