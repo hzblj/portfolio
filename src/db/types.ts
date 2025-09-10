@@ -55,6 +55,7 @@ export type Entries = Entry[]
 
 export type CVSectionProject = {
   name: string
+  url: string
   position: string
   technologies: string[]
   paragraphs: string[]

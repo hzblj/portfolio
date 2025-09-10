@@ -35,6 +35,7 @@ export const workExperience: CVSections = [
         ],
         position: 'Lead Mobile Developer',
         technologies: ['React Native', 'Expo', 'TypeScript', 'Detox'],
+        url: 'https://qest.cz/en/reference',
       },
       {
         name: 'Happenne – Live Events Platform',
@@ -44,6 +45,7 @@ export const workExperience: CVSections = [
         ],
         position: 'Senior Front-End Developer',
         technologies: ['Next.js', 'Node.js', 'NX', 'TypeScript'],
+        url: 'https://en.happenee.com',
       },
       {
         name: 'Sportlito – Fan Engagement App',
@@ -53,6 +55,7 @@ export const workExperience: CVSections = [
         ],
         position: 'Mid Front-End Developer',
         technologies: ['React Native', 'Expo', 'TypeScript'],
+        url: 'https://www.linkedin.com/company/sportlito',
       },
       {
         name: 'Volvo Czech Republic – Volvista Technician App',
@@ -62,6 +65,7 @@ export const workExperience: CVSections = [
         ],
         position: 'Mid Front-End Developer',
         technologies: ['React Native', 'Expo', 'TypeScript'],
+        url: 'https://qest.cz/en/reference',
       },
       {
         name: 'Abaku – Educational Game Platform',
@@ -71,6 +75,7 @@ export const workExperience: CVSections = [
         ],
         position: 'Junior Full-Stack Developer',
         technologies: ['React', 'Node.js', 'TypeScript'],
+        url: 'https://abaku.cz',
       },
       {
         name: 'Shipvio, Amazing Places, Insurance system',
@@ -80,6 +85,7 @@ export const workExperience: CVSections = [
         ],
         position: 'Junior Quality Assurance Engineer',
         technologies: ['React', 'Node.js', 'TypeScript'],
+        url: 'https://www.shipvio.com',
       },
     ],
     technologies: [],

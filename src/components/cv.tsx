@@ -1,97 +1,247 @@
-import {FC} from 'react'
+import {FC, ReactNode} from 'react'
 
-import {cv} from '@/db'
+import {CVSection, CVSectionLink, CVSectionProject, cv} from '@/db'
+import {cn} from '@/utils'
 
-const SectionLeft = () => {
+const SectionLeft: FC<{year: string}> = ({year}) => (
+  <div className="w-[88px] h-[17px] flex-shrink-0">
+    <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/40">{year}</span>
+  </div>
+)
+
+const Dot = () => <div className="w-[4px] h-[4px] bg-white/20 rounded-full" />
+const Line = () => <div className="w-[1.5px] h-[18.75px] bg-white/15 rounded-[2px]" />
+
+const Segments: FC<Pick<CVSection, 'positions'>> = ({positions}) => {
+  if (positions.length - 1 === 0) {
+    return null
+  }
+
   return (
-    <div className="w-[88px] h-[17px] flex-shrink-0">
-      <span className="font-normal text-[14px] leading-[100%] tracking-[0px] text-white/40">2022 - Now</span>
+    <div className="absolute left-[-13px] top-[7px] flex flex-col items-center justify-center gap-[2px]">
+      {positions.map((_, index) => (
+        <div key={index.toString()} className="flex flex-col items-center justify-center gap-[2px]">
+          <Dot />
+          {index !== positions.length - 1 && <Line />}
+        </div>
+      ))}
     </div>
   )
 }
 
-const SectionPositions = () => {
+const variant: Record<'active' | 'inactive', string> = {
+  active: 'text-white',
+  inactive: 'text-white/60',
+}
+
+const SectionPositions: FC<Pick<CVSection, 'positions'>> = props => (
+  <div className="flex flex-col flex-shrink-0 h-full gap-[10px] relative">
+    <Segments positions={props.positions} />
+    {props.positions.map((position, index) => (
+      <span
+        key={index.toString()}
+        className={cn(
+          'block font-normal text-[14px] leading-[100%] tracking-[0px] h-[17px]',
+          variant[index === 0 ? 'active' : 'inactive']
+        )}
+      >
+        {position}
+      </span>
+    ))}
+  </div>
+)
+
+const SectionLocation: FC<Pick<CVSection, 'location'>> = props => {
+  if (!props.location) {
+    return null
+  }
+
   return (
     <div>
-      <span className="font-normal text-[14px] leading-[100%] tracking-[0px] text-white h-[17px]">
-        Lead Mobile Developer at Footshop
+      <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]">
+        {props.location}
       </span>
     </div>
   )
 }
 
-const SectionLocation = () => {
+const SectionTechnologies: FC<Pick<CVSection, 'technologies'>> = props => {
+  if (!props.technologies || props.technologies.length === 0) {
+    return null
+  }
+
   return (
     <div>
-      <span className="font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]">
-        Prague, CZ / Remote
+      <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/50 h-[17px]">
+        {props.technologies.join(', ')}
       </span>
     </div>
   )
 }
 
-const SectionTechnologies = () => {
+const SectionParagraph: FC<{children: ReactNode}> = ({children}) => (
+  <div>
+    <p className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50">{children}</p>
+  </div>
+)
+
+const SectionLink: FC<CVSectionLink> = ({name, url}) => (
+  <div>
+    <a
+      href={url}
+      target="_blank"
+      className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50 underline decoration-white/20 decoration-[1.5px] underline-offset-4 hover:decoration-white/40 transition-colors duration-300 ease-in-out"
+    >
+      {name}
+    </a>
+  </div>
+)
+
+const SectionLinks: FC<Pick<CVSection, 'links'>> = ({links}) => {
+  if (!links || links.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="flex flex-col gap-[24px] pt-[24px]">
+      {links.map((link, index) => (
+        <SectionLink key={index.toString()} {...link} />
+      ))}
+    </div>
+  )
+}
+
+const SectionTitle: FC<Pick<CVSection, 'positions' | 'location' | 'technologies'>> = ({
+  positions,
+  location,
+  technologies,
+}) => (
+  <div className="flex flex-col gap-[6px] pb-[24px]">
+    <SectionPositions positions={positions} />
+    <SectionLocation location={location} />
+    <SectionTechnologies technologies={technologies} />
+  </div>
+)
+
+const SectionProject: FC<CVSectionProject> = ({name, position, technologies, paragraphs, url}) => (
+  <div>
+    <div className="flex flex-col gap-[8px] pb-[24px]">
+      <div>
+        <a
+          href={url}
+          target="_blank"
+          className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/80 h-[22px] underline decoration-white/20 decoration-[1.5px] underline-offset-4 hover:decoration-white/40 transition-colors duration-300 ease-in-out"
+        >
+          {name}
+        </a>
+      </div>
+      <div>
+        <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]">
+          {position}
+        </span>
+      </div>
+      <div>
+        <SectionTechnologies technologies={technologies} />
+      </div>
+    </div>
+    <div className="flex flex-col gap-[24px]">
+      {paragraphs.map((paragraph, index) => (
+        <SectionParagraph key={index.toString()}>{paragraph}</SectionParagraph>
+      ))}
+    </div>
+  </div>
+)
+
+const SectionProjects: FC<Pick<CVSection, 'projects'>> = ({projects}) => {
+  if (!projects || projects?.length === 0) {
+    return null
+  }
+
   return (
     <div>
-      <span className="font-normal text-[14px] leading-[100%] tracking-[0px] text-white/50 h-[17px]">
-        React Native, Expo, Turbo Monorepo, TypeScript, Maestro
-      </span>
+      <div className="py-[24px]">
+        <span className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white h-[22px]">
+          Projects
+        </span>
+      </div>
+      <div className="flex flex-col gap-[24px]">
+        {projects.map((project, index) => (
+          <SectionProject key={index.toString()} {...project} />
+        ))}
+      </div>
     </div>
   )
 }
 
-type SectionParagraphProps = {
-  text: string
-}
-
-const SectionParagraph: FC<SectionParagraphProps> = ({text}) => {
-  return (
-    <div>
-      <span className="font-normal text-[14px] leading-[24px] tracking-[0px] text-white/50">{text}</span>
+const SectionRight: FC<Omit<CVSection, 'year'>> = ({
+  paragraphs,
+  positions,
+  location,
+  technologies,
+  projects,
+  links,
+}) => (
+  <div>
+    <SectionTitle positions={positions} location={location} technologies={technologies} />
+    <div className="flex flex-col gap-[24px]">
+      {paragraphs.map((paragraph, index) => (
+        <SectionParagraph key={index.toString()}>{paragraph}</SectionParagraph>
+      ))}
     </div>
-  )
-}
+    <SectionProjects projects={projects} />
+    <SectionLinks links={links} />
+  </div>
+)
 
-const SectionTitle = () => {
-  return (
-    <div>
-      <SectionPositions />
-      <SectionLocation />
-      <SectionTechnologies />
-    </div>
-  )
-}
-
-const SectionRight = () => {
-  return (
-    <div>
-      <SectionTitle />
-      <SectionParagraph text="Joined Footshop to lead the development of a brand-new mobile app for iOS and Android, drawing on my experience building performant, cross-platform apps." />
-      <SectionParagraph text="I designed and built the mobile architecture using React Native with Expo, implementing a Turbo Monorepo setup to enable efficient code sharing across multiple projects. I led the full development lifecycle of the Footshop mobile app, guiding it from initial prototyping through to production release and deployment on app stores. In parallel, I developed the Queens mobile app, Footshop’s sister brand, leveraging the same shared architecture to accelerate delivery and maintain consistency. To ensure quality and reliability, I established end-to-end testing workflows using Maestro, achieving high test coverage across key user flows. Throughout the project, I worked closely with product managers, designers, and backend developers to deliver seamless, branded shopping experiences. A strong emphasis was placed on scalability, performance, and developer experience, supported by a clean and maintainable architecture." />
-    </div>
-  )
-}
-
-const Section = () => {
-  return (
-    <div className="flex flex-row w-full items-start gap-[44px]">
-      <SectionLeft />
-      <SectionRight />
-    </div>
-  )
-}
+const Section = ({year, ...props}: CVSection) => (
+  <div className="flex flex-row w-full items-start gap-[44px]">
+    <SectionLeft year={year} />
+    <SectionRight {...props} />
+  </div>
+)
 
 export const CV = () => {
   const workExperience = cv.workExperience
+  const sideProjects = cv.sideProjects
+  const education = cv.education
 
   return (
-    <div className="flex w-full justify-center">
-      <div className="max-w-[700px] flex flex-col items-center py-[56px] px-[64px]">
-        {workExperience.map((section, index) => (
-          <div key={index.toString()} className="flex flex-col w-full">
-            <Section />
+    <div className="h-full flex flex-col">
+      <div className="w-full h-full flex flex-col gap-[64px]">
+        <div className="h-[17px]">
+          <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Work Experience</h1>
+        </div>
+        <div className="flex flex-col gap-[56px]">
+          {workExperience.map((section, index) => (
+            <div key={index.toString()} className="flex flex-col w-full">
+              <Section {...section} />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-[56px]">
+          <div className="h-[17px]">
+            <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Side Projects</h1>
           </div>
-        ))}
+          {sideProjects.map((section, index) => (
+            <div key={index.toString()} className="flex flex-col w-full">
+              <Section {...section} />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-[56px]">
+          <div className="h-[17px]">
+            <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Education</h1>
+          </div>
+          {education.map((section, index) => (
+            <div key={index.toString()} className="flex flex-col w-full">
+              <Section {...section} />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex h-[300px] w-full flex-shrink-0"></div>
       </div>
     </div>
   )
