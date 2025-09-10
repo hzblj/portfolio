@@ -4,6 +4,7 @@ import {FC} from 'react'
 import {Config} from '@/config'
 import {EntryProfile} from '@/db'
 
+import {CardProfileControls} from './card-profile-controls'
 import {LinkExternal} from './link-external'
 
 const Avatar = () => (
@@ -39,29 +40,6 @@ const Position = () => (
   </div>
 )
 
-const Controls = () => (
-  <div className="flex flex-row items-center justify-center gap-1.5 pt-11">
-    <div>
-      <div className="w-4 h-4 bg-gray-800" />
-    </div>
-    <div>
-      <span className="text-[12px] font-normal leading-[100%] tracking-[0px] text-white/50">Scroll</span>
-    </div>
-    <div>
-      <span className="text-[12px] font-normal leading-[100%] tracking-[0px] text-white/30">or use</span>
-    </div>
-    <div>
-      <div className="w-[25px] h-4 bg-gray-800" />
-    </div>
-    <div>
-      <span className="text-[12px] font-normal leading-[100%] tracking-[0px] text-white/50">WSAD keys</span>
-    </div>
-    <div>
-      <span className="text-[12px] font-normal leading-[100%] tracking-[0px] text-white/30">to explore...</span>
-    </div>
-  </div>
-)
-
 export const CardProfile: FC<EntryProfile> = ({area}) => (
   <div
     className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card-border-gradient items-center justify-center"
@@ -75,7 +53,7 @@ export const CardProfile: FC<EntryProfile> = ({area}) => (
           <Position />
         </div>
       </div>
-      <Controls />
+      <CardProfileControls />
     </div>
   </div>
 )

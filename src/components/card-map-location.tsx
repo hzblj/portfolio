@@ -1,7 +1,6 @@
 'use client'
 
 import {gsap} from 'gsap'
-import Image from 'next/image'
 import {useEffect, useRef} from 'react'
 
 const LocationDotPulse = () => {
@@ -32,7 +31,7 @@ const LocationDotPulse = () => {
   )
 }
 
-const LocationDot = () => (
+export const CardMapLocation = () => (
   <div className="absolute top-auto right-[150px] bottom-[100px] left-auto z-20">
     <div className="relative w-[44px] h-[44px] flex items-center justify-center">
       <div className="flex items-center justify-center w-[28px] h-[28px] bg-white rounded-2xl z-40">
@@ -44,63 +43,3 @@ const LocationDot = () => (
     </div>
   </div>
 )
-
-export const CardMapLocation = () => {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!ref.current) return
-    const el = ref.current
-
-    const ctx = gsap.context(() => {
-      el.addEventListener('mouseenter', () => {
-        gsap.killTweensOf(el)
-
-        gsap.to(el, {
-          duration: 0.6,
-          ease: 'power3.out',
-          scale: 1.1,
-          transformOrigin: 'center center',
-        })
-      })
-
-      el.addEventListener('mouseleave', () => {
-        gsap.killTweensOf(el)
-
-        gsap.to(el, {
-          duration: 0.6,
-          ease: 'power3.inOut',
-          scale: 1,
-        })
-      })
-    }, ref)
-
-    return () => ctx.revert()
-  }, [])
-
-  return (
-    <div className="flex flex-grow overflow-hidden relative rounded-2xl z-10">
-      <div className="flex flex-1 m-[1px] rounded-2xl">
-        <div
-          ref={ref}
-          className="absolute left-[1px] right-[1px] top-[1px] bottom-[1px] overflow-hidden z-10 [transform-style:preserve-3d] will-change-transform cursor-pointer"
-        >
-          <div className="w-full h-full">
-            <Image
-              priority
-              src="/svg/map.svg"
-              alt="alt"
-              fill
-              sizes="786px"
-              className="rounded-2xl"
-              style={{
-                objectFit: 'cover',
-              }}
-            />
-          </div>
-          <LocationDot />
-        </div>
-      </div>
-    </div>
-  )
-}
