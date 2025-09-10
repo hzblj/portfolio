@@ -30,8 +30,8 @@ const shot: EntryShot = {
   title: 'Shot Large 2',
   variant: 'shot',
   videos: {
-    mp4: 'shot-large-2.mp4',
-    webm: 'shot-large-2.webm',
+    mp4: '/mp4/shot-large-2.mp4',
+    webm: '/webm/shot-large-2.webm',
   },
 }
 

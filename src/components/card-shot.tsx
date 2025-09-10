@@ -6,8 +6,9 @@ import {FC, Fragment, useCallback, useState} from 'react'
 import {EntryShot} from '@/db'
 
 import {CardShotModal} from './card-shot-modal'
+import {HoverVideo} from './hover-video'
 
-export const CardShot: FC<EntryShot> = ({area, properties, title, description, image}) => {
+export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos}) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const onOpen = useCallback(() => setIsModalOpen(true), [])
@@ -34,6 +35,11 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
                 objectFit: 'cover',
               }}
             />
+            {videos && (
+              <div className="absolute inset-0 bg-green-800 rounded-2xl overflow-hidden">
+                <HoverVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} muted loop preload="auto" />
+              </div>
+            )}
           </div>
         </div>
       </div>
