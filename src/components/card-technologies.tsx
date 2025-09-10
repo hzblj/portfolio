@@ -4,7 +4,7 @@ import {CardTechnologiesTechnology} from './card-technologies-technology'
 
 export const CardTechnologies = ({area}: EntryTechnologies) => (
   <div
-    className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card-border-gradient"
+    className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card"
     style={{gridArea: area, transformStyle: 'preserve-3d'}}
   >
     <div className="flex flex-row w-full grow overflow-hidden h-full items-center justify-center gap-[43.33px]">

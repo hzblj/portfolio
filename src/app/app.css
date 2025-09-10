@@ -1,5 +1,62 @@
 @import "tailwindcss";
 
+@theme {
+  --card-radius: 16px;
+  --card-blur: 136px;
+  --card-border-width: 1px;
+  --card-border-angle: 160deg;
+
+  --card-bg: linear-gradient(
+    97.6deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.06) 29.43%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  --card-border-gradient: linear-gradient(
+    var(--card-border-angle),
+    rgba(255, 255, 255, 0.45) 8.56%,
+    rgba(255, 255, 255, 0.0001) 37.96%,
+    rgba(255, 255, 255, 0.0001) 50.19%,
+    rgba(255, 255, 255, 0.15) 80.06%
+  );
+}
+
+@utility card {
+  position: relative;
+  border-radius: var(--card-radius);
+  background: var(--card-bg);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  backdrop-filter: blur(var(--card-blur));
+}
+
+@utility card-cv {
+  --card-border-angle: 134.62deg;
+  --card-border-gradient: linear-gradient(
+    var(--card-border-angle),
+    rgba(255, 255, 255, 0.45) 8.56%,
+    rgba(255, 255, 255, 0.0001) 37.96%,
+    rgba(255, 255, 255, 0.0001) 50.19%,
+    rgba(255, 255, 255, 0.15) 80.06%
+  );
+}
+
+@utility card-map {
+  --card-bg: var(--color-black, #000);
+}
+@utility card-radius-24 {
+  --card-radius: 24px;
+}
+@utility card-no-blur {
+  --card-blur: 0px;
+}
+@utility card-border-2 {
+  --card-border-width: 2px;
+}
+@utility card-angle-160 {
+  --card-border-angle: 160deg;
+}
+
 html {
   width: 100%;
   height: 100%;
@@ -50,36 +107,14 @@ body {
     "s26 l2 l2 s27 s28 s29 l3 l3";
 }
 
-.card-border-gradient {
-  all: unset;
-  position: relative;
-  background: linear-gradient(
-    97.6deg,
-    rgba(255, 255, 255, 0.11) 0%,
-    rgba(255, 255, 255, 0.06) 29.43%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
-  backdrop-filter: blur(136px);
-  background-blend-mode: luminosity;
-  border-radius: 16px;
-}
-
-.card-border-gradient::before {
+.card::before {
   content: "";
   position: absolute;
-  z-index: -1;
   inset: 0;
-
   border-radius: inherit;
-  padding: 1px;
-
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.45) 8.56%,
-    rgba(255, 255, 255, 0.0001) 37.96%,
-    rgba(255, 255, 255, 0.0001) 50.19%,
-    rgba(255, 255, 255, 0.15) 80.06%
-  );
+  padding: var(--card-border-width);
+  background: var(--card-border-gradient);
+  pointer-events: none;
 
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -87,44 +122,6 @@ body {
   mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
-
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-.card-map-border-gradient {
-  all: unset;
-  position: relative;
-  background: var(--color-black);
-  backdrop-filter: blur(136px);
-  background-blend-mode: luminosity;
-  border-radius: 16px;
-}
-
-.card-map-border-gradient::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-
-  border-radius: inherit;
-  padding: 1px;
-
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.45) 8.56%,
-    rgba(255, 255, 255, 0.0001) 37.96%,
-    rgba(255, 255, 255, 0.0001) 50.19%,
-    rgba(255, 255, 255, 0.15) 80.06%
-  );
-
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }

@@ -206,7 +206,7 @@ export const CV = () => {
   const education = cv.education
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full w-full flex flex-col max-w-[572px]">
       <div className="w-full h-full flex flex-col gap-[64px]">
         <div className="h-[17px]">
           <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Work Experience</h1>
