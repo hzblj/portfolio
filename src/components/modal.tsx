@@ -3,7 +3,7 @@
 import {type FC, type ReactNode, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 
-type ModalProps = {
+export type ModalProps = {
   isOpen: boolean
   children: ReactNode
   onClose(): void
