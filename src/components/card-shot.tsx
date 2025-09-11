@@ -10,7 +10,7 @@ import {CardShotHover} from './card-shot-hover'
 import {CardShotModal} from './card-shot-modal'
 import {CardShotVideo} from './card-shot-video'
 
-export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos}) => {
+export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos, size}) => {
   const refTitle = useRef<HTMLDivElement>(null)
   const refVideoIcon = useRef<HTMLDivElement>(null)
 
@@ -77,7 +77,13 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
           className="flex flex-col w-full grow overflow-hidden relative items-center justify-center cursor-pointer"
         >
           <div className="w-full h-full flex justify-center items-center relative overflow-hidden">
-            <Image priority src={image} alt={title} fill sizes="288px" style={{objectFit: 'cover'}} />
+            <Image
+              src={image}
+              alt={title}
+              fill
+              sizes={size === 'small' ? '289px' : '594px'}
+              style={{objectFit: 'cover'}}
+            />
             <CardShotVideo ref={refVideoIcon} videos={videos} image={image} />
           </div>
           <CardShotHover ref={refTitle} title={title} />

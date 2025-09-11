@@ -35,7 +35,8 @@ export const HoverVideo: FC<HoverVideoProps> = ({
     try {
       await el.play()
     } catch (err) {
-      console.error(err)
+      // biome-ignore lint/suspicious/noConsole: Log video warning
+      console.warn(err)
     }
   }, [])
 
@@ -46,8 +47,16 @@ export const HoverVideo: FC<HoverVideoProps> = ({
       return
     }
 
-    el.pause()
-    el.currentTime = 0
+    try {
+      if (!el.paused && !el.ended) {
+        el.pause()
+      }
+
+      el.currentTime = 0
+    } catch (e) {
+      // biome-ignore lint/suspicious/noConsole: Log video warning
+      console.warn(e)
+    }
   }, [])
 
   const toggle = useCallback(() => {

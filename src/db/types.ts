@@ -15,6 +15,8 @@ export type EntryShotVideos = {
   webm: string
 }
 
+export type EntryShotSize = 'large' | 'small'
+
 export type EntryShot = {
   title: string
   description: string
@@ -23,6 +25,7 @@ export type EntryShot = {
   area: ShotArea
   properties: EntryShotProperties
   variant: Extract<EntryVariant, 'shot'>
+  size: EntryShotSize
 }
 
 export type EntryContact = {

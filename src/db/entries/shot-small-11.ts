@@ -27,6 +27,7 @@ const shot: EntryShot = {
       value: '2023',
     },
   ],
+  size: 'small',
   title: 'Shot Small 11',
   variant: 'shot',
 }

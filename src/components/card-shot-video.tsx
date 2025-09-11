@@ -16,7 +16,7 @@ export const CardShotVideo = forwardRef<HTMLDivElement, CardShotVideoProps>(({vi
   return (
     <Fragment>
       <div className="absolute inset-0 rounded-2xl overflow-hidden">
-        <HoverVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} muted loop preload="auto" />
+        <HoverVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} muted loop preload="metadata" />
       </div>
       <div className="absolute right-[12px] top-[12.47px] rounded-2xl overflow-hidden">
         <div

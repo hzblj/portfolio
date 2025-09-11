@@ -27,6 +27,7 @@ const shot: EntryShot = {
       value: '2023',
     },
   ],
+  size: 'large',
   title: 'Shot Large 3',
   variant: 'shot',
   videos: {
