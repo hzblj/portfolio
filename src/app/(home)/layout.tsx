@@ -11,10 +11,9 @@ export default function RootLayout({children}: Props) {
   return (
     <main id="main" className="bg-black block relative">
       <div
-        className="overflow-hidden responsive-scale"
+        className="overflow-hidden responsive-scale will-change-[transform,opacity] origin-[0px_0px]"
         style={{
           height: toPx(Config.layout.height),
-          transformOrigin: '0px 0px',
           width: toPx(Config.layout.width),
         }}
       >

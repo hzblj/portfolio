@@ -143,6 +143,7 @@ body {
   touch-action: none;
   -webkit-overflow-scrolling: auto;
   overscroll-behavior: none;
+  box-sizing: border-box;
 }
 
 :root {
