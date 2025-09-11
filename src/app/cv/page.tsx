@@ -3,8 +3,10 @@ import {CV} from '@/components'
 export default async function Cv() {
   return (
     <div className="flex w-full h-full justify-center overflow-y-scroll pt-[116px]">
-      <div className="max-w-[700px] h-full flex flex-col items-center py-[56px] px-[64px]">
-        <CV />
+      <div className="max-w-[572px] w-full h-full flex flex-col items-center">
+        <CV>
+          <div className="flex h-[116px] w-full flex-shrink-0" />
+        </CV>
       </div>
     </div>
   )

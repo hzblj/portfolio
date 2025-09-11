@@ -200,13 +200,17 @@ const Section = ({year, ...props}: CVSection) => (
   </div>
 )
 
-export const CV = () => {
+export type CVProps = {
+  children?: ReactNode
+}
+
+export const CV: FC<CVProps> = ({children}) => {
   const workExperience = cv.workExperience
   const sideProjects = cv.sideProjects
   const education = cv.education
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full w-full flex flex-col max-w-[572px]">
       <div className="w-full h-full flex flex-col gap-[64px]">
         <div className="h-[17px]">
           <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Work Experience</h1>
@@ -239,9 +243,9 @@ export const CV = () => {
               <Section {...section} />
             </div>
           ))}
-        </div>
 
-        <div className="flex h-[300px] w-full flex-shrink-0"></div>
+          {children && children}
+        </div>
       </div>
     </div>
   )

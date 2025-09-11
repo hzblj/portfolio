@@ -2220,6 +2220,16 @@ lightningcss@1.30.1:
     lightningcss-win32-arm64-msvc "1.30.1"
     lightningcss-win32-x64-msvc "1.30.1"
 
+liquid-glass-react@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/liquid-glass-react/-/liquid-glass-react-1.1.1.tgz#d510517b5fda7785890e28a7885881abff887421"
+  integrity sha512-pKzaktaMAEztd93wpWcz2Z5Z9qdLJUNJdMX+n00Ca4XsnrLTQ5xJzm/+GQXZUeuFXe/PQ8ziVMZO6531PyaFJw==
+
+liquid-web@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/liquid-web/-/liquid-web-1.1.1.tgz#c3c59831bff67276acc1ffb1f533262ed9d5ac64"
+  integrity sha512-JzJIOvalHOkNGmiBhyw3yscn9CCCRvHmI/IFBTevCxW7OyHRuuUXVED5wX3sBx7+npggFWhUPWzTpC3sFGuMVA==
+
 locate-path@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-6.0.0.tgz#55321eb309febbc59c4801d931a72452a681d286"

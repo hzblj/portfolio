@@ -10,14 +10,15 @@ type GridProps = {
 
 const Grid = ({children, transform}: GridProps) => (
   <div
-    className="absolute flex shrink-0"
+    className="absolute flex shrink-0 max-w-none"
     style={{
       height: toPx(Config.layout.height),
       transform,
+      transformStyle: 'preserve-3d',
       width: toPx(Config.layout.width),
     }}
   >
-    <section className="grid gap-[16px] min-h-0 min-w-0 content-grid">{children}</section>
+    <section className="grid gap-[16px] min-h-0 min-w-0 content-grid p-[2px]">{children}</section>
   </div>
 )
 

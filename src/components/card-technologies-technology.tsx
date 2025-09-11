@@ -30,6 +30,10 @@ export const CardTechnologiesTechnology: FC<TechnologyProps> = ({title, image, v
   const ref = useRef<HTMLImageElement>(null)
 
   const handleEnter = useCallback(() => {
+    if (!ref.current) {
+      return
+    }
+
     gsap.to(ref.current, {
       duration: 0.5,
       ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -38,6 +42,10 @@ export const CardTechnologiesTechnology: FC<TechnologyProps> = ({title, image, v
   }, [])
 
   const handleLeave = useCallback(() => {
+    if (!ref.current) {
+      return
+    }
+
     gsap.to(ref.current, {
       duration: 0.5,
       ease: 'cubic-bezier(0.22, 1, 0.36, 1)',

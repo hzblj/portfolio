@@ -10,13 +10,22 @@ export type EntryShotProperty = {
 
 export type EntryShotProperties = EntryShotProperty[]
 
+export type EntryShotVideos = {
+  mp4: string
+  webm: string
+}
+
+export type EntryShotSize = 'large' | 'small'
+
 export type EntryShot = {
   title: string
   description: string
   image: string
+  videos?: EntryShotVideos
   area: ShotArea
   properties: EntryShotProperties
   variant: Extract<EntryVariant, 'shot'>
+  size: EntryShotSize
 }
 
 export type EntryContact = {

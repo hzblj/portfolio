@@ -8,7 +8,7 @@ import {CardMapLocation} from './card-map-location'
 
 export const CardMap: FC<EntryMap> = ({area}) => (
   <div
-    className="w-full shrink-0 flex h-full contain-intrinsic card-map-border-gradient overflow-hidden"
+    className="w-full shrink-0 flex h-full contain-intrinsic card card-map overflow-hidden"
     style={{gridArea: area, transformStyle: 'preserve-3d'}}
   >
     <div className="flex flex-col w-full grow overflow-hidden h-full relative rounded-2xl">

@@ -1,17 +1,17 @@
 import Image from 'next/image'
 import {FC} from 'react'
 
-import {EntryShotProperties, EntryShotProperty} from '@/db'
+import {EntryShot, EntryShotProperty} from '@/db'
 
+import {LoopVideo} from './loop-video'
 import {Modal} from './modal'
 
-export type CardShotModalProps = {
-  title: string
-  image: string
-  description: string
-  isModalOpen: boolean
-  onClose(): void
-  properties: EntryShotProperties
+export type CardShotModalProps = Pick<
+  EntryShot,
+  'title' | 'image' | 'description' | 'properties' | 'videos' | 'size'
+> & {
+  isOpen: boolean
+  onClose: () => void
 }
 
 const ShotProperty: FC<EntryShotProperty> = ({name, value}) => (
@@ -26,25 +26,24 @@ const ShotProperty: FC<EntryShotProperty> = ({name, value}) => (
 )
 
 export const CardShotModal: FC<CardShotModalProps> = ({
-  isModalOpen,
-  onClose,
   properties,
   title,
   description,
   image,
+  onClose,
+  isOpen,
+  videos,
+  size,
 }) => (
-  <Modal isOpen={isModalOpen} onClose={onClose}>
+  <Modal isOpen={isOpen} onClose={onClose}>
     <div className="px-8 pt-8 pb-2">
-      <div className="w-full h-[336px] rounded-[20px] flex justify-center items-center relative overflow-hidden">
-        <Image
-          src={image}
-          alt="alt"
-          fill
-          sizes="288px"
-          style={{
-            objectFit: 'cover',
-          }}
-        />
+      <div className="relative w-full h-[336px] rounded-[20px] flex justify-center items-center overflow-hidden">
+        <Image src={image} alt="alt" fill sizes={size === 'small' ? '289px' : '594px'} style={{objectFit: 'cover'}} />
+        {videos && (
+          <div className="absolute inset-0 rounded-[20px] overflow-hidden">
+            <LoopVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} />
+          </div>
+        )}
       </div>
       <div>
         <div>

@@ -13,6 +13,7 @@ export type CameraState = {
   x4: string
   origin: {x: number; y: number}
   scrollBehavior?: CameraScrollBehavior
+  isModalOpen: boolean
 }
 
 export type CameraTransforms = Pick<CameraState, 'viewport' | 'x1' | 'x2' | 'x3' | 'x4'>

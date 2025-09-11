@@ -1,14 +1,11 @@
 import {CardContact, CardCV, CardGallery, CardMap, CardProfile, CardShot, CardTechnologies} from '@/components'
-import {Entries} from '@/db'
+import {entries} from '@/db'
 import {CameraProvider} from '@/providers'
 
 export default async function Home() {
-  const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`)
-  const res = (await req.json()) as {data: Entries}
-
   return (
     <CameraProvider>
-      {res.data.map(entry => {
+      {entries.map(entry => {
         switch (entry.variant) {
           case 'contact':
             return <CardContact key={entry.area} {...entry} />

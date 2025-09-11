@@ -4,7 +4,7 @@ const shot: EntryShot = {
   area: 'l1',
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
-  image: 'https://picsum.photos/450/450',
+  image: '/jpg/shot-large-1.jpg',
   properties: [
     {
       name: 'Product',
@@ -27,6 +27,7 @@ const shot: EntryShot = {
       value: '2023',
     },
   ],
+  size: 'large',
   title: 'Shot Large 1',
   variant: 'shot',
 }

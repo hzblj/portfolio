@@ -34,6 +34,7 @@ export const createCameraState = (): CameraState => {
 
   return {
     camera: {x: 0, y: 0},
+    isModalOpen: false,
     origin: {x, y},
     scrollBehavior: 'natural',
     viewport: 'translate3d(0px, 0px, 0px)',

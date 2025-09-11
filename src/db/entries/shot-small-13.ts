@@ -4,7 +4,7 @@ const shot: EntryShot = {
   area: 's13',
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
-  image: 'https://picsum.photos/450/450',
+  image: '/webp/shot-small-13.webp',
   properties: [
     {
       name: 'Product',
@@ -27,8 +27,13 @@ const shot: EntryShot = {
       value: '2023',
     },
   ],
+  size: 'small',
   title: 'Shot Small 13',
   variant: 'shot',
+  videos: {
+    mp4: '/webm/shot-small-13.mp4',
+    webm: '/webm/shot-small-13.webm',
+  },
 }
 
 export default shot
