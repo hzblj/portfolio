@@ -3,7 +3,7 @@
 // https://github.com/koirodev/liquid-web
 // https://liquid.prismify.in/
 import {LiquidWeb} from 'liquid-web/react'
-import {type FC, type ReactNode, useEffect, useRef} from 'react'
+import {type FC, type ReactNode, useCallback, useEffect, useRef} from 'react'
 import ReactDOM from 'react-dom'
 import {cn} from '@/utils'
 
@@ -25,16 +25,35 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
   const modalRoot = document.getElementById('main')!
   const ref = useRef<HTMLDivElement>(null)
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      const keyValue = e.key.toLowerCase()
+
+      if (keyValue === 'esc' || keyValue === 'escape') {
+        e.preventDefault()
+        onClose()
+      }
+    },
+    [onClose]
+  )
+
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
+    if (!isOpen) {
       document.body.style.overflow = ''
+      return
     }
+
+    document.body.style.overflow = 'hidden'
+
+    const abortController = new AbortController()
+
+    document.addEventListener('keydown', handleKeyDown, {signal: abortController.signal})
+
     return () => {
       document.body.style.overflow = ''
+      abortController.abort()
     }
-  }, [isOpen])
+  }, [isOpen, handleKeyDown])
 
   if (!isOpen) {
     return null
