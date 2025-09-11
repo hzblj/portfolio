@@ -5,6 +5,7 @@ import Image from 'next/image'
 import {FC, Fragment, useCallback, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
+import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardShotHover} from './card-shot-hover'
 import {CardShotModal} from './card-shot-modal'
@@ -14,10 +15,8 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   const refTitle = useRef<HTMLDivElement>(null)
   const refVideoIcon = useRef<HTMLDivElement>(null)
 
+  const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const onOpen = useCallback(() => setIsModalOpen(true), [])
-  const onClose = useCallback(() => setIsModalOpen(false), [])
 
   const handleEnter = useCallback(() => {
     if (!refTitle.current) {
@@ -64,6 +63,16 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
     }
   }, [])
 
+  const handleOnClose = useCallback(() => {
+    setIsModalOpen(false)
+    actionToggleModal(dispatch, false)
+  }, [dispatch])
+
+  const handleOnOpen = useCallback(() => {
+    setIsModalOpen(true)
+    actionToggleModal(dispatch, true)
+  }, [dispatch])
+
   return (
     <Fragment>
       <div
@@ -71,7 +80,7 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
         style={{gridArea: area}}
       >
         <div
-          onClick={onOpen}
+          onClick={handleOnOpen}
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
           className="flex flex-col w-full grow overflow-hidden relative items-center justify-center cursor-pointer"
@@ -91,12 +100,14 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
       </div>
 
       <CardShotModal
-        isModalOpen={isModalOpen}
-        onClose={onClose}
+        isOpen={isModalOpen}
+        onClose={handleOnClose}
         properties={properties}
         title={title}
         description={description}
         image={image}
+        size={size}
+        videos={videos}
       />
     </Fragment>
   )

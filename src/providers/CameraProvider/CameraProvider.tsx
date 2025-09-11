@@ -5,7 +5,7 @@ import {ScrollSmoother} from 'gsap/ScrollSmoother'
 import {SplitText} from 'gsap/SplitText'
 
 import dynamic from 'next/dynamic'
-import {type ReactNode, useMemo} from 'react'
+import {Fragment, type ReactNode, useMemo} from 'react'
 
 import {Viewport} from './components'
 import {Context, createCameraState, useCameraState} from './context'
@@ -34,16 +34,30 @@ const Provider = ({children}: CameraProviderProps) => {
   )
 }
 
+const Controls = () => {
+  const {isModalOpen} = useCameraState()
+
+  if (isModalOpen) {
+    return null
+  }
+
+  return (
+    <Fragment>
+      <ScrollControls />
+      <KeyboardControls />
+      <ToucheControls friction={0.9} speed={2.0} />
+      <DragControls />
+    </Fragment>
+  )
+}
+
 export const CameraProvider = (props: CameraProviderProps) => {
   const camera = useMemo(() => createCameraState(), [])
 
   return (
     <Context defaultState={camera}>
       <Provider {...props} />
-      <ScrollControls />
-      <KeyboardControls />
-      <ToucheControls friction={0.9} speed={2.0} />
-      <DragControls />
+      <Controls />
     </Context>
   )
 }

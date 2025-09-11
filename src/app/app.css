@@ -189,3 +189,36 @@ body {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
+
+.card-modal {
+  position: relative;
+  border-radius: 52px;
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  backdrop-filter: blur(var(--card-blur));
+}
+
+.card-modal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--card-border-width);
+  background: linear-gradient(
+    134.62deg,
+    rgba(255, 255, 255, 0.45) 8.56%,
+    rgba(255, 255, 255, 0.0001) 37.96%,
+    rgba(255, 255, 255, 0.0001) 50.19%,
+    rgba(255, 255, 255, 0.15) 80.06%
+  );
+  pointer-events: none;
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}

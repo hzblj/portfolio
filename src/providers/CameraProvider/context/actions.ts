@@ -1,4 +1,4 @@
-import {toPx} from '@/utils'
+import {isBool, toPx} from '@/utils'
 
 import {HEIGHT, WIDTH} from '../const'
 import {CameraAction, CameraOffset, CameraState, CameraTransforms} from './types'
@@ -45,5 +45,13 @@ export const actionOnScroll = (dispatch: CameraAction, offset: CameraOffset) =>
     return {
       ...newState,
       ...recalculateTransforms(newState),
+    }
+  })
+
+export const actionToggleModal = (dispatch: CameraAction, isOpen?: boolean) =>
+  dispatch(draft => {
+    return {
+      ...draft,
+      isModalOpen: isBool(isOpen) ? isOpen : !draft.isModalOpen,
     }
   })
