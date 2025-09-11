@@ -3,7 +3,7 @@ import {Entries} from '@/db'
 import {CameraProvider} from '@/providers'
 
 export default async function Home() {
-  const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`)
+  const req = await fetch(`${process.env.BASE_URL}/api/projects`)
   const res = (await req.json()) as {data: Entries}
 
   return (
