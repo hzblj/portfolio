@@ -57,7 +57,7 @@ export const CardMapCartogram: FC<CardMapCartogramProps> = ({children}) => {
             <Image
               priority
               src="/svg/map.svg"
-              alt="alt"
+              alt="map"
               fill
               sizes="786px"
               className="rounded-2xl"

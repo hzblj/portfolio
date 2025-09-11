@@ -48,26 +48,26 @@ export const CardProfileControlsKeyboard = () => {
       <div className="absolute left-0 top-[4px] right-0 bottom-0">
         <div className="flex flex-col items-center gap-[0.5px]">
           <div ref={refW} className="w-[6px] h-[6px] flex items-center justify-center opacity-20 will-change-transform">
-            <Image priority src="/svg/key-cap.svg" alt="alt" width={6} height={6} className="object-cover" />
+            <Image priority src="/svg/key-cap.svg" alt="key-cap" width={6} height={6} className="object-cover" />
           </div>
           <div className="flex flex-row gap-[0.5px]">
             <div
               ref={refA}
               className="w-[6px] h-[6px] flex items-center justify-center opacity-20 will-change-transform"
             >
-              <Image priority src="/svg/key-cap.svg" alt="alt" width={6} height={6} className="object-cover" />
+              <Image priority src="/svg/key-cap.svg" alt="key-cap" width={6} height={6} className="object-cover" />
             </div>
             <div
               ref={refS}
               className="w-[6px] h-[6px] flex items-center justify-center opacity-20 will-change-transform"
             >
-              <Image priority src="/svg/key-cap.svg" alt="alt" width={6} height={6} className="object-cover" />
+              <Image priority src="/svg/key-cap.svg" alt="key-cap" width={6} height={6} className="object-cover" />
             </div>
             <div
               ref={refD}
               className="w-[6px] h-[6px] flex items-center justify-center opacity-20 will-change-transform"
             >
-              <Image priority src="/svg/key-cap.svg" alt="alt" width={6} height={6} className="object-cover" />
+              <Image priority src="/svg/key-cap.svg" alt="key-cap" width={6} height={6} className="object-cover" />
             </div>
           </div>
         </div>

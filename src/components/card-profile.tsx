@@ -10,6 +10,7 @@ import {LinkExternal} from './link-external'
 const Avatar = () => (
   <div className="relative flex items-center justify-center rounded-[48px] overflow-hidden w-[64px] h-[64px] shadow-[inset_0_0_0_1px_#ffffff1a]">
     <Image
+      priority
       src="/png/profile@3x.png"
       alt="profile-avatar"
       fill

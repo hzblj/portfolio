@@ -39,7 +39,7 @@ export const CardProfileControlsArrows = () => {
           ref={ref}
           className="w-[24px] h-[24px] flex items-center justify-center will-change-transform [transform:translateZ(0)]"
         >
-          <Image priority src="/svg/arrows.svg" alt="alt" width={24} height={24} style={{objectFit: 'cover'}} />
+          <Image priority src="/svg/arrows.svg" alt="arrows" width={24} height={24} style={{objectFit: 'cover'}} />
         </div>
       </div>
     </div>
