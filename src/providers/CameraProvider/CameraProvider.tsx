@@ -9,7 +9,7 @@ import {type ReactNode, useMemo} from 'react'
 
 import {Viewport} from './components'
 import {Context, createCameraState, useCameraState} from './context'
-import {KeyboardControls, ScrollControls, ToucheControls} from './controls'
+import {DragControls, KeyboardControls, ScrollControls, ToucheControls} from './controls'
 
 const Grid = dynamic(() => import('./components/Grid'), {ssr: false})
 
@@ -43,6 +43,7 @@ export const CameraProvider = (props: CameraProviderProps) => {
       <ScrollControls />
       <KeyboardControls />
       <ToucheControls friction={0.9} speed={2.0} />
+      <DragControls />
     </Context>
   )
 }
