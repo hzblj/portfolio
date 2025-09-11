@@ -12,6 +12,7 @@
     rgba(255, 255, 255, 0.06) 29.43%,
     rgba(255, 255, 255, 0.06) 100%
   );
+
   --card-border-gradient: linear-gradient(
     var(--card-border-angle),
     rgba(255, 255, 255, 0.45) 8.56%,
@@ -55,6 +56,68 @@
 }
 @utility card-angle-160 {
   --card-border-angle: 160deg;
+}
+
+@layer utilities {
+  .responsive-scale {
+    @apply scale-100;
+  }
+
+  /* Mobile */
+  @media (width <= 767px) {
+    .responsive-scale {
+      @apply scale-[0.86];
+    }
+  }
+
+  /* Tablet (768–1023) → stays 1.0 */
+  @media (768px <= width <= 1023px) {
+    .responsive-scale {
+      @apply scale-100;
+    }
+  }
+
+  /* Small desktop (1024–1919) → stays 1.0 */
+  @media (1024px <= width <= 1919px) {
+    .responsive-scale {
+      @apply scale-100;
+    }
+  }
+
+  /* Full HD (1920–2559) → stays 1.0 */
+  @media (1920px <= width <= 2559px) {
+    .responsive-scale {
+      @apply scale-100;
+    }
+  }
+
+  /* QHD / 4xl (2560–3439) */
+  @media (2560px <= width <= 3439px) {
+    .responsive-scale {
+      @apply scale-[1.10];
+    }
+  }
+
+  /* Ultrawide (3440–3839) */
+  @media (3440px <= width <= 3839px) {
+    .responsive-scale {
+      @apply scale-[1.5];
+    }
+  }
+
+  /* 5xl / 4K (3840–5119) */
+  @media (3840px <= width <= 5119px) {
+    .responsive-scale {
+      @apply scale-[1.75];
+    }
+  }
+
+  /* 6xl / 5K+ (>=5120) */
+  @media (width >= 5120px) {
+    .responsive-scale {
+      @apply scale-[2];
+    }
+  }
 }
 
 html {
