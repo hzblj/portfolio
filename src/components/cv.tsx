@@ -1,4 +1,8 @@
-import {FC, ReactNode} from 'react'
+'use client'
+
+import classNames from 'classnames'
+import gsap from 'gsap'
+import {FC, ReactNode, useLayoutEffect, useRef} from 'react'
 
 import {CVSection, CVSectionLink, CVSectionProject, cv} from '@/db'
 import {cn} from '@/utils'
@@ -40,6 +44,7 @@ const SectionPositions: FC<Pick<CVSection, 'positions'>> = props => (
     {props.positions.map((position, index) => (
       <span
         key={index.toString()}
+        data-cv-reveal="true"
         className={cn(
           'block font-normal text-[14px] leading-[100%] tracking-[0px] h-[17px]',
           variant[index === 0 ? 'active' : 'inactive']
@@ -58,21 +63,30 @@ const SectionLocation: FC<Pick<CVSection, 'location'>> = props => {
 
   return (
     <div>
-      <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]">
+      <span
+        data-cv-reveal="true"
+        className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]"
+      >
         {props.location}
       </span>
     </div>
   )
 }
 
-const SectionTechnologies: FC<Pick<CVSection, 'technologies'>> = props => {
+const SectionTechnologies: FC<Pick<CVSection, 'technologies'> & {className?: string}> = props => {
   if (!props.technologies || props.technologies.length === 0) {
     return null
   }
 
   return (
     <div>
-      <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/50 h-[17px]">
+      <span
+        data-cv-reveal="true"
+        className={classNames(
+          'block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/50 h-[17px]',
+          props.className
+        )}
+      >
         {props.technologies.join(', ')}
       </span>
     </div>
@@ -80,9 +94,7 @@ const SectionTechnologies: FC<Pick<CVSection, 'technologies'>> = props => {
 }
 
 const SectionParagraph: FC<{children: ReactNode}> = ({children}) => (
-  <div>
-    <p className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50">{children}</p>
-  </div>
+  <p className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50">{children}</p>
 )
 
 const SectionLink: FC<CVSectionLink> = ({name, url}) => (
@@ -90,7 +102,7 @@ const SectionLink: FC<CVSectionLink> = ({name, url}) => (
     <a
       href={url}
       target="_blank"
-      className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50 underline decoration-white/20 decoration-[1.5px] underline-offset-4 hover:decoration-white/40 transition-colors duration-300 ease-in-out"
+      className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50 underline decoration-white/20 decoration-[1.5px] underline-offset-4 hover:decoration-white/40 transition-colors duration-500 ease-out"
     >
       {name}
     </a>
@@ -130,13 +142,17 @@ const SectionProject: FC<CVSectionProject> = ({name, position, technologies, par
         <a
           href={url}
           target="_blank"
+          data-cv-reveal="true"
           className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/80 h-[22px] underline decoration-white/20 decoration-[1.5px] underline-offset-4 hover:decoration-white/40 transition-colors duration-300 ease-in-out"
         >
           {name}
         </a>
       </div>
       <div>
-        <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]">
+        <span
+          data-cv-reveal="true"
+          className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/60 h-[17px]"
+        >
           {position}
         </span>
       </div>
@@ -146,7 +162,9 @@ const SectionProject: FC<CVSectionProject> = ({name, position, technologies, par
     </div>
     <div className="flex flex-col gap-[24px]">
       {paragraphs.map((paragraph, index) => (
-        <SectionParagraph key={index.toString()}>{paragraph}</SectionParagraph>
+        <div key={index.toString()} data-cv-reveal="true">
+          <SectionParagraph>{paragraph}</SectionParagraph>
+        </div>
       ))}
     </div>
   </div>
@@ -160,7 +178,10 @@ const SectionProjects: FC<Pick<CVSection, 'projects'>> = ({projects}) => {
   return (
     <div>
       <div className="py-[24px]">
-        <span className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white h-[22px]">
+        <span
+          data-cv-reveal="true"
+          className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white h-[22px]"
+        >
           Projects
         </span>
       </div>
@@ -185,7 +206,9 @@ const SectionRight: FC<Omit<CVSection, 'year'>> = ({
     <SectionTitle positions={positions} location={location} technologies={technologies} />
     <div className="flex flex-col gap-[24px]">
       {paragraphs.map((paragraph, index) => (
-        <SectionParagraph key={index.toString()}>{paragraph}</SectionParagraph>
+        <div key={index.toString()} data-cv-reveal="true">
+          <SectionParagraph>{paragraph}</SectionParagraph>
+        </div>
       ))}
     </div>
     <SectionProjects projects={projects} />
@@ -194,27 +217,93 @@ const SectionRight: FC<Omit<CVSection, 'year'>> = ({
 )
 
 const Section = ({year, ...props}: CVSection) => (
-  <div className="flex flex-row w-full items-start gap-[44px]">
+  <div className="flex flex-col md:flex-row w-full items-start gap-[24px] md:gap-[44px]" data-cv-section="true">
     <SectionLeft year={year} />
     <SectionRight {...props} />
   </div>
 )
 
-export type CVProps = {
-  children?: ReactNode
+type RevealOptions = {
+  sectionSelector?: string
+  nodeSelector?: string
+  nodeStagger?: number
+  nodeDuration?: number
+  sectionGap?: number
+  ease?: gsap.EaseString
+  from?: gsap.TweenVars
+  to?: gsap.TweenVars
+  enable?: boolean
 }
 
-export const CV: FC<CVProps> = ({children}) => {
+const useCvSequentialReveal = ({
+  sectionSelector = '[data-cv-section]',
+  nodeSelector = '[data-cv-reveal]',
+  nodeStagger = 0.06,
+  nodeDuration = 0.6,
+  sectionGap = 0.06,
+  ease = 'power2.out',
+  from = {autoAlpha: 0, y: 20},
+  to = {autoAlpha: 1, y: 0},
+  enable = true,
+}: RevealOptions = {}) => {
+  useLayoutEffect(() => {
+    if (!enable) {
+      return
+    }
+
+    const ctx = gsap.context(() => {
+      const sections = gsap.utils.toArray<HTMLElement>(sectionSelector)
+
+      if (!sections.length) {
+        return
+      }
+
+      const master = gsap.timeline({defaults: {ease}})
+
+      sections.forEach((section, i) => {
+        const nodes = gsap.utils.toArray<HTMLElement>(section.querySelectorAll(nodeSelector))
+
+        if (!nodes.length) {
+          return
+        }
+
+        const sectionTL = gsap.timeline()
+
+        sectionTL.fromTo(
+          nodes,
+          {...from},
+          {...to, duration: nodeDuration, force3D: true, stagger: nodeStagger, willChange: 'transform, opacity'}
+        )
+
+        master.add(sectionTL, i === 0 ? 0 : `>${sectionGap}`)
+      })
+    })
+
+    return () => ctx.revert()
+  }, [sectionSelector, nodeSelector, nodeStagger, nodeDuration, sectionGap, ease, from, to, enable])
+}
+
+export type CVProps = {
+  children?: ReactNode
+  animated?: boolean
+}
+
+export const CV: FC<CVProps> = ({children, animated = false}) => {
+  const ref = useRef<HTMLDivElement>(null)
+
   const workExperience = cv.workExperience
   const sideProjects = cv.sideProjects
   const education = cv.education
 
+  useCvSequentialReveal({enable: animated})
+
   return (
     <div className="h-full w-full flex flex-col max-w-[572px]">
-      <div className="w-full h-full flex flex-col gap-[64px]">
+      <div ref={ref} className="w-full h-full flex flex-col gap-[44px] md:gap-[56px]">
         <div className="h-[17px]">
           <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Work Experience</h1>
         </div>
+
         <div className="flex flex-col gap-[56px]">
           {workExperience.map((section, index) => (
             <div key={index.toString()} className="flex flex-col w-full">
