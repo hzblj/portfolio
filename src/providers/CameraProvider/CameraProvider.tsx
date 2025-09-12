@@ -45,7 +45,7 @@ const Controls = () => {
     <Fragment>
       <ScrollControls />
       <KeyboardControls />
-      <ToucheControls friction={0.9} speed={2.0} />
+      <ToucheControls friction={0.9} speed={1.2} />
       <DragControls />
     </Fragment>
   )
