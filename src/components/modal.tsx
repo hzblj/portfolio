@@ -6,6 +6,8 @@ import {type FC, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef
 import ReactDOM from 'react-dom'
 import {cn} from '@/utils'
 
+import {ModalCloseButton} from './modal-close-button'
+
 export type ModalVariant = 'small' | 'large'
 
 export type ModalProps = {
@@ -24,6 +26,7 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
   const modalRoot = document.getElementById('main')!
   const cardRef = useRef<HTMLDivElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLDivElement>(null)
 
   const [mounted, setMounted] = useState(isOpen)
 
@@ -32,9 +35,16 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
       return
     }
 
-    gsap.killTweensOf([cardRef.current, backdropRef.current])
+    gsap.killTweensOf([cardRef.current, backdropRef.current, closeButtonRef.current])
 
     gsap.to(cardRef.current, {duration: 0.25, ease: 'power2.in', scale: 0.95})
+
+    gsap.to(closeButtonRef.current, {
+      autoAlpha: 0,
+      duration: 0.05,
+      ease: 'power2.in',
+    })
+
     gsap.to(backdropRef.current, {
       autoAlpha: 0,
       duration: 0.2,
@@ -68,12 +78,13 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
       return
     }
 
-    if (!cardRef.current || !backdropRef.current) {
+    if (!cardRef.current || !backdropRef.current || !closeButtonRef.current) {
       return
     }
 
-    gsap.killTweensOf([cardRef.current, backdropRef.current])
+    gsap.killTweensOf([cardRef.current, backdropRef.current, closeButtonRef.current])
     gsap.set(backdropRef.current, {autoAlpha: 0})
+    gsap.set(closeButtonRef.current, {autoAlpha: 0})
     gsap.set(cardRef.current, {scale: 0.95})
   }, [mounted])
 
@@ -86,7 +97,8 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
     const abortController = new AbortController()
     document.addEventListener('keydown', handleKeyDown, {signal: abortController.signal})
 
-    if (cardRef.current && backdropRef.current) {
+    if (cardRef.current && backdropRef.current && closeButtonRef.current) {
+      gsap.to(closeButtonRef.current, {autoAlpha: 1, duration: 0.25, ease: 'power2.out', delay: 0.1})
       gsap.to(backdropRef.current, {autoAlpha: 1, duration: 0.25, ease: 'power2.out'})
       gsap.to(cardRef.current, {autoAlpha: 1, duration: 0.3, ease: 'power2.out', scale: 1})
     }
@@ -108,7 +120,7 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
         <div
           ref={cardRef}
           className={cn(
-            'flex flex-col w-full max-w-[512px] z-40 overflow-hidden will-change-transform [backface-visibility:hidden] transform-gpu',
+            'flex flex-col w-full z-40 overflow-hidden will-change-transform [backface-visibility:hidden] transform-gpu mx-[12px] md:mx-0 mb-[56px] md:mb-0',
             modalVariants[variant]
           )}
           onClick={e => e.stopPropagation()}
@@ -128,6 +140,7 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
           </LiquidWeb>
         </div>
       </div>
+      <ModalCloseButton ref={closeButtonRef} onClose={startClose}/>
     </div>,
     modalRoot
   )
