@@ -192,7 +192,6 @@ body {
 
 .card-modal {
   position: relative;
-  border-radius: 52px;
   background-blend-mode: luminosity;
   -webkit-backdrop-filter: blur(var(--card-blur));
   backdrop-filter: blur(var(--card-blur));

@@ -98,7 +98,7 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
     document.addEventListener('keydown', handleKeyDown, {signal: abortController.signal})
 
     if (cardRef.current && backdropRef.current && closeButtonRef.current) {
-      gsap.to(closeButtonRef.current, {autoAlpha: 1, duration: 0.25, ease: 'power2.out', delay: 0.1})
+      gsap.to(closeButtonRef.current, {autoAlpha: 1, delay: 0.1, duration: 0.25, ease: 'power2.out'})
       gsap.to(backdropRef.current, {autoAlpha: 1, duration: 0.25, ease: 'power2.out'})
       gsap.to(cardRef.current, {autoAlpha: 1, duration: 0.3, ease: 'power2.out', scale: 1})
     }
@@ -134,13 +134,13 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
               scale: 22,
             }}
           >
-            <div className="relative card-modal overflow-hidden">
+            <div className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]">
               <div className="relative z-20">{children}</div>
             </div>
           </LiquidWeb>
         </div>
       </div>
-      <ModalCloseButton ref={closeButtonRef} onClose={startClose}/>
+      <ModalCloseButton ref={closeButtonRef} onClose={startClose} />
     </div>,
     modalRoot
   )
