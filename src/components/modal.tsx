@@ -1,9 +1,8 @@
 'use client'
 
-// https://github.com/koirodev/liquid-web
-// https://liquid.prismify.in/
+import gsap from 'gsap'
 import {LiquidWeb} from 'liquid-web/react'
-import {type FC, type ReactNode, useCallback, useEffect, useRef} from 'react'
+import {type FC, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {cn} from '@/utils'
 
@@ -23,46 +22,85 @@ const modalVariants: Record<ModalVariant, string> = {
 
 export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'small'}) => {
   const modalRoot = document.getElementById('main')!
-  const ref = useRef<HTMLDivElement>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const backdropRef = useRef<HTMLDivElement>(null)
+
+  const [mounted, setMounted] = useState(isOpen)
+
+  const startClose = useCallback(() => {
+    if (!cardRef.current || !backdropRef.current) {
+      return
+    }
+
+    gsap.to(cardRef.current, {
+      duration: 0.3,
+      ease: 'power2.in',
+      scale: 0.95,
+    })
+
+    gsap.to(backdropRef.current, {
+      autoAlpha: 0,
+      duration: 0.2,
+      ease: 'power2.in',
+      onComplete: () => {
+        setMounted(false)
+        onClose()
+      },
+    })
+  }, [onClose])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       const keyValue = e.key.toLowerCase()
-
       if (keyValue === 'esc' || keyValue === 'escape') {
         e.preventDefault()
-        onClose()
+        startClose()
       }
     },
-    [onClose]
+    [startClose]
   )
 
   useEffect(() => {
-    if (!isOpen) {
-      document.body.style.overflow = ''
+    if (isOpen) {
+      setMounted(true)
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!mounted) {
       return
     }
 
     document.body.style.overflow = 'hidden'
 
     const abortController = new AbortController()
-
     document.addEventListener('keydown', handleKeyDown, {signal: abortController.signal})
+
+    if (cardRef.current && backdropRef.current) {
+      gsap.fromTo(backdropRef.current, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, ease: 'power2.out'})
+
+      gsap.fromTo(cardRef.current, {scale: 0.95}, {duration: 0.35, ease: 'power2.out', scale: 1})
+    }
 
     return () => {
       document.body.style.overflow = ''
       abortController.abort()
     }
-  }, [isOpen, handleKeyDown])
+  }, [mounted, handleKeyDown])
 
-  if (!isOpen) {
+  if (!mounted) {
     return null
   }
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-40 w-screen h-screen overflow-auto block">
-      <div className="flex justify-center items-center w-full min-h-full mx-auto py-10 relative">
-        <div className={cn('flex flex-col w-full max-w-[512px] z-40 overflow-hidden', modalVariants[variant])}>
+      <div ref={backdropRef} className="block fixed bg-black/50 inset-0" />
+      <div className="flex justify-center items-center w-full min-h-full mx-auto py-10 relative" onClick={startClose}>
+        <div
+          ref={cardRef}
+          className={cn('flex flex-col w-full max-w-[512px] z-40 overflow-hidden', modalVariants[variant])}
+          onClick={e => e.stopPropagation()}
+        >
           <LiquidWeb
             options={{
               aberration: 50,
@@ -72,12 +110,11 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
               scale: 22,
             }}
           >
-            <div ref={ref} className="relative card-modal overflow-hidden">
+            <div className="relative card-modal overflow-hidden">
               <div className="relative z-20">{children}</div>
             </div>
           </LiquidWeb>
         </div>
-        <div className="absolute bg-black/50 inset-0" onClick={onClose} />
       </div>
     </div>,
     modalRoot
