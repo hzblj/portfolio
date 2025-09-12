@@ -2,7 +2,7 @@
 
 import gsap from 'gsap'
 import {LiquidWeb} from 'liquid-web/react'
-import {type FC, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
+import {type FC, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {cn} from '@/utils'
 
@@ -32,12 +32,9 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
       return
     }
 
-    gsap.to(cardRef.current, {
-      duration: 0.3,
-      ease: 'power2.in',
-      scale: 0.95,
-    })
+    gsap.killTweensOf([cardRef.current, backdropRef.current])
 
+    gsap.to(cardRef.current, {duration: 0.25, ease: 'power2.in', scale: 0.95})
     gsap.to(backdropRef.current, {
       autoAlpha: 0,
       duration: 0.2,
@@ -66,20 +63,32 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
     }
   }, [isOpen])
 
+  useLayoutEffect(() => {
+    if (!mounted) {
+      return
+    }
+
+    if (!cardRef.current || !backdropRef.current) {
+      return
+    }
+
+    gsap.killTweensOf([cardRef.current, backdropRef.current])
+    gsap.set(backdropRef.current, {autoAlpha: 0})
+    gsap.set(cardRef.current, {scale: 0.95})
+  }, [mounted])
+
   useEffect(() => {
     if (!mounted) {
       return
     }
 
     document.body.style.overflow = 'hidden'
-
     const abortController = new AbortController()
     document.addEventListener('keydown', handleKeyDown, {signal: abortController.signal})
 
     if (cardRef.current && backdropRef.current) {
-      gsap.fromTo(backdropRef.current, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, ease: 'power2.out'})
-
-      gsap.fromTo(cardRef.current, {scale: 0.95}, {duration: 0.35, ease: 'power2.out', scale: 1})
+      gsap.to(backdropRef.current, {autoAlpha: 1, duration: 0.25, ease: 'power2.out'})
+      gsap.to(cardRef.current, {autoAlpha: 1, duration: 0.3, ease: 'power2.out', scale: 1})
     }
 
     return () => {
@@ -94,12 +103,12 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-40 w-screen h-screen overflow-auto block">
-      <div ref={backdropRef} className="block fixed bg-black/50 inset-0 will-change-[opacity]" />
+      <div ref={backdropRef} className="fixed inset-0 bg-black/50 will-change-[opacity]" />
       <div className="flex justify-center items-center w-full min-h-full mx-auto py-10 relative" onClick={startClose}>
         <div
           ref={cardRef}
           className={cn(
-            'flex flex-col w-full max-w-[512px] z-40 overflow-hidden will-change-transform',
+            'flex flex-col w-full max-w-[512px] z-40 overflow-hidden will-change-transform [backface-visibility:hidden] transform-gpu',
             modalVariants[variant]
           )}
           onClick={e => e.stopPropagation()}
