@@ -42,7 +42,7 @@ const Controls = () => {
     <Fragment>
       {!isModalOpen && <ScrollControls />}
       {!isModalOpen && <KeyboardControls />}
-      <ToucheControls friction={0.9} speed={1.2} hasHover={hasHover} isModalOpen={isModalOpen} />
+      <ToucheControls friction={0.9} speed={1.2} isModalOpen={isModalOpen} />
       {hasHover && !isModalOpen && <DragControls />}
     </Fragment>
   )

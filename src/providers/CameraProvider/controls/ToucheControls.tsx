@@ -7,11 +7,10 @@ import {actionOnScroll, useCameraDispatch} from '../context'
 type ToucheControlsProps = {
   speed: number
   friction: number
-  hasHover: boolean
   isModalOpen: boolean
 }
 
-export const ToucheControls = ({friction, speed, hasHover, isModalOpen}: ToucheControlsProps) => {
+export const ToucheControls = ({friction, speed, isModalOpen}: ToucheControlsProps) => {
   const dispatch = useCameraDispatch()
 
   const isDragging = useRef(false)
@@ -87,13 +86,6 @@ export const ToucheControls = ({friction, speed, hasHover, isModalOpen}: ToucheC
   }, [startInertia])
 
   useEffect(() => {
-    if (!hasHover) {
-      if (rafId.current != null) {
-        cancelAnimationFrame(rafId.current)
-      }
-      return
-    }
-
     if (isModalOpen) {
       if (rafId.current != null) {
         cancelAnimationFrame(rafId.current)
@@ -114,7 +106,7 @@ export const ToucheControls = ({friction, speed, hasHover, isModalOpen}: ToucheC
         cancelAnimationFrame(rafId.current)
       }
     }
-  }, [onTouchStart, onTouchMove, onTouchEnd, hasHover, isModalOpen])
+  }, [onTouchStart, onTouchMove, onTouchEnd, isModalOpen])
 
   return null
 }
