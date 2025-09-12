@@ -6,18 +6,20 @@ import {Fragment, forwardRef} from 'react'
 import {EntryShot} from '@/db'
 import {HoverVideo} from './hover-video'
 
-export type CardShotVideoProps = Pick<EntryShot, 'videos' | 'image'>
+export type CardShotVideoProps = Pick<EntryShot, 'videos' | 'image'> & {hasHover?: boolean}
 
-export const CardShotVideo = forwardRef<HTMLDivElement, CardShotVideoProps>(({videos, image}, ref) => {
+export const CardShotVideo = forwardRef<HTMLDivElement, CardShotVideoProps>(({videos, image, hasHover = true}, ref) => {
   if (!videos) {
     return null
   }
 
   return (
     <Fragment>
-      <div className="absolute inset-0 rounded-2xl overflow-hidden">
-        <HoverVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} muted loop preload="metadata" />
-      </div>
+      {hasHover && (
+        <div className="absolute inset-0 rounded-2xl overflow-hidden">
+          <HoverVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} muted loop preload="metadata" />
+        </div>
+      )}
       <div className="absolute right-[12px] top-[12.47px] rounded-2xl overflow-hidden">
         <div
           ref={ref}

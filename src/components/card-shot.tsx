@@ -5,6 +5,7 @@ import Image from 'next/image'
 import {FC, Fragment, useCallback, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
+import {useHasHover} from '@/hooks'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardShotHover} from './card-shot-hover'
@@ -14,6 +15,8 @@ import {CardShotVideo} from './card-shot-video'
 export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos, size}) => {
   const refTitle = useRef<HTMLDivElement>(null)
   const refVideoIcon = useRef<HTMLDivElement>(null)
+
+  const hasHover = useHasHover()
 
   const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -94,9 +97,9 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
               sizes={size === 'small' ? '289px' : '594px'}
               style={{objectFit: 'cover'}}
             />
-            <CardShotVideo ref={refVideoIcon} videos={videos} image={image} />
+            <CardShotVideo ref={refVideoIcon} videos={videos} image={image} hasHover={hasHover} />
           </div>
-          <CardShotHover ref={refTitle} title={title} />
+          {hasHover && <CardShotHover ref={refTitle} title={title} />}
         </div>
       </div>
 
