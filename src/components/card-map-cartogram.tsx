@@ -51,7 +51,7 @@ export const CardMapCartogram: FC<CardMapCartogramProps> = ({children}) => {
       <div className="absolute inset-[1px] overflow-hidden rounded-2xl">
         <div
           ref={ref}
-          className="absolute inset-[1px] will-change-transform [transform-style:preserve-3d] cursor-pointer"
+          className="absolute inset-[1px] will-change-transform [transform-style:preserve-3d] cursor-pointer transform-gpu"
         >
           <a href={Config.location.mapUrl} target="_blank" className="rounded-2xl">
             <Image

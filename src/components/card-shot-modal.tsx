@@ -14,13 +14,26 @@ export type CardShotModalProps = Pick<
   onClose: () => void
 }
 
-const ShotProperty: FC<EntryShotProperty> = ({name, value}) => (
+const ShotProperty: FC<EntryShotProperty> = ({name, value, url}) => (
   <div className="flex flex-row py-6">
     <div className="flex-1">
       <span className="text-[15px] font-normal tracking-normal align-middle text-white/50 leading-[100%]">{name}</span>
     </div>
     <div>
-      <span className="text-[15px] font-normal tracking-normal align-middle text-white/90 leading-[100%]">{value}</span>
+      {url && (
+        <a
+          href={url}
+          target="_blank"
+          className="text-[15px] font-normal tracking-normal align-middle text-white/90 leading-[100%] underline decoration-white/60 decoration-[1.5px] underline-offset-4 hover:decoration-white/80 transition-colors duration-500 ease-out"
+        >
+          {value}
+        </a>
+      )}
+      {!url && (
+        <span className="text-[15px] font-normal tracking-normal align-middle text-white/90 leading-[100%]">
+          {value}
+        </span>
+      )}
     </div>
   </div>
 )

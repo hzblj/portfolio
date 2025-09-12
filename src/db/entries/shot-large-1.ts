@@ -20,7 +20,8 @@ const shot: EntryShot = {
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://footshop.cz',
+      value: 'footshop.cz',
     },
     {
       name: 'Year',

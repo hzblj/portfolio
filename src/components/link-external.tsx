@@ -43,7 +43,7 @@ export const LinkExternal: FC<LinkExternalProps> = ({url, children}) => {
       <div className="absolute w-full bottom-[-1.5px]">
         <div
           ref={lineRef}
-          className="h-[1.5px] w-0 will-change-[width,height] bg-[linear-gradient(to_right,#ffffff_0%,rgba(255,255,255,0.48)_100%)]"
+          className="h-[1.5px] w-0 will-change-[width,height] bg-[linear-gradient(to_right,#ffffff_0%,rgba(255,255,255,0.48)_100%)] transform-gpu"
         />
       </div>
     </a>

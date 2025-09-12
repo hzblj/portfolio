@@ -24,7 +24,7 @@ const LocationDotPulse = () => {
   return (
     <div
       ref={ref}
-      className="w-[44px] h-[44px] rounded-full bg-[#1B88FF66] [transform-style:preserve-3d] [will-change:transform]"
+      className="w-[44px] h-[44px] rounded-full bg-[#1B88FF66] [transform-style:preserve-3d] [will-change:transform] transform-gpu"
     >
       <div />
     </div>

@@ -6,6 +6,7 @@ export type ShotArea = `${ShotSize}${number}`
 export type EntryShotProperty = {
   name: string
   value: string
+  url?: string
 }
 
 export type EntryShotProperties = EntryShotProperty[]

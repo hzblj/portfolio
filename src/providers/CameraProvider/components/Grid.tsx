@@ -10,7 +10,7 @@ type GridProps = {
 
 const Grid = ({children, transform}: GridProps) => (
   <div
-    className="absolute flex shrink-0 max-w-none"
+    className="absolute flex shrink-0 max-w-none transform-gpu will-change-transform"
     style={{
       height: toPx(Config.layout.height),
       transform,
