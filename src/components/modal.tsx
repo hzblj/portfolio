@@ -94,11 +94,14 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-40 w-screen h-screen overflow-auto block">
-      <div ref={backdropRef} className="block fixed bg-black/50 inset-0" />
+      <div ref={backdropRef} className="block fixed bg-black/50 inset-0 will-change-[opacity]" />
       <div className="flex justify-center items-center w-full min-h-full mx-auto py-10 relative" onClick={startClose}>
         <div
           ref={cardRef}
-          className={cn('flex flex-col w-full max-w-[512px] z-40 overflow-hidden', modalVariants[variant])}
+          className={cn(
+            'flex flex-col w-full max-w-[512px] z-40 overflow-hidden will-change-transform',
+            modalVariants[variant]
+          )}
           onClick={e => e.stopPropagation()}
         >
           <LiquidWeb
