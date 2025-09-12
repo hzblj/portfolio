@@ -50,10 +50,10 @@ export const CardShotModal: FC<CardShotModalProps> = ({
 }) => (
   <Modal isOpen={isOpen} onClose={onClose}>
     <div className="px-[20px] md:px-8 pt-[20px] md:pt-8 pb-2">
-      <div className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden">
+      <div className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden border-[0.75px] border-[#FFFFFF26]">
         <Image src={image} alt="shot" fill sizes={size === 'small' ? '289px' : '594px'} style={{objectFit: 'cover'}} />
         {videos && (
-          <div className="absolute inset-0 rounded-[20px] overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
             <LoopVideo srcMp4={videos.mp4} srcWebm={videos.webm} poster={image} />
           </div>
         )}
