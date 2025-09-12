@@ -36,6 +36,7 @@ export const LinkExternal: FC<LinkExternalProps> = ({url, children}) => {
       target="_blank"
       rel="noopener noreferrer"
       onMouseEnter={handleEnter}
+      onMouseOver={handleEnter}
       onMouseLeave={handleLeave}
       className="inline-block relative"
     >

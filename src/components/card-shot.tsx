@@ -86,6 +86,7 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
           onClick={handleOnOpen}
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
+          onMouseOver={handleEnter}
           className="flex flex-col w-full grow overflow-hidden relative items-center justify-center cursor-pointer"
         >
           <div className="w-full h-full flex justify-center items-center relative overflow-hidden">

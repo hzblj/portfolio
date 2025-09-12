@@ -71,6 +71,7 @@ export const CardCV: FC<EntryCV> = ({area}) => {
         <div
           className="flex flex-col w-full grow overflow-hidden h-full relative cursor-pointer"
           onMouseEnter={handleEnter}
+          onMouseOver={handleEnter}
           onMouseLeave={handleLeave}
           onClick={handleOnOpen}
         >

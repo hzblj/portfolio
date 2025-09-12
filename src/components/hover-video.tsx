@@ -33,6 +33,9 @@ export const HoverVideo: FC<HoverVideoProps> = ({
     }
 
     try {
+      if (!el.paused) {
+        return
+      }
       await el.play()
     } catch (err) {
       // biome-ignore lint/suspicious/noConsole: Log video warning
@@ -77,6 +80,7 @@ export const HoverVideo: FC<HoverVideoProps> = ({
     <div
       className="relative overflow-hidden rounded-2xl w-full h-full"
       onMouseEnter={play}
+      onMouseOver={play}
       onMouseLeave={pause}
       onFocus={play}
       onBlur={pause}

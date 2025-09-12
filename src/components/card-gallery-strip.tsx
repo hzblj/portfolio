@@ -34,6 +34,7 @@ const CardGalleryStripeItem = forwardRef<HTMLDivElement, CardGalleryStripeItemPr
         ref={ref}
         className="group relative flex-[1_1_0%] min-w-0 cursor-pointer"
         onMouseEnter={onHover}
+        onMouseOver={onHover}
         onFocus={onHover}
         onLoad={onLoad}
         role="button"
