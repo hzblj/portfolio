@@ -38,16 +38,12 @@ const Controls = () => {
   const hasHover = useHasHover()
   const {isModalOpen} = useCameraState()
 
-  if (isModalOpen) {
-    return null
-  }
-
   return (
     <Fragment>
-      <ScrollControls />
-      <KeyboardControls />
-      <ToucheControls friction={0.9} speed={1.2} />
-      {hasHover && <DragControls />}
+      {!isModalOpen && <ScrollControls />}
+      {!isModalOpen && <KeyboardControls />}
+      <ToucheControls friction={0.9} speed={1.2} hasHover={hasHover} isModalOpen={isModalOpen} />
+      {hasHover && !isModalOpen && <DragControls />}
     </Fragment>
   )
 }
