@@ -6,7 +6,7 @@ import {SplitText} from 'gsap/SplitText'
 
 import dynamic from 'next/dynamic'
 import {Fragment, type ReactNode, useMemo} from 'react'
-
+import {useHasHover} from '@/hooks'
 import {Viewport} from './components'
 import {Context, createCameraState, useCameraState} from './context'
 import {DragControls, KeyboardControls, ScrollControls, ToucheControls} from './controls'
@@ -35,6 +35,7 @@ const Provider = ({children}: CameraProviderProps) => {
 }
 
 const Controls = () => {
+  const hasHover = useHasHover()
   const {isModalOpen} = useCameraState()
 
   if (isModalOpen) {
@@ -46,7 +47,7 @@ const Controls = () => {
       <ScrollControls />
       <KeyboardControls />
       <ToucheControls friction={0.9} speed={1.2} />
-      <DragControls />
+      {hasHover && <DragControls />}
     </Fragment>
   )
 }
