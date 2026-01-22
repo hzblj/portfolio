@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'footshop-trending',
   title: 'Footshop - Trending',
   variant: 'shot',
 }

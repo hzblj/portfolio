@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'sportlito-story-sharing',
   title: 'Sportlito - Story Sharing',
   variant: 'shot',
   videos: {

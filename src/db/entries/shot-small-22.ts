@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'meetback-product',
   title: 'Meetback - Product',
   variant: 'shot',
   videos: {

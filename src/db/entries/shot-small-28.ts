@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'meetback-attendee-selection',
   title: 'Meetback - Attendee Selection',
   variant: 'shot',
 }

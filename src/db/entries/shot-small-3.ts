@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'footshop-product-listing-details',
   title: 'Footshop - Product Listing & Details',
   variant: 'shot',
 }

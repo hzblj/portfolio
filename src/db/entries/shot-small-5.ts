@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'volvista-vehicle-service-management',
   title: 'Volvista - Vehicle Service Management',
   variant: 'shot',
 }

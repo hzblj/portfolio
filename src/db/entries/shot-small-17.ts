@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'queens-brand-customization',
   title: 'Queens - Brand Customization',
   variant: 'shot',
 }

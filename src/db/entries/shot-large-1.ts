@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'large',
+  slug: 'footshop-mobile-app',
   title: 'Footshop - Mobile App',
   variant: 'shot',
 }

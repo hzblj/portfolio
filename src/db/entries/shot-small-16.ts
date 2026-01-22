@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'dpd-zebra-device',
   title: 'DPD - Zebra Device',
   variant: 'shot',
 }

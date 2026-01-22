@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'sportlito-teams',
   title: 'Sportlito - Teams',
   variant: 'shot',
 }

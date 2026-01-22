@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'queens-mobile-app',
   title: 'Queens - Mobile App',
   variant: 'shot',
 }

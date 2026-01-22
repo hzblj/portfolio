@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'lapz-watch-f1-in-visionos-spatial-video-player',
   title: 'Lapz - Spatial Video Player',
   variant: 'shot',
   videos: {

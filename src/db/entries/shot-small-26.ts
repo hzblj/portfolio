@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'sportlito-live-match-stories',
   title: 'Sportlito - Live Match Stories',
   variant: 'shot',
 }

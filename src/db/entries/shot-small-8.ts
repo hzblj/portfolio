@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'lapz-watch-f1-in-visionos-team-radio',
   title: 'Lapz - Team Radio',
   variant: 'shot',
 }

@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'lapz-weather-radar',
   title: 'Lapz - Weather Radar',
   variant: 'shot',
   videos: {

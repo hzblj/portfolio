@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'lapz-watch-f1-in-visionos-map',
   title: 'Lapz - Map',
   variant: 'shot',
   videos: {

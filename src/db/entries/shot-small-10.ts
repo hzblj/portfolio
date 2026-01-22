@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'footshop-pickup-points',
   title: 'Footshop - Pickup Points',
   variant: 'shot',
 }

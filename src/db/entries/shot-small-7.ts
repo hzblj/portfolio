@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'lapz-watch-f1-in-visionos-visionos-ui',
   title: 'Lapz - visionOS UI',
   variant: 'shot',
 }

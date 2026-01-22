@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'footshop-onboarding',
   title: 'Footshop - Onboarding',
   variant: 'shot',
 }

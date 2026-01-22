@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'footshop-native-payments',
   title: 'Footshop - Native Payments',
   variant: 'shot',
 }

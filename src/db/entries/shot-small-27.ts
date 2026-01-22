@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'sportlito-match-feed',
   title: 'Sportlito - Match Feed',
   variant: 'shot',
   videos: {

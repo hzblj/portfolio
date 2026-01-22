@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'volvista-adaptive-design-system',
   title: 'Volvista - Adaptive Design System',
   variant: 'shot',
 }

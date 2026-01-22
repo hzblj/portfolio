@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'meetback-meeting-detail',
   title: 'Meetback - Meeting Detail',
   variant: 'shot',
 }

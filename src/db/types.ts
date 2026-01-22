@@ -27,36 +27,43 @@ export type EntryShot = {
   properties: EntryShotProperties
   variant: Extract<EntryVariant, 'shot'>
   size: EntryShotSize
+  slug: string
 }
 
 export type EntryContact = {
   area: 'contact'
   variant: Extract<EntryVariant, 'contact'>
+  slug: string
 }
 
 export type EntryMap = {
   area: 'map'
   variant: Extract<EntryVariant, 'map'>
+  slug: string
 }
 
 export type EntryCV = {
   area: 'cv'
   variant: Extract<EntryVariant, 'cv'>
+  slug: string
 }
 
 export type EntryProfile = {
   area: 'profile'
   variant: Extract<EntryVariant, 'profile'>
+  slug: string
 }
 
 export type EntryGallery = {
   area: 'gallery'
   variant: Extract<EntryVariant, 'gallery'>
+  slug: string
 }
 
 export type EntryTechnologies = {
   area: 'technologies'
   variant: Extract<EntryVariant, 'technologies'>
+  slug: string
 }
 
 export type Entry = EntryShot | EntryContact | EntryMap | EntryCV | EntryProfile | EntryGallery | EntryTechnologies

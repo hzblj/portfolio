@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'queens-splash-screen',
   title: 'Queens - Splash Screen',
   variant: 'shot',
   videos: {

@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'meetback-feedback-builder',
   title: 'Meetback - Feedback Builder',
   variant: 'shot',
 }

@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'sportlito-live-match-notifications',
   title: 'Sportlito - Live Match Notifications',
   variant: 'shot',
 }

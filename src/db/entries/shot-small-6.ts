@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'lapz-watch-f1-in-visionos-player-settings',
   title: 'Lapz - Player Settings',
   variant: 'shot',
 }

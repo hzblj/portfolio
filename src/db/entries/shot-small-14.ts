@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'dpd-my-pickup-global-payments-integration',
   title: 'DPD - Global Payments Integration',
   variant: 'shot',
 }

@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
+  slug: 'dpd-my-pickup-parcel-handover-flows',
   title: 'DPD - Parcel Handover Flows',
   variant: 'shot',
 }

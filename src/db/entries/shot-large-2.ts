@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'large',
+  slug: 'sportlito-mobile-app',
   title: 'Sportlito - Mobile App',
   variant: 'shot',
   videos: {

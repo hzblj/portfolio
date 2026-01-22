@@ -29,6 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'large',
+  slug: 'lapz-watch-f1-in-visionos-driver-cameras',
   title: 'Lapz - Driver Cameras',
   variant: 'shot',
   videos: {
