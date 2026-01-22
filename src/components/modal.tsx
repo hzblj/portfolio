@@ -1,7 +1,6 @@
 'use client'
 
 import gsap from 'gsap'
-import {LiquidWeb} from 'liquid-web/react'
 import {type FC, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {cn} from '@/utils'
@@ -125,19 +124,9 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
           )}
           onClick={e => e.stopPropagation()}
         >
-          <LiquidWeb
-            options={{
-              aberration: 50,
-              blur: 50,
-              mode: 'standard',
-              saturation: 170,
-              scale: 22,
-            }}
-          >
-            <div className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]">
-              <div className="relative z-20">{children}</div>
-            </div>
-          </LiquidWeb>
+          <div className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]">
+            <div className="relative z-20">{children}</div>
+          </div>
         </div>
       </div>
       <ModalCloseButton ref={closeButtonRef} onClose={startClose} />

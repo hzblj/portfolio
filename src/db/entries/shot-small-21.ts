@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's21',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Stories use an Instagram-style slide format with gesture handling on every slide. Each slide has its own animations for events like goals, cards, and emojis. Timing is managed per slide, with automatic progress to the next one. Title and image animations are part of the flow to keep motion consistent. The whole interaction and animation system is built in Reanimated for smooth performance.',
   image: '/webp/shot-small-21.webp',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Sportlito',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Sport / Media / Entertainment',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://www.linkedin.com/company/sportlito',
+      value: 'sportlito.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2020',
     },
   ],
   size: 'small',
-  title: 'Shot Small 21',
+  title: 'Sportlito - Stories',
   variant: 'shot',
   videos: {
     mp4: '/mp4/shot-small-21.mp4',

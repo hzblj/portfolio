@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's26',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Live matches are shown as Instagram-style stories with real-time updates. Key moments are generated live as the game evolves. The app is built with React Native and Expo, with animations handled using Reanimated.',
   image: '/jpg/shot-small-26.jpg',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Sportlito',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Sport / Media / Entertainment',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://www.linkedin.com/company/sportlito',
+      value: 'sportlito.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2020',
     },
   ],
   size: 'small',
-  title: 'Shot Small 26',
+  title: 'Sportlito - Live Match Stories',
   variant: 'shot',
 }
 

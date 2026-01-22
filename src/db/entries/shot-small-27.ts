@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's27',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'The home screen shows all matches in a single scrollable feed. The list is optimized for fast scrolling and smooth performance. Different card types are supported to display various match states. More content loads automatically at the end of the list. This makes it easy to browse many matches without delays.',
   image: '/webp/shot-small-27.webp',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Sportlito',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Sport / Media / Entertainment',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://www.linkedin.com/company/sportlito',
+      value: 'sportlito.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2020',
     },
   ],
   size: 'small',
-  title: 'Shot Small 27',
+  title: 'Sportlito - Match Feed',
   variant: 'shot',
   videos: {
     mp4: '/mp4/shot-small-27.mp4',

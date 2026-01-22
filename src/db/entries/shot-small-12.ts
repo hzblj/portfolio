@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's12',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'An animated splash screen using Lottie is shown when the app starts. It adapts to light and dark mode based on the system appearance.',
   image: '/webp/shot-small-12.webp',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Queens',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Apparel / Sneakers',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://queens.com',
+      value: 'queens.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2025',
     },
   ],
   size: 'small',
-  title: 'Shot Small 12',
+  title: 'Queens - Splash Screen',
   variant: 'shot',
   videos: {
     mp4: '/webm/shot-small-12.mp4',

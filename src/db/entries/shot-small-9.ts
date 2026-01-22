@@ -3,7 +3,7 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's9',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'An onboarding flow was created for the Footshop mobile app to guide users through their first launch. Content loads with staggered animations to keep the experience smooth and engaging. Video is used to set the brand tone early. The flow collects basic user preferences like gender, notification consent, and account sign-in.',
   image: '/jpg/shot-small-9.jpg',
   properties: [
     {
@@ -11,15 +11,16 @@ const shot: EntryShot = {
       value: 'Footshop',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Fashion / Sneakers',
     },
     {
       name: 'Link',
+      url: 'https://footshop.com',
       value: 'footshop.com',
     },
     {
@@ -28,7 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
-  title: 'Shot Small 9',
+  title: 'Footshop - Onboarding',
   variant: 'shot',
 }
 

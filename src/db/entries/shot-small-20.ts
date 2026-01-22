@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's20',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Each team has its own detail page with upcoming and past matches. The page also allows fans to follow a team to stay up to date. Following a team ensures important matches are not missed.',
   image: '/jpg/shot-small-20.jpg',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Sportlito',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Sport / Media / Entertainment',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://www.linkedin.com/company/sportlito',
+      value: 'sportlito.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2020',
     },
   ],
   size: 'small',
-  title: 'Shot Small 20',
+  title: 'Sportlito - Teams',
   variant: 'shot',
 }
 

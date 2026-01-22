@@ -3,7 +3,7 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's1',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'A trending section was added to the Footshop mobile app to show the top 10 products by category. Users can see what is trending in Shoes, Apparel, and Accessories for specific cities like Prague, Berlin, or Paris. The main idea was to help users find inspiration and discover popular styles in different locations.',
   image: '/jpg/shot-small-1.jpg',
   properties: [
     {
@@ -11,24 +11,25 @@ const shot: EntryShot = {
       value: 'Footshop',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Fashion / Sneakers',
     },
     {
       name: 'Link',
+      url: 'https://footshop.com',
       value: 'footshop.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2025',
     },
   ],
   size: 'small',
-  title: 'Shot Small 1',
+  title: 'Footshop - Trending',
   variant: 'shot',
 }
 

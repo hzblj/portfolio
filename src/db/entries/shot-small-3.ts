@@ -3,7 +3,7 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's3',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Product listing and PDP screens were designed for the Footshop mobile app with a strong focus on performance. FlashList was used to handle long product lists smoothly on both iOS and Android. Layouts adapt dynamically to different product types, campaigns, and screen sizes. Product cards were built as flexible components that can change structure without breaking scroll performance. The result is fast browsing and a consistent shopping experience even with large catalogs.',
   image: '/jpg/shot-small-3.jpg',
   properties: [
     {
@@ -11,15 +11,16 @@ const shot: EntryShot = {
       value: 'Footshop',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Fashion / Sneakers',
     },
     {
       name: 'Link',
+      url: 'https://footshop.com',
       value: 'footshop.com',
     },
     {
@@ -28,7 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
-  title: 'Shot Small 3',
+  title: 'Footshop - Product Listing & Details',
   variant: 'shot',
 }
 

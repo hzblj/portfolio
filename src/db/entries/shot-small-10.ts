@@ -3,7 +3,7 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's10',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'A custom pickup points map was built for the Footshop mobile app to handle large amounts of locations. The map helps users quickly find nearby pickup points during checkout. Clustering was implemented to keep the map readable at all zoom levels. The solution avoids heavy third-party abstractions and keeps full control over performance and UX.',
   image: '/jpg/shot-small-10.jpg',
   properties: [
     {
@@ -11,15 +11,16 @@ const shot: EntryShot = {
       value: 'Footshop',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Fashion / Sneakers',
     },
     {
       name: 'Link',
+      url: 'https://footshop.com',
       value: 'footshop.com',
     },
     {
@@ -28,7 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
-  title: 'Shot Small 10',
+  title: 'Footshop - Pickup Points',
   variant: 'shot',
 }
 

@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's28',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'I built the attendee selection flow to choose exactly who will receive the feedback form. It makes the selection clear and prevents sending feedback to the wrong attendees.',
   image: '/jpg/shot-small-28.jpg',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Meetback',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'React, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Business Analytics / Productivity',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://meetback.io',
+      value: 'meetback.io',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2021',
     },
   ],
   size: 'small',
-  title: 'Shot Small 28',
+  title: 'Meetback - Attendee Selection',
   variant: 'shot',
 }
 

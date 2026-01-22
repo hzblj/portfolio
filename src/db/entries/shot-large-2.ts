@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 'l2',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Sportlito allows every fan to witness the most exciting moments of their favourite players and clubs through visual stories. These are produced live by an algorithm based on fans preferences, updated in real-time and easily sharable with others.',
   image: '/webp/shot-large-2.webp',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Sportlito',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Sport / Media / Entertainment',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://www.linkedin.com/company/sportlito',
+      value: 'sportlito.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2020',
     },
   ],
   size: 'large',
-  title: 'Shot Large 2',
+  title: 'Sportlito - Mobile App',
   variant: 'shot',
   videos: {
     mp4: '/mp4/shot-large-2.mp4',

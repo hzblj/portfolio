@@ -1,12 +1,14 @@
 'use client'
+
 import {gsap} from 'gsap'
 import {CustomEase} from 'gsap/CustomEase'
 import {ScrollSmoother} from 'gsap/ScrollSmoother'
 import {SplitText} from 'gsap/SplitText'
-
 import dynamic from 'next/dynamic'
 import {Fragment, type ReactNode, useMemo} from 'react'
+
 import {useHasHover} from '@/hooks'
+
 import {Viewport} from './components'
 import {Context, createCameraState, useCameraState} from './context'
 import {DragControls, KeyboardControls, ScrollControls, ToucheControls} from './controls'
@@ -40,9 +42,9 @@ const Controls = () => {
 
   return (
     <Fragment>
-      {!isModalOpen && <ScrollControls />}
-      {!isModalOpen && <KeyboardControls />}
-      <ToucheControls friction={0.9} speed={1.2} isModalOpen={isModalOpen} />
+      {hasHover && !isModalOpen && <ScrollControls />}
+      {hasHover && !isModalOpen && <KeyboardControls />}
+      {!hasHover && !isModalOpen && <ToucheControls friction={0.9} speed={1.2} />}
       {hasHover && !isModalOpen && <DragControls />}
     </Fragment>
   )

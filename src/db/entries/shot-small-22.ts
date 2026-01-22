@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's22',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Meetback was a simple platform for collecting and analyzing feedback from meetings, aiming to enhance their efficiency and effectiveness. Users could request feedback on various aspects such as efficiency, duration, and usefulness, or send anonymous feedback on meetings they had attended.',
   image: '/webp/shot-small-22.webp',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Meetback',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'React, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Business Analytics / Productivity',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://meetback.io',
+      value: 'meetback.io',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2021',
     },
   ],
   size: 'small',
-  title: 'Shot Small 22',
+  title: 'Meetback - Product',
   variant: 'shot',
   videos: {
     mp4: '/mp4/shot-small-22.mp4',

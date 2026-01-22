@@ -3,7 +3,7 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's2',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Native payments were added to the Footshop mobile app using Adyen as the payment provider. The goal was to make checkout faster and reduce friction on mobile. Apple Pay and Google Pay were integrated to support platform-native payment flows',
   image: '/jpg/shot-small-2.jpg',
   properties: [
     {
@@ -11,15 +11,16 @@ const shot: EntryShot = {
       value: 'Footshop',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Fashion / Sneakers',
     },
     {
       name: 'Link',
+      url: 'https://footshop.com',
       value: 'footshop.com',
     },
     {
@@ -28,7 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'small',
-  title: 'Shot Small 2',
+  title: 'Footshop - Native Payments',
   variant: 'shot',
 }
 

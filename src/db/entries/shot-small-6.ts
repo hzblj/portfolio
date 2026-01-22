@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's6',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Player settings went through many iterations because it had to control several parts of the experience in one place. It handles opening and closing driver cams, stream options like audio and channel selection, and 3D map settings for cars, DRS zones, and corner numbers. A ornament and sheet with nested navigation was chosen to group related options and keep the main player clean.',
   image: '/jpg/shot-small-6.jpg',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Lapz - Watch F1 in visionOS',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Swift, visionOS, RealityKit',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'AR / Motorsports',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://lapz.io',
+      value: 'lapz.io',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2024',
     },
   ],
   size: 'small',
-  title: 'Shot Small 6',
+  title: 'Lapz - Player Settings',
   variant: 'shot',
 }
 

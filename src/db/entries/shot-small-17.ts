@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's17',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Queens uses its own API and its own theme, separate from Footshop. Theme colors are defined per app and applied across the UI. Each screen can be customized based on the app needs. The current architecture gives full freedom to adjust visuals and behavior per brand.',
   image: '/jpg/shot-small-17.jpg',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Queens',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Apparel / Sneakers',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://queens.com',
+      value: 'queens.com',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2025',
     },
   ],
   size: 'small',
-  title: 'Shot Small 17',
+  title: 'Queens - Brand Customization',
   variant: 'shot',
 }
 

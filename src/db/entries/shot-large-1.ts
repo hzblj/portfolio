@@ -3,7 +3,7 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 'l1',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Joined Footshop to lead the development of a new mobile app for iOS and Android. The work started as a small MVP focused on core e-commerce flows. Over time, it evolved into a strategic product used as a main mobile channel. The goal was to move fast, validate ideas early, and still keep the codebase ready for long-term growth. Expo and React Native were chosen to ship quickly on both platforms while keeping performance and developer velocity high.',
   image: '/jpg/shot-large-1.jpg',
   properties: [
     {
@@ -11,17 +11,17 @@ const shot: EntryShot = {
       value: 'Footshop',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Expo, React Native, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'E-commerce / Fashion / Sneakers',
     },
     {
       name: 'Link',
-      url: 'https://footshop.cz',
-      value: 'footshop.cz',
+      url: 'https://footshop.com',
+      value: 'footshop.com',
     },
     {
       name: 'Year',
@@ -29,7 +29,7 @@ const shot: EntryShot = {
     },
   ],
   size: 'large',
-  title: 'Shot Large 1',
+  title: 'Footshop - Mobile App',
   variant: 'shot',
 }
 

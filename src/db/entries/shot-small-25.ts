@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 's25',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'I built the meeting detail dashboard to present meeting feedback in a clear way. Charts show overall results and the NPS score, so users can quickly understand how the meeting was rated. Each feedback message allows direct actions, like sending a reply or adding a reaction.',
   image: '/jpg/shot-small-25.jpg',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Meetback',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'React, TypeScript',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'Business Analytics / Productivity',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://meetback.io',
+      value: 'meetback.io',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2021',
     },
   ],
   size: 'small',
-  title: 'Shot Small 25',
+  title: 'Meetback - Meeting Detail',
   variant: 'shot',
 }
 

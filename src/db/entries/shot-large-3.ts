@@ -3,32 +3,33 @@ import type {EntryShot} from '../types'
 const shot: EntryShot = {
   area: 'l3',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fringilla, libero ut sodales tempus, justo turpis malesuada mauris, a elementum turpis erat in.',
+    'Driver cameras are attached to each car in the 3D map and are opened by tapping the driver badge. After opening, a live onboard stream is shown directly in the spatial scene. The camera follows the selected driver and stays anchored to the car position. Along with the video, key stats are shown, including tire type, speed, current gear, and interval to other drivers.',
   image: '/webp/shot-large-3.webp',
   properties: [
     {
       name: 'Product',
-      value: 'Footshop',
+      value: 'Lapz - Watch F1 in visionOS',
     },
     {
-      name: 'Project',
-      value: 'Responsive Screens',
+      name: 'Technology',
+      value: 'Swift, visionOS, RealityKit',
     },
     {
       name: 'Industry',
-      value: 'DeFi / Web3 / Fintech',
+      value: 'AR / Motorsports',
     },
     {
       name: 'Link',
-      value: 'footshop.com',
+      url: 'https://lapz.io',
+      value: 'lapz.io',
     },
     {
       name: 'Year',
-      value: '2023',
+      value: '2024',
     },
   ],
   size: 'large',
-  title: 'Shot Large 3',
+  title: 'Lapz - Driver Cameras',
   variant: 'shot',
   videos: {
     mp4: '/mp4/shot-large-3.mp4',

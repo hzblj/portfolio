@@ -26,6 +26,8 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
       return
     }
 
+    gsap.killTweensOf(refTitle.current)
+
     gsap.to(refTitle.current, {
       duration: 0.5,
       ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -79,7 +81,7 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   return (
     <Fragment>
       <div
-        className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden bg-card-surface rounded-2xl border border-solid border-white/15 transform-3d"
+        className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden bg-card-surface rounded-2xl border border-solid border-white/15 transform-3d bg-black"
         style={{gridArea: area}}
       >
         <div
