@@ -82,3 +82,7 @@ export const entries: Entries = [
 
 export * from './cv'
 export * from './types'
+
+export const getEntryBySlug = (slug: string) => {
+  return entries.find(e => e.slug === slug)
+}
