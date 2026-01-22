@@ -1,0 +1,40 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jan Blazej",
+  "jobTitle": "Lead Mobile Developer & Founder",
+  "url": "https://janblazej.dev",
+  "email": "hello@janblazej.dev",
+  "image": "https://janblazej.dev/png/profile@3x.png",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Prague",
+    "addressCountry": "CZ"
+  },
+  "alumniOf": {
+    "@type": "Organization",
+    "name": "Prague University of Economics and Business"
+  },
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Footshop",
+    "url": "https://footshop.com"
+  },
+  "knowsAbout": [
+    "React Native",
+    "Expo",
+    "TypeScript",
+    "iOS Development",
+    "Android Development",
+    "Mobile App Development",
+    "Swift",
+    "visionOS",
+    "RealityKit"
+  ],
+  "sameAs": [
+    "https://www.linkedin.com/in/hzblj",
+    "https://github.com/hzblj",
+    "https://www.instagram.com/hzblj"
+  ]
+}
+
