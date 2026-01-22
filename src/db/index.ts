@@ -37,7 +37,7 @@ import small28 from './entries/shot-small-28'
 import small29 from './entries/shot-small-29'
 import technologies from './entries/technologies'
 
-import {Entries} from './types'
+import type {Entries} from './types'
 
 export const entries: Entries = [
   contact,

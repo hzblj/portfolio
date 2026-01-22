@@ -35,10 +35,12 @@ files.forEach(f => {
 })
 
 const content = `${imports}
+
 import type {Entries} from './types'
 
-export const entries: Entries[] = [
-${arrayItems}]
+export const entries: Entries = [
+${arrayItems}
+]
 
 export * from './cv'
 export * from './types'
