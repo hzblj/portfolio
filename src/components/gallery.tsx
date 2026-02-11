@@ -1,7 +1,8 @@
 'use client'
 
+import {gsap} from 'gsap'
 import Image from 'next/image'
-import {type FC, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import {createRef, type FC, forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 
 import {cn} from '@/utils'
@@ -23,13 +24,14 @@ type GalleryItemProps = {
   columns: number
 }
 
-const GalleryItem: FC<GalleryItemProps> = ({index, columnIndex, rowIndex, columns}) => {
+const GalleryItem = forwardRef<HTMLDivElement, GalleryItemProps>(({index, columnIndex, rowIndex, columns}, ref) => {
   const invertedColumnIndex = columns - 1 - columnIndex
 
   return (
     <div
+      ref={ref}
       className={cn(
-        'w-full max-w-[356px] h-auto aspect-[356/630] pointer-events-auto',
+        'w-full max-w-[356px] h-auto aspect-[356/630] pointer-events-auto opacity-0 will-change-[opacity,transform] transform-gpu',
         rowIndex === 0 && `mt-[${indexShifter[columnIndex]}px]`,
         rowIndex > 0 && `mt-[-${indexShifter[invertedColumnIndex]}px]`
       )}
@@ -46,7 +48,7 @@ const GalleryItem: FC<GalleryItemProps> = ({index, columnIndex, rowIndex, column
       />
     </div>
   )
-}
+})
 
 export type GalleryProps = {
   isOpen: boolean
@@ -58,18 +60,40 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useMemo(() => DATA.map(() => createRef<HTMLDivElement>()), [])
 
   const [mounted, setMounted] = useState(isOpen)
   const [columns, setColumns] = useState(3)
 
   const startClose = useCallback(() => {
-    if (!cardRef.current || !backdropRef.current) {
+    if (!cardRef.current || !backdropRef.current || !closeButtonRef.current) {
       return
     }
 
-    setMounted(false)
-    onClose()
-  }, [onClose])
+    const items = itemRefs.map(ref => ref.current).filter(Boolean) as HTMLDivElement[]
+
+    gsap.to(items, {
+      duration: 0.4,
+      ease: 'power3.in',
+      onComplete: () => {
+        setMounted(false)
+        onClose()
+      },
+      opacity: 0,
+      scale: 0.95,
+      stagger: {
+        amount: 0.3,
+        from: 'end',
+      },
+      y: 40,
+    })
+
+    gsap.to(backdropRef.current, {
+      duration: 0.7 * (DATA.length - 1),
+      ease: 'power2.inOut',
+      opacity: 0,
+    })
+  }, [onClose, itemRefs])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -96,7 +120,55 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
     if (!cardRef.current || !backdropRef.current || !closeButtonRef.current) {
       return
     }
-  }, [mounted])
+
+    const items = itemRefs.map(ref => ref.current).filter(Boolean) as HTMLDivElement[]
+
+    if (items.length === 0) {
+      return
+    }
+
+    gsap.set(backdropRef.current, {
+      opacity: 0,
+    })
+
+    gsap.to(backdropRef.current, {
+      duration: 0.4,
+      ease: 'power2.inOut',
+      opacity: 1,
+    })
+
+    gsap.set(closeButtonRef.current, {
+      opacity: 0,
+      scale: 0.8,
+    })
+
+    gsap.to(closeButtonRef.current, {
+      delay: 0.2,
+      duration: 0.4,
+      ease: 'power3.out',
+      opacity: 1,
+      scale: 1,
+    })
+
+    gsap.set(items, {
+      opacity: 0,
+      scale: 0.95,
+      y: 40,
+    })
+
+    gsap.to(items, {
+      delay: 0.1,
+      duration: 0.6,
+      ease: 'power3.out',
+      opacity: 1,
+      scale: 1,
+      stagger: {
+        amount: 0.4,
+        from: 'start',
+      },
+      y: 0,
+    })
+  }, [mounted, itemRefs])
 
   useEffect(() => {
     if (!mounted) {
@@ -134,7 +206,7 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-40 w-screen h-screen overflow-auto block">
-      <div ref={backdropRef} className="fixed inset-0 bg-black/80 will-change-[opacity]" />
+      <div ref={backdropRef} className="fixed inset-0 bg-black/50 will-change-[opacity]" />
       <div className="flex w-full min-h-full mx-auto py-10 relative justify-center" onClick={startClose}>
         <div
           ref={cardRef}
@@ -146,6 +218,7 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
               {DATA.map((_, index) => (
                 <GalleryItem
                   key={index.toString()}
+                  ref={itemRefs[index]}
                   columnIndex={index % columns}
                   rowIndex={Math.floor(index / columns)}
                   columns={columns}
