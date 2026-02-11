@@ -1,7 +1,7 @@
 'use client'
 
 import {gsap} from 'gsap'
-import {FC, Fragment, useCallback, useRef, useState} from 'react'
+import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryCV} from '@/db'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
@@ -16,7 +16,11 @@ export const CardCV: FC<EntryCV> = ({area}) => {
   const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleEnter = useCallback(() => {
+  const handleEnter = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     if (!ref.current) {
       return
     }
@@ -37,7 +41,11 @@ export const CardCV: FC<EntryCV> = ({area}) => {
     tlRef.current = tl
   }, [])
 
-  const handleLeave = useCallback(() => {
+  const handleLeave = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     if (!ref.current) {
       return
     }
@@ -70,9 +78,9 @@ export const CardCV: FC<EntryCV> = ({area}) => {
       >
         <div
           className="flex flex-col w-full grow overflow-hidden h-full relative cursor-pointer"
-          onMouseEnter={handleEnter}
-          onMouseOver={handleEnter}
-          onMouseLeave={handleLeave}
+          onPointerEnter={handleEnter}
+          onPointerOver={handleEnter}
+          onPointerLeave={handleLeave}
           onClick={handleOnOpen}
         >
           <div

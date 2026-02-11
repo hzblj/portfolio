@@ -2,7 +2,7 @@
 
 import {gsap} from 'gsap'
 import Image from 'next/image'
-import {FC, Fragment, useCallback, useRef, useState} from 'react'
+import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
 import {useHasHover} from '@/hooks'
@@ -21,7 +21,11 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleEnter = useCallback(() => {
+  const handleEnter = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     if (!refTitle.current) {
       return
     }
@@ -45,7 +49,11 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
     }
   }, [])
 
-  const handleLeave = useCallback(() => {
+  const handleLeave = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     if (!refTitle.current) {
       return
     }
@@ -86,9 +94,10 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
       >
         <div
           onClick={handleOnOpen}
-          onMouseEnter={handleEnter}
-          onMouseLeave={handleLeave}
-          onMouseOver={handleEnter}
+          onPointerEnter={handleEnter}
+          onPointerLeave={handleLeave}
+          onPointerOver={handleEnter}
+          role="button"
           className="flex flex-col w-full grow overflow-hidden relative items-center justify-center cursor-pointer"
         >
           <div className="w-full h-full flex justify-center items-center relative overflow-hidden">

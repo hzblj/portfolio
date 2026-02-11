@@ -1,6 +1,6 @@
 'use client'
 
-import {FC, useCallback, useRef} from 'react'
+import {FC, PointerEvent, useCallback, useRef} from 'react'
 
 export type HoverVideoProps = {
   srcMp4: string
@@ -21,7 +21,11 @@ export const HoverVideo: FC<HoverVideoProps> = ({
 }) => {
   const ref = useRef<HTMLVideoElement | null>(null)
 
-  const play = useCallback(async () => {
+  const play = useCallback(async (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     const el = ref.current
 
     if (!el) {
@@ -43,7 +47,11 @@ export const HoverVideo: FC<HoverVideoProps> = ({
     }
   }, [])
 
-  const pause = useCallback(() => {
+  const pause = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     const el = ref.current
 
     if (!el) {
@@ -62,29 +70,12 @@ export const HoverVideo: FC<HoverVideoProps> = ({
     }
   }, [])
 
-  const toggle = useCallback(() => {
-    const el = ref.current
-
-    if (!el) {
-      return
-    }
-
-    if (el.paused) {
-      void play()
-    } else {
-      pause()
-    }
-  }, [play, pause])
-
   return (
     <div
       className="relative overflow-hidden rounded-2xl w-full h-full"
-      onMouseEnter={play}
-      onMouseOver={play}
-      onMouseLeave={pause}
-      onFocus={play}
-      onBlur={pause}
-      onTouchStart={toggle}
+      onPointerEnter={play}
+      onPointerOver={play}
+      onPointerLeave={pause}
       role="button"
     >
       <video

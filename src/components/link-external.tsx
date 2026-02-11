@@ -1,7 +1,7 @@
 'use client'
 
 import gsap from 'gsap'
-import {type FC, type ReactNode, useCallback, useRef} from 'react'
+import {type FC, PointerEvent, type ReactNode, useCallback, useRef} from 'react'
 
 export type LinkExternalProps = {
   url: string
@@ -11,7 +11,11 @@ export type LinkExternalProps = {
 export const LinkExternal: FC<LinkExternalProps> = ({url, children}) => {
   const lineRef = useRef<HTMLDivElement>(null)
 
-  const handleEnter = useCallback(() => {
+  const handleEnter = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     gsap.killTweensOf(lineRef.current)
     gsap.to(lineRef.current, {
       delay: 0.15,
@@ -21,7 +25,11 @@ export const LinkExternal: FC<LinkExternalProps> = ({url, children}) => {
     })
   }, [])
 
-  const handleLeave = useCallback(() => {
+  const handleLeave = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     gsap.killTweensOf(lineRef.current)
     gsap.to(lineRef.current, {
       duration: 0.2,
@@ -35,9 +43,9 @@ export const LinkExternal: FC<LinkExternalProps> = ({url, children}) => {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      onMouseEnter={handleEnter}
-      onMouseOver={handleEnter}
-      onMouseLeave={handleLeave}
+      onPointerEnter={handleEnter}
+      onPointerOver={handleEnter}
+      onPointerLeave={handleLeave}
       className="inline-block relative"
     >
       {children}

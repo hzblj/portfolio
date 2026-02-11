@@ -2,7 +2,7 @@
 
 import {gsap} from 'gsap'
 import Image from 'next/image'
-import {FC, useCallback, useRef} from 'react'
+import {FC, PointerEvent, useCallback, useRef} from 'react'
 
 import {cn} from '@/utils/cn'
 
@@ -29,7 +29,11 @@ const variantClasses: Record<TechnologyVariant, string> = {
 export const CardTechnologiesTechnology: FC<TechnologyProps> = ({title, image, variant, url}) => {
   const ref = useRef<HTMLImageElement>(null)
 
-  const handleEnter = useCallback(() => {
+  const handleEnter = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     if (!ref.current) {
       return
     }
@@ -41,7 +45,11 @@ export const CardTechnologiesTechnology: FC<TechnologyProps> = ({title, image, v
     })
   }, [])
 
-  const handleLeave = useCallback(() => {
+  const handleLeave = useCallback((e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') {
+      return
+    }
+
     if (!ref.current) {
       return
     }
@@ -55,7 +63,7 @@ export const CardTechnologiesTechnology: FC<TechnologyProps> = ({title, image, v
 
   return (
     <a href={url} target="_blank">
-      <div className="flex flex-col items-center" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+      <div className="flex flex-col items-center" onPointerEnter={handleEnter} onPointerLeave={handleLeave}>
         <div className="w-[96px] h-[84px] relative mb-3">
           <Image
             ref={ref}
