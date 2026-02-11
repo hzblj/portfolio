@@ -2,7 +2,7 @@
 
 import gsap from 'gsap'
 import Image from 'next/image'
-import {createRef, FC, forwardRef, useCallback, useMemo, useRef} from 'react'
+import {createRef, FC, forwardRef, type PointerEvent, useCallback, useMemo, useRef} from 'react'
 
 const items: string[] = [
   'https://picsum.photos/200/300',
@@ -27,15 +27,21 @@ type CardGalleryStripeItemProps = {
 
 const CardGalleryStripeItem = forwardRef<HTMLDivElement, CardGalleryStripeItemProps>(
   ({url, expand, index, onLoad}, ref) => {
-    const onHover = useCallback(() => expand(index), [expand, index])
+    const onHover = useCallback(
+      (e: PointerEvent) => {
+        if (e.pointerType === 'mouse') {
+          expand(index)
+        }
+      },
+      [expand, index]
+    )
 
     return (
       <div
         ref={ref}
         className="group relative flex-[1_1_0%] min-w-0 cursor-pointer"
-        onMouseEnter={onHover}
-        onMouseOver={onHover}
-        onFocus={onHover}
+        onPointerEnter={onHover}
+        onPointerOver={onHover}
         onLoad={onLoad}
         role="button"
       >
@@ -98,13 +104,21 @@ export const CardGalleryStrip: FC = () => {
     [panelRefs]
   )
 
+  const onLeave = useCallback(
+    (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') {
+        reset()
+      }
+    },
+    [reset]
+  )
+
   return (
     <div
       ref={containerRef}
       className="relative overflow-hidden flex grow w-full h-full"
       style={{clipPath: 'inset(1px round 16px)'}}
-      onMouseLeave={reset}
-      onFocus={reset}
+      onPointerLeave={onLeave}
     >
       <div className="absolute inset-0 flex">
         {items.map((item, index) => (
