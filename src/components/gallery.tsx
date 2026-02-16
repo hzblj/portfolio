@@ -5,6 +5,8 @@ import Image from 'next/image'
 import {createRef, type FC, forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 
+import {toPx} from '@/utils'
+
 import {ModalCloseButton} from './modal-close-button'
 
 const indexShifter: Record<number, number> = {
@@ -33,7 +35,7 @@ const GalleryItem = forwardRef<HTMLDivElement, GalleryItemProps>(({index, column
     <div
       ref={ref}
       className="w-full max-w-[356px] h-auto aspect-[356/630] pointer-events-auto opacity-0 will-change-[opacity,transform] transform-gpu"
-      style={{marginTop: `${marginTop}px`}}
+      style={{marginTop: toPx(marginTop)}}
     >
       <Image
         src={`https://picsum.photos/id/${index}/630/630`}
