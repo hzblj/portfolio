@@ -47,6 +47,7 @@ const CardGalleryStripeItem = forwardRef<HTMLDivElement, CardGalleryStripeItemPr
       >
         <Image
           src={url}
+          loading="lazy"
           alt={`gallery image ${index + 1}`}
           width={276.93}
           height={445}

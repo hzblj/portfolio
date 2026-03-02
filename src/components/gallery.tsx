@@ -39,8 +39,8 @@ const GalleryItem = forwardRef<HTMLDivElement, GalleryItemProps>(({index, column
     >
       <Image
         src={DATA[index]}
+        loading="lazy"
         alt={`Gallery image ${index + 1}`}
-        priority
         width={356}
         height={630}
         className="h-full w-full object-cover"

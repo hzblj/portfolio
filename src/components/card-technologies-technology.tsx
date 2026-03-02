@@ -68,7 +68,7 @@ export const CardTechnologiesTechnology: FC<TechnologyProps> = ({title, image, v
           <Image
             ref={ref}
             src={image}
-            priority
+            preload
             alt={title}
             fill
             sizes="84px"

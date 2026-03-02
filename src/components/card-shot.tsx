@@ -102,10 +102,11 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
         >
           <div className="w-full h-full flex justify-center items-center relative overflow-hidden">
             <Image
-              priority
               src={image}
               alt={title}
               fill
+              loading="eager"
+              fetchPriority="high"
               sizes={size === 'small' ? '289px' : '594px'}
               style={{objectFit: 'cover'}}
             />

@@ -53,9 +53,8 @@ export const CardMapCartogram: FC<CardMapCartogramProps> = ({children}) => {
           ref={ref}
           className="absolute inset-[1px] will-change-transform [transform-style:preserve-3d] cursor-pointer transform-gpu"
         >
-          <a href={Config.location.mapUrl} target="_blank" className="rounded-2xl">
+          <a href={Config.location.mapUrl} target="_blank" className="rounded-2xl relative w-full h-full flex flex-1">
             <Image
-              priority
               src="/svg/map.svg"
               alt="map"
               fill
