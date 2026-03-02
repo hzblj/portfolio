@@ -20,8 +20,14 @@ export const metadata: Metadata = {
   description:
     'Experienced Lead Mobile Developer specializing in React Native, Expo, and TypeScript. Building high-performance mobile applications for iOS and Android. Based in Prague, Czechia.',
   icons: {
-    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+    icon: [
+      {sizes: '32x32', type: 'image/png', url: '/favicon-32x32.png'},
+      {sizes: '16x16', type: 'image/png', url: '/favicon-16x16.png'},
+    ],
+    shortcut: '/favicon.ico',
   },
+  manifest: '/site.webmanifest',
   keywords: [
     'Jan Blazej',
     'Lead Mobile Developer',
