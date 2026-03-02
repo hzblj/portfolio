@@ -52,9 +52,9 @@ export const metadata: Metadata = {
     images: [
       {
         alt: 'Jan Blazej - Lead Mobile Developer',
-        height: 192,
-        url: '/png/profile@3x.png',
-        width: 192,
+        height: 630,
+        url: '/png/og-image.png',
+        width: 1200,
       },
     ],
     locale: 'en_US',
@@ -80,11 +80,10 @@ export const metadata: Metadata = {
     template: '%s | Jan Blazej',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     description:
       'Experienced Lead Mobile Developer specializing in React Native, Expo, and TypeScript. Building high-performance mobile applications.',
-    // TODO - Better twitter image
-    images: ['/png/profile@3x.png'],
+    images: ['/png/og-image.png'],
     title: 'Jan Blazej - Lead Mobile Developer & Founder',
   },
 }
