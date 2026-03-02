@@ -396,6 +396,17 @@ export const CV: FC<CVProps> = ({children, animated = false}) => {
 
         <SectionLanguagesAndLocations />
 
+        <div data-cv-section="true" className="flex justify-center">
+          <LinkExternal url="/pdf/cv.pdf">
+            <span
+              data-cv-reveal="true"
+              className="text-[14px] font-normal tracking-[0px] bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]"
+            >
+              Download CV in PDF
+            </span>
+          </LinkExternal>
+        </div>
+
         {children && children}
       </div>
     </div>
