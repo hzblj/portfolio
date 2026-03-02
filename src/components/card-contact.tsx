@@ -21,7 +21,7 @@ const ContactLink = ({type, url}: Contact) => (
 
 export const CardContact: FC<EntryContact> = ({area}) => (
   <div
-    className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card"
+    className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card z-10"
     style={{gridArea: area, transformStyle: 'preserve-3d'}}
   >
     <div className="flex flex-col w-full grow overflow-hidden h-full items-center justify-center relative">
