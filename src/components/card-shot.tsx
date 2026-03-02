@@ -6,6 +6,7 @@ import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
 import {useHasHover} from '@/hooks'
+import {trackProjectView} from '@/lib'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardShotHover} from './card-shot-hover'
@@ -84,7 +85,8 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   const handleOnOpen = useCallback(() => {
     setIsModalOpen(true)
     actionToggleModal(dispatch, true)
-  }, [dispatch])
+    trackProjectView(title)
+  }, [dispatch, title])
 
   return (
     <Fragment>

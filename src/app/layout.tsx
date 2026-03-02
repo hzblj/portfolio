@@ -5,6 +5,8 @@ import './app.css'
 import type {Metadata} from 'next'
 import {type ReactNode} from 'react'
 
+import {GoogleAnalytics, WebVitals} from '@/components'
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -27,7 +29,6 @@ export const metadata: Metadata = {
     ],
     shortcut: '/favicon.ico',
   },
-  manifest: '/site.webmanifest',
   keywords: [
     'Jan Blazej',
     'Lead Mobile Developer',
@@ -43,6 +44,7 @@ export const metadata: Metadata = {
     'Swift',
     'RealityKit',
   ],
+  manifest: '/site.webmanifest',
   metadataBase: new URL('https://janblazej.dev'),
   openGraph: {
     description:
@@ -129,7 +131,11 @@ export default function RootLayout({children}: Props) {
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <GoogleAnalytics />
+        <WebVitals />
+      </body>
     </html>
   )
 }
