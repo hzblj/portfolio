@@ -9,6 +9,6 @@
 - No circular dependencies.
 - Keep structure flat and predictable.
 - Allowed internal subfolders:
-  - `components`
-  - `hooks`
-  - `consts`
+    - `components`
+    - `hooks`
+    - `consts`
