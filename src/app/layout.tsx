@@ -2,7 +2,7 @@ import {Inter} from 'next/font/google'
 
 import './app.css'
 
-import type {Metadata} from 'next'
+import type {Metadata, Viewport} from 'next'
 import {type ReactNode} from 'react'
 
 import {GoogleAnalytics, WebVitals} from '@/components'
@@ -13,9 +13,17 @@ const inter = Inter({
   weight: ['400', '500', '700'],
 })
 
+export const viewport: Viewport = {
+  themeColor: '#000000',
+  viewportFit: 'cover',
+}
+
 export const metadata: Metadata = {
   alternates: {
     canonical: '/',
+  },
+  appleWebApp: {
+    statusBarStyle: 'black-translucent',
   },
   authors: [{name: 'Jan Blazej', url: 'https://janblazej.dev'}],
   creator: 'Jan Blazej',
