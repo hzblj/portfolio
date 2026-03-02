@@ -15,7 +15,7 @@ const indexShifter: Record<number, number> = {
   2: 630,
 }
 
-const DATA = ['1', '2', '4', '5', '6', '1', '2', '4', '5']
+const DATA = Array.from({length: 12}, (_, i) => `/png/gallery-${i + 1}.png`)
 
 type GalleryItemProps = {
   columnIndex: number
@@ -38,8 +38,8 @@ const GalleryItem = forwardRef<HTMLDivElement, GalleryItemProps>(({index, column
       style={{marginTop: toPx(marginTop)}}
     >
       <Image
-        src={`https://picsum.photos/id/${index}/630/630`}
-        alt="image"
+        src={DATA[index]}
+        alt={`Gallery image ${index + 1}`}
         priority
         width={356}
         height={630}

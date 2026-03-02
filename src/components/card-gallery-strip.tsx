@@ -5,12 +5,12 @@ import Image from 'next/image'
 import {createRef, FC, forwardRef, type PointerEvent, useCallback, useMemo, useRef} from 'react'
 
 const items: string[] = [
-  'https://picsum.photos/200/300',
-  'https://picsum.photos/id/237/200/300',
-  'https://picsum.photos/id/23/200/300',
-  'https://picsum.photos/id/27/200/300',
-  'https://picsum.photos/id/29/200/300',
-  'https://picsum.photos/id/297/200/300',
+  '/png/gallery-1.png',
+  '/png/gallery-2.png',
+  '/png/gallery-3.png',
+  '/png/gallery-4.png',
+  '/png/gallery-5.png',
+  '/png/gallery-6.png',
 ]
 
 const UN_HOVERED_OPACITY = 0.5
@@ -47,8 +47,7 @@ const CardGalleryStripeItem = forwardRef<HTMLDivElement, CardGalleryStripeItemPr
       >
         <Image
           src={url}
-          alt="image"
-          priority
+          alt={`gallery image ${index + 1}`}
           width={276.93}
           height={445}
           className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-auto object-cover will-change-[flex-grow,opacity]"
