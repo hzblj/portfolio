@@ -3,9 +3,11 @@
 import classNames from 'classnames'
 import gsap from 'gsap'
 import {FC, ReactNode, useLayoutEffect, useRef} from 'react'
-import {LinkExternal} from '@/components/link-external'
-import {CVSection, CVSectionLink, CVSectionProject, cv} from '@/db'
+
+import {CVPosition, CVSection, CVSectionLink, CVSectionProject, cv} from '@/db'
 import {cn} from '@/utils'
+
+import {LinkExternal} from './link-external'
 
 const SectionLeft: FC<{year: string}> = ({year}) => (
   <div className="w-[88px] h-[17px] flex-shrink-0">
@@ -38,20 +40,45 @@ const variant: Record<'active' | 'inactive', string> = {
   inactive: 'text-white/60',
 }
 
+const PositionLabel: FC<CVPosition & {className?: string}> = ({title, company, url, className}) => {
+  const label = company ? `${title} at ` : title
+
+  if (company && url) {
+    return (
+      <span className={className}>
+        {label}
+        <LinkExternal url={url} variant="muted">
+          <span className={className}>{company}</span>
+        </LinkExternal>
+      </span>
+    )
+  }
+
+  if (company) {
+    return (
+      <span className={className}>
+        {label}
+        {company}
+      </span>
+    )
+  }
+
+  return <span className={className}>{title}</span>
+}
+
 const SectionPositions: FC<Pick<CVSection, 'positions'>> = props => (
   <div className="flex flex-col flex-shrink-0 h-full gap-[10px] relative">
     <Segments positions={props.positions} />
     {props.positions.map((position, index) => (
-      <span
-        key={index.toString()}
-        data-cv-reveal="true"
-        className={cn(
-          'block font-normal text-[14px] leading-[100%] tracking-[0px] h-[17px]',
-          variant[index === 0 ? 'active' : 'inactive']
-        )}
-      >
-        {position}
-      </span>
+      <div key={index.toString()} data-cv-reveal="true" className="h-[17px]">
+        <PositionLabel
+          {...position}
+          className={cn(
+            'font-normal text-[14px] leading-[100%] tracking-[0px]',
+            variant[index === 0 ? 'active' : 'inactive']
+          )}
+        />
+      </div>
     ))}
   </div>
 )

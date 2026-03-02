@@ -90,9 +90,15 @@ export type CVSectionLink = {
   url: string
 }
 
+export type CVPosition = {
+  company?: string
+  title: string
+  url?: string
+}
+
 export type CVSection = {
   year: string
-  positions: string[]
+  positions: CVPosition[]
   location: string | null
   technologies: string[]
   paragraphs: string[]

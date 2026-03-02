@@ -20,7 +20,7 @@ const shot: EntryShot = {
     },
     {
       name: 'Link',
-      url: 'https://meetback.io',
+      url: 'https://meetback.webflow.io',
       value: 'meetback.io',
     },
     {
