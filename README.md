@@ -1,3 +1,5 @@
+![Portfolio](public/png/project.png)
+
 # Portfolio
 
 Personal portfolio site with a 2D camera navigation system — the entire home page is a pannable, zoomable canvas of cards instead of a traditional scrolling page.
