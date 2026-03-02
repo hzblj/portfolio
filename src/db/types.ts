@@ -30,8 +30,15 @@ export type EntryShot = {
   slug: string
 }
 
+export type Contact = {
+  type: string
+  url: string
+  name?: string
+}
+
 export type EntryContact = {
   area: 'contact'
+  contacts: Contact[]
   variant: Extract<EntryVariant, 'contact'>
   slug: string
 }
@@ -99,4 +106,5 @@ export type CV = {
   workExperience: CVSections
   sideProjects: CVSections
   education: CVSections
+  connect: Contact[]
 }

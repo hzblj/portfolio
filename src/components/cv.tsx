@@ -3,7 +3,7 @@
 import classNames from 'classnames'
 import gsap from 'gsap'
 import {FC, ReactNode, useLayoutEffect, useRef} from 'react'
-
+import {LinkExternal} from '@/components/link-external'
 import {CVSection, CVSectionLink, CVSectionProject, cv} from '@/db'
 import {cn} from '@/utils'
 
@@ -223,6 +223,59 @@ const Section = ({year, ...props}: CVSection) => (
   </div>
 )
 
+const SectionItem: FC<{name?: string; url?: string; type: string}> = ({name, url, type}) => {
+  return (
+    <div className="flex items-center">
+      <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/40 w-[70.37px] mr-[35.98px]">
+        {type}
+      </span>
+      {url ? (
+        <LinkExternal url={url}>
+          <span className="text-[14px] font-normal tracking-[0px] bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]">
+            {name}
+          </span>
+        </LinkExternal>
+      ) : (
+        <span className="text-[14px] font-normal tracking-[0px] bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]">
+          {name}
+        </span>
+      )}
+    </div>
+  )
+}
+
+const SectionConnect: FC = () => (
+  <div className="flex flex-col gap-[19.19px]">
+    {cv.connect.map(connect => (
+      <SectionItem key={connect.type} {...connect} />
+    ))}
+  </div>
+)
+
+const SectionLanguagesAndLocations: FC = () => (
+  <div className="flex flex-row gap-[51px] flex-wrap">
+    <div className="flex flex-col gap-[56px]">
+      <div className="h-[17px]">
+        <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Languages</h1>
+      </div>
+      <div className="flex flex-col gap-[19.19px]">
+        <SectionItem type="Native" name="Czech" />
+        <SectionItem type="B2" name="English" />
+      </div>
+    </div>
+    <div className="flex flex-1" />
+    <div className="flex flex-col gap-[56px]">
+      <div className="h-[17px]">
+        <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Locations</h1>
+      </div>
+      <div className="flex flex-col gap-[19.19px]">
+        <SectionItem type="Based in" name="Prague, Czechia" />
+        <SectionItem type="Raised in" name="Ostrava, Czechia" />
+      </div>
+    </div>
+  </div>
+)
+
 type RevealOptions = {
   sectionSelector?: string
   nodeSelector?: string
@@ -332,9 +385,18 @@ export const CV: FC<CVProps> = ({children, animated = false}) => {
               <Section {...section} />
             </div>
           ))}
-
-          {children && children}
         </div>
+
+        <div className="flex flex-col gap-[56px]">
+          <div className="h-[17px]">
+            <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Connect</h1>
+          </div>
+          <SectionConnect />
+        </div>
+
+        <SectionLanguagesAndLocations />
+
+        {children && children}
       </div>
     </div>
   )

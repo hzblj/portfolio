@@ -1,11 +1,7 @@
 import {FC} from 'react'
 
-import {Config, Contact} from '@/config'
-import {EntryContact} from '@/db'
-
+import {Contact, EntryContact} from '@/db'
 import {LinkExternal} from './link-external'
-
-const contacts = Config.contacts
 
 const DotDivider = () => (
   <div className="w-1 h-1 rounded-[50px] bg-[linear-gradient(180deg,#FFFFFF_0%,rgba(255,255,255,0.48)_100%)] shadow-[inset_0_0.5px_0_0_#FFFFFF] mx-3" />
@@ -19,7 +15,7 @@ const ContactLink = ({type, url}: Contact) => (
   </LinkExternal>
 )
 
-export const CardContact: FC<EntryContact> = ({area}) => (
+export const CardContact: FC<EntryContact> = ({area, contacts}) => (
   <div
     className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card z-10"
     style={{gridArea: area, transformStyle: 'preserve-3d'}}
