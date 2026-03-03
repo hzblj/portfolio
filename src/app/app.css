@@ -129,6 +129,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+  background-color: var(--color-black);
 }
 
 body {
@@ -149,7 +150,7 @@ body {
 :root {
   display: block;
   unicode-bidi: isolate;
-  color-scheme: light;
+  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
