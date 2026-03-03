@@ -3,6 +3,25 @@ export type EntryVariant = 'shot' | 'contact' | 'map' | 'cv' | 'profile' | 'gall
 export type ShotSize = 's' | 'l'
 export type ShotArea = `${ShotSize}${number}`
 
+export type AnimationConfig = {
+  origin: string
+  from: {
+    x: number
+    y: number
+    scale: number
+    opacity: number
+  }
+  to: {
+    x: number
+    y: number
+    scale: number
+    opacity: number
+    duration: number
+    delay: number
+    ease: string
+  }
+}
+
 export type EntryShotProperty = {
   name: string
   value: string
@@ -28,6 +47,7 @@ export type EntryShot = {
   variant: Extract<EntryVariant, 'shot'>
   size: EntryShotSize
   slug: string
+  animation?: AnimationConfig
 }
 
 export type Contact = {
@@ -41,36 +61,42 @@ export type EntryContact = {
   contacts: Contact[]
   variant: Extract<EntryVariant, 'contact'>
   slug: string
+  animation?: AnimationConfig
 }
 
 export type EntryMap = {
   area: 'map'
   variant: Extract<EntryVariant, 'map'>
   slug: string
+  animation?: AnimationConfig
 }
 
 export type EntryCV = {
   area: 'cv'
   variant: Extract<EntryVariant, 'cv'>
   slug: string
+  animation?: AnimationConfig
 }
 
 export type EntryProfile = {
   area: 'profile'
   variant: Extract<EntryVariant, 'profile'>
   slug: string
+  animation?: AnimationConfig
 }
 
 export type EntryGallery = {
   area: 'gallery'
   variant: Extract<EntryVariant, 'gallery'>
   slug: string
+  animation?: AnimationConfig
 }
 
 export type EntryTechnologies = {
   area: 'technologies'
   variant: Extract<EntryVariant, 'technologies'>
   slug: string
+  animation?: AnimationConfig
 }
 
 export type Entry = EntryShot | EntryContact | EntryMap | EntryCV | EntryProfile | EntryGallery | EntryTechnologies

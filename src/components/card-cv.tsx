@@ -4,14 +4,17 @@ import {gsap} from 'gsap'
 import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryCV} from '@/db'
+import {useEntranceAnimation} from '@/hooks'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardCVModal} from './card-cv-modal'
 import {CV} from './cv'
 
-export const CardCV: FC<EntryCV> = ({area}) => {
+export const CardCV: FC<EntryCV> = ({area, animation}) => {
+  const refCard = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLDivElement>(null)
   const tlRef = useRef<gsap.core.Tween | gsap.core.Timeline | null>(null)
+  useEntranceAnimation(refCard, animation)
 
   const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -73,6 +76,7 @@ export const CardCV: FC<EntryCV> = ({area}) => {
   return (
     <Fragment>
       <div
+        ref={refCard}
         className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card card-cv"
         style={{gridArea: area, transformStyle: 'preserve-3d'}}
       >

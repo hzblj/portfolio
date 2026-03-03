@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: -37, y: -15},
+    origin: 'top left',
+    to: {delay: 0.1, duration: 0.8, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's22',
   description:
     'Meetback was a simple platform for collecting and analyzing feedback from meetings, aiming to enhance their efficiency and effectiveness. Users could request feedback on various aspects such as efficiency, duration, and usefulness, or send anonymous feedback on meetings they had attended.',

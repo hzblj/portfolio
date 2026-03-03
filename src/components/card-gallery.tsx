@@ -1,14 +1,18 @@
 'use client'
 
-import {FC, useCallback, useState} from 'react'
+import {FC, useCallback, useRef, useState} from 'react'
 
 import {EntryGallery} from '@/db'
+import {useEntranceAnimation} from '@/hooks'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardGalleryStrip} from './card-gallery-strip'
 import {Gallery} from './gallery'
 
-export const CardGallery: FC<EntryGallery> = ({area}) => {
+export const CardGallery: FC<EntryGallery> = ({area, animation}) => {
+  const refCard = useRef<HTMLDivElement>(null)
+  useEntranceAnimation(refCard, animation)
+
   const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -24,6 +28,7 @@ export const CardGallery: FC<EntryGallery> = ({area}) => {
 
   return (
     <div
+      ref={refCard}
       className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card"
       style={{gridArea: area, transformStyle: 'preserve-3d'}}
     >

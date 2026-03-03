@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: 109, y: 70},
+    origin: 'bottom right',
+    to: {delay: 0.2, duration: 1.2, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's1',
   description:
     'A trending section was added to the Footshop mobile app to show the top 10 products by category. Users can see what is trending in Shoes, Apparel, and Accessories for specific cities like Prague, Berlin, or Paris. The main idea was to help users find inspiration and discover popular styles in different locations.',

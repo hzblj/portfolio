@@ -1,6 +1,9 @@
-import {FC} from 'react'
+'use client'
+
+import {FC, useRef} from 'react'
 
 import {Contact, EntryContact} from '@/db'
+import {useEntranceAnimation} from '@/hooks'
 import {LinkExternal} from './link-external'
 
 const DotDivider = () => (
@@ -15,25 +18,31 @@ const ContactLink = ({type, url}: Contact) => (
   </LinkExternal>
 )
 
-export const CardContact: FC<EntryContact> = ({area, contacts}) => (
-  <div
-    className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card z-10"
-    style={{gridArea: area, transformStyle: 'preserve-3d'}}
-  >
-    <div className="flex flex-col w-full grow overflow-hidden h-full items-center justify-center relative">
-      <div className="flex flex-row">
-        {contacts.map((contact, index) => (
-          <div key={contact.type} className="flex flex-row items-center justify-center">
-            <ContactLink {...contact} />
-            {contacts.length - 1 > index && <DotDivider />}
-          </div>
-        ))}
-      </div>
-      <div className="absolute bottom-8">
-        <span className="text-[14px] opacity-70 font-normal leading-[100%] tracking-[0px] bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]">
-          Contact
-        </span>
+export const CardContact: FC<EntryContact> = ({area, contacts, animation}) => {
+  const refCard = useRef<HTMLDivElement>(null)
+  useEntranceAnimation(refCard, animation)
+
+  return (
+    <div
+      ref={refCard}
+      className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden card z-10"
+      style={{gridArea: area, transformStyle: 'preserve-3d'}}
+    >
+      <div className="flex flex-col w-full grow overflow-hidden h-full items-center justify-center relative">
+        <div className="flex flex-row">
+          {contacts.map((contact, index) => (
+            <div key={contact.type} className="flex flex-row items-center justify-center">
+              <ContactLink {...contact} />
+              {contacts.length - 1 > index && <DotDivider />}
+            </div>
+          ))}
+        </div>
+        <div className="absolute bottom-8">
+          <span className="text-[14px] opacity-70 font-normal leading-[100%] tracking-[0px] bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-transparent drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]">
+            Contact
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}

@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: -37, y: 0},
+    origin: 'center left',
+    to: {delay: 0.15, duration: 1, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's18',
   description:
     'In collaboration with Black Box Infinite, we’ve developed a highly detailed version of the Las Vegas Circuit. By rotating or zooming in on the map, you can explore remarkable landmarks in stunning detail, including the Fountains of Bellagio, the interior seating of The Sphere, and many other iconic features that make Las Vegas unique. For an extra touch of realism, even a helicopter flies overhead every five minutes.',

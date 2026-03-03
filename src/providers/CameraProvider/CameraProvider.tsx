@@ -17,6 +17,7 @@ const Grid = dynamic(() => import('./components/Grid'), {ssr: false})
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollSmoother, CustomEase, SplitText)
+  CustomEase.create('bezier-out-back', 'M0,0 C0.47,1.69 0.63,0.99 1,1')
 }
 
 export type CameraProviderProps = {

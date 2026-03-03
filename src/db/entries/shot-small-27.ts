@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: 1, y: -70},
+    origin: 'top right',
+    to: {delay: 0.2, duration: 1.2, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's27',
   description:
     'The home screen shows all matches in a single scrollable feed. The list is optimized for fast scrolling and smooth performance. Different card types are supported to display various match states. More content loads automatically at the end of the list. This makes it easy to browse many matches without delays.',

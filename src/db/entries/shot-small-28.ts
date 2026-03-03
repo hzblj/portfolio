@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: -1, y: -70},
+    origin: 'top left',
+    to: {delay: 0.2, duration: 1.2, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's28',
   description:
     'I built the attendee selection flow to choose exactly who will receive the feedback form. It makes the selection clear and prevents sending feedback to the wrong attendees.',

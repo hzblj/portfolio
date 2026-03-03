@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: -37, y: -15},
+    origin: 'top left',
+    to: {delay: 0.15, duration: 1, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's23',
   description:
     'A custom video player was built with a fully custom progress bar. The player supports both live and archived playback and integrates FairPlay DRM for protected F1 streams. From the player UI, additional floating windows can be opened, such as driver cams, live data stream, and team radios. An audio controller is placed in the top-right corner for quick access and clear control.',

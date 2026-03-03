@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: -1, y: -15},
+    origin: 'top left',
+    to: {delay: 0.15, duration: 1, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's25',
   description:
     'I built the meeting detail dashboard to present meeting feedback in a clear way. Charts show overall results and the NPS score, so users can quickly understand how the meeting was rated. Each feedback message allows direct actions, like sending a reply or adding a reaction.',

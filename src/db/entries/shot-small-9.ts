@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: 37, y: 14.5},
+    origin: 'bottom right',
+    to: {delay: 0.1, duration: 0.8, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's9',
   description:
     'An onboarding flow was created for the Footshop mobile app to guide users through their first launch. Content loads with staggered animations to keep the experience smooth and engaging. Video is used to set the brand tone early. The flow collects basic user preferences like gender, notification consent, and account sign-in.',

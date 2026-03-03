@@ -1,6 +1,11 @@
 import type {EntryShot} from '../types'
 
 const shot: EntryShot = {
+  animation: {
+    from: {opacity: 0, scale: 0.88, x: -37, y: 14.5},
+    origin: 'bottom left',
+    to: {delay: 0.15, duration: 1, ease: 'bezier-out-back', opacity: 1, scale: 1, x: 0, y: 0},
+  },
   area: 's8',
   description:
     'Team radio is played directly from the driver’s headset in a dedicated window. A simple audio player shows a live waveform. Speech is transcribed using Speech framework and rendered as subtitles, with individual segments highlighted in sync with playback.',

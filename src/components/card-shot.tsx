@@ -5,7 +5,7 @@ import Image from 'next/image'
 import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
-import {useHasHover} from '@/hooks'
+import {useEntranceAnimation, useHasHover} from '@/hooks'
 import {trackProjectView} from '@/lib'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
@@ -13,11 +13,13 @@ import {CardShotHover} from './card-shot-hover'
 import {CardShotModal} from './card-shot-modal'
 import {CardShotVideo} from './card-shot-video'
 
-export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos, size}) => {
+export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos, size, animation}) => {
+  const refCard = useRef<HTMLDivElement>(null)
   const refTitle = useRef<HTMLDivElement>(null)
   const refVideoIcon = useRef<HTMLDivElement>(null)
 
   const hasHover = useHasHover()
+  useEntranceAnimation(refCard, animation)
 
   const dispatch = useCameraDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -91,6 +93,7 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   return (
     <Fragment>
       <div
+        ref={refCard}
         className="w-full shrink-0 flex h-full contain-intrinsic overflow-hidden bg-card-surface rounded-2xl border border-solid border-white/15 transform-3d bg-black"
         style={{gridArea: area}}
       >
