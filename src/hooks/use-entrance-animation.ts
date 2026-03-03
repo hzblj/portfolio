@@ -1,15 +1,18 @@
 import {gsap} from 'gsap'
-import {type RefObject, useLayoutEffect} from 'react'
+import {type RefObject, useEffect, useLayoutEffect} from 'react'
 
 import type {AnimationConfig} from '@/db/types'
+import {useIntro} from '@/providers'
 
 export const useEntranceAnimation = (ref: RefObject<HTMLDivElement | null>, animation?: AnimationConfig) => {
+  const {introComplete} = useIntro()
+
   useLayoutEffect(() => {
     if (!animation || !ref.current) {
       return
     }
 
-    const {origin, from, to} = animation
+    const {origin, from} = animation
 
     gsap.set(ref.current, {
       opacity: from.opacity,
@@ -18,6 +21,14 @@ export const useEntranceAnimation = (ref: RefObject<HTMLDivElement | null>, anim
       x: from.x,
       y: from.y,
     })
+  }, [animation, ref])
+
+  useEffect(() => {
+    if (!introComplete || !animation || !ref.current) {
+      return
+    }
+
+    const {to} = animation
 
     gsap.to(ref.current, {
       delay: to.delay,
@@ -28,5 +39,5 @@ export const useEntranceAnimation = (ref: RefObject<HTMLDivElement | null>, anim
       x: to.x,
       y: to.y,
     })
-  }, [animation, ref])
+  }, [introComplete, animation, ref])
 }

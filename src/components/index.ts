@@ -1,4 +1,5 @@
 export * from './card-contact'
+export * from './intro-overlay'
 export * from './card-cv'
 export * from './card-gallery'
 export * from './card-map'
