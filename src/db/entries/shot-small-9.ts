@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's9',
   description:
-    'An onboarding flow was created for the Footshop mobile app to guide users through their first launch. Content loads with staggered animations to keep the experience smooth and engaging. Video is used to set the brand tone early. The flow collects basic user preferences like gender, notification consent, and account sign-in.',
+    'I designed the first-launch flow around video to set the brand tone immediately, with staggered content animations that make it feel considered rather than a checklist. Underneath, it quietly collects the essentials: gender preference, notification consent, and sign-in.',
   image: '/jpg/shot-small-9.jpg',
   properties: [
     {

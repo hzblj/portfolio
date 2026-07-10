@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's17',
   description:
-    'Queens uses its own API and its own theme, separate from Footshop. Theme colors are defined per app and applied across the UI. Each screen can be customized based on the app needs. The current architecture gives full freedom to adjust visuals and behavior per brand.',
+    'Queens runs on its own API and its own theme layer, fully decoupled from Footshop. Every screen can be restyled or rebehaved per brand, which is what makes running two product lines off one shared codebase sustainable instead of a constant merge conflict.',
   image: '/jpg/shot-small-17.jpg',
   properties: [
     {

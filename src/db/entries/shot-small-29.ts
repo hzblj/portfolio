@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's29',
   description:
-    'I built the feedback builder where users create a feedback form from reusable question blocks. On the left side, questions can be added, reordered with drag and drop, duplicated, or removed. The right side shows a live preview that updates instantly as the form changes. There is also a preview mode to run the feedback flow as a real user would see it.',
+    'I built the feedback builder around reusable question blocks — add, reorder by drag-and-drop, duplicate, or remove on the left, with a live preview on the right that updates instantly. A run-through mode lets you experience the form exactly as a respondent would before sending it out.',
   image: '/jpg/shot-small-29.jpg',
   properties: [
     {

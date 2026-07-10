@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's24',
   description:
-    'Rich notifications show a story image generated live from the match. Every score update creates a new image with a real photo from the game. The image is pre-generated to keep delivery fast and stable. Fans see the latest moment instantly, without opening the app.',
+    "Rich push notifications carry a story image generated live from the match — every score update triggers a fresh image built from a real photo of the moment. Pre-generating it server-side kept delivery fast and stable, so fans see it on the lock screen before they'd think to open the app.",
   image: '/jpg/shot-small-24.jpg',
   properties: [
     {

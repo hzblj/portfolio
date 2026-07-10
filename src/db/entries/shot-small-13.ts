@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's13',
   description:
-    'In F1, weather can decide the whole race. Teams watch radar data all the time to plan strategy and tire choices. We recreated this idea at home by building a large 3D entity placed above the user. The entity displays an animated heatmap texture that visualizes live weather data.',
+    'F1 strategy lives and dies by weather radar, so I recreated that same tool for viewers at home: a large 3D entity hovering above the room, rendering an animated heatmap of live weather data over the circuit.',
   image: '/webp/shot-small-13.webp',
   properties: [
     {

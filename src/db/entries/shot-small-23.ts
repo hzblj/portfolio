@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's23',
   description:
-    'A custom video player was built with a fully custom progress bar. The player supports both live and archived playback and integrates FairPlay DRM for protected F1 streams. From the player UI, additional floating windows can be opened, such as driver cams, live data stream, and team radios. An audio controller is placed in the top-right corner for quick access and clear control.',
+    'I built a custom video player with FairPlay DRM for protected F1 streams and a fully custom progress bar, supporting both live and archived races. From the player you can pop out floating windows for driver cams, live telemetry, and team radio, with an audio controller tucked into the corner for quick access.',
   image: '/webp/shot-small-23.webp',
   properties: [
     {

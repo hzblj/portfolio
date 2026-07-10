@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's14',
   description:
-    'Card payments are processed directly on POS terminals using the Global Payments SDK. The SDK is integrated into the Expo app as a native module, with the core payment logic implemented in Kotlin. This approach allows secure in-person payments.',
+    'I integrated the Global Payments SDK directly into POS terminals used at pickup points, wrapping the Kotlin payment logic as a native module inside the Expo app. It lets staff take secure in-person card payments without leaving the app they already use for everything else.',
   image: '/jpg/shot-small-14.jpg',
   properties: [
     {

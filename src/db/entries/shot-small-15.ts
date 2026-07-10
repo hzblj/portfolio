@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's15',
   description:
-    'Parcel drop-off and courier pickup are handled through separate, clearly defined flows. An offline-first approach was required, with data synchronized between multiple devices used at the same pickup point. All actions are stored locally and synced later, so work can continue without interruptions.',
+    'Drop-off and courier pickup run as two clearly separated flows, built offline-first since pickup points often have spotty connectivity and share data across multiple devices. Every action is stored locally first and synced later, so staff never have to stop working because the network did.',
   image: '/jpg/shot-small-15.jpg',
   properties: [
     {

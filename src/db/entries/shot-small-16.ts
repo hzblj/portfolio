@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's16',
   description:
-    'The app was built specifically for Zebra devices with a built-in barcode scanner used at pickup points. It handles complex parcel drop-off and courier pickup flows that must work in real store conditions. An offline-first approach was required, because these devices are often used without stable internet. The design focuses on fast scanning, clear flow steps, and reliable daily use on dedicated hardware.',
+    'I built this version specifically for Zebra handheld scanners used on the shop floor, where drop-off and pickup flows need to survive real store conditions — weak signal, gloved hands, a queue of customers waiting. Offline-first architecture and a scan-first UI keep it fast and reliable on dedicated hardware, not just in a demo.',
   image: '/jpg/shot-small-16.jpg',
   properties: [
     {

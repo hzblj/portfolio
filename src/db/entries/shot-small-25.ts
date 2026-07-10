@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's25',
   description:
-    'I built the meeting detail dashboard to present meeting feedback in a clear way. Charts show overall results and the NPS score, so users can quickly understand how the meeting was rated. Each feedback message allows direct actions, like sending a reply or adding a reaction.',
+    "I built the meeting detail dashboard to turn raw feedback into something a manager could act on — charts for overall scores and NPS, plus inline reply and reaction actions on every comment so feedback doesn't just sit there unanswered.",
   image: '/jpg/shot-small-25.jpg',
   properties: [
     {

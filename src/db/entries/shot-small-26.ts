@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's26',
   description:
-    'Live matches are shown as Instagram-style stories with real-time updates. Key moments are generated live as the game evolves. The app is built with React Native and Expo, with animations handled using Reanimated.',
+    'Live matches play out as Instagram-style stories, with key moments generated in real time as the game evolves — built in React Native and Expo, animated with Reanimated, so a goal in minute 89 shows up in the feed before the fans in the stadium finish celebrating.',
   image: '/jpg/shot-small-26.jpg',
   properties: [
     {

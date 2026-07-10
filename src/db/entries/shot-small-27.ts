@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's27',
   description:
-    'The home screen shows all matches in a single scrollable feed. The list is optimized for fast scrolling and smooth performance. Different card types are supported to display various match states. More content loads automatically at the end of the list. This makes it easy to browse many matches without delays.',
+    'The home feed mixes several card types — live, upcoming, finished — into one smoothly scrolling list that loads more as you go. Getting scroll performance right across all those match states was most of the engineering work; the rest is just good data.',
   image: '/webp/shot-small-27.webp',
   properties: [
     {

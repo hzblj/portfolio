@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's22',
   description:
-    'Meetback was a simple platform for collecting and analyzing feedback from meetings, aiming to enhance their efficiency and effectiveness. Users could request feedback on various aspects such as efficiency, duration, and usefulness, or send anonymous feedback on meetings they had attended.',
+    'Meetback was a web platform I built to collect and analyze feedback on meetings — efficiency, duration, usefulness — including anonymous feedback from anyone who sat through them. The premise was simple: most meetings never get evaluated, so most companies never learn which ones are actually worth having.',
   image: '/webp/shot-small-22.webp',
   properties: [
     {

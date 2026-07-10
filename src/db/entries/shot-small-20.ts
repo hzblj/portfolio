@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's20',
   description:
-    'Each team has its own detail page with upcoming and past matches. The page also allows fans to follow a team to stay up to date. Following a team ensures important matches are not missed.',
+    'Every team gets a detail page with upcoming and past fixtures, and a follow button that quietly becomes the backbone of the personalized feed — miss the tap, and you miss the moments that matter to you.',
   image: '/jpg/shot-small-20.jpg',
   properties: [
     {

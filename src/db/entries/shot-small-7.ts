@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's7',
   description:
-    'Several core screens are built purely with SwiftUI to present data in a clear and responsive way. Upcoming Races and Last Races lists adapt to different window sizes. Race results are shown using custom tables, while the product detail screen shows circuit statistics and highlights a 3D track map with available stream options. Native SwiftUI was chosen to stay close to the system and keep performance predictable on visionOS.',
+    'Several core screens are built in pure SwiftUI — upcoming and past races, results tables, and a circuit detail view that surfaces stats next to a 3D track map. I stayed native rather than reaching for a cross-platform layer, since predictable performance on visionOS mattered more than code reuse here.',
   image: '/jpg/shot-small-7.jpg',
   properties: [
     {

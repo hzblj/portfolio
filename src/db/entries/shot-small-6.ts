@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's6',
   description:
-    'Player settings went through many iterations because it had to control several parts of the experience in one place. It handles opening and closing driver cams, stream options like audio and channel selection, and 3D map settings for cars, DRS zones, and corner numbers. A ornament and sheet with nested navigation was chosen to group related options and keep the main player clean.',
+    'The settings panel went through several redesigns before it clicked: one place to control driver cams, audio and broadcast channel, and every 3D map overlay — cars, DRS zones, corner numbers. I settled on an ornament with nested navigation sheets so the main player stays uncluttered no matter how many options live underneath it.',
   image: '/jpg/shot-small-6.jpg',
   properties: [
     {

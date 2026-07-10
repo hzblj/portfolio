@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's5',
   description:
-    'We built a complete vehicle service flow for service technicians. A technician finds a car by license plate and opens a detailed view with full service history. During a repair, all work, parts, prices, and photos are added through a simple form. The service report is sent to the client mobile app. The client sees the total cost and confirms the service directly in the app.',
+    "I built the end-to-end service flow technicians use on the shop floor: look up a car by license plate, pull its full service history, then log parts, labor, prices, and photos as the repair happens. That report goes straight to the client's app, where they see the total cost and approve it without a phone call.",
   image: '/jpg/shot-small-5.jpg',
   properties: [
     {

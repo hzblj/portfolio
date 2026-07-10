@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's21',
   description:
-    'Stories use an Instagram-style slide format with gesture handling on every slide. Each slide has its own animations for events like goals, cards, and emojis. Timing is managed per slide, with automatic progress to the next one. Title and image animations are part of the flow to keep motion consistent. The whole interaction and animation system is built in Reanimated for smooth performance.',
+    'Stories run on an Instagram-style slide format with gesture handling on every slide and per-event animations for goals, cards, and reactions. I built the whole timing and animation system in Reanimated to keep it at 60fps even with heavy layered motion.',
   image: '/webp/shot-small-21.webp',
   properties: [
     {

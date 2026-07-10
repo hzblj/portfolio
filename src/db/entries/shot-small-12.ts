@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's12',
   description:
-    'An animated splash screen using Lottie is shown when the app starts. It adapts to light and dark mode based on the system appearance.',
+    "A small detail with an outsized effect on first impressions: a Lottie-animated splash screen that adapts automatically to the system's light or dark mode.",
   image: '/webp/shot-small-12.webp',
   properties: [
     {

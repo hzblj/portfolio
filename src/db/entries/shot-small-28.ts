@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's28',
   description:
-    'I built the attendee selection flow to choose exactly who will receive the feedback form. It makes the selection clear and prevents sending feedback to the wrong attendees.',
+    'I built the attendee selection flow so organizers pick exactly who gets asked for feedback — a small screen, but the wrong list here means either annoyed non-attendees or gaps in the data.',
   image: '/jpg/shot-small-28.jpg',
   properties: [
     {

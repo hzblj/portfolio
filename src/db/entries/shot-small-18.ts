@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's18',
   description:
-    'In collaboration with Black Box Infinite, we’ve developed a highly detailed version of the Las Vegas Circuit. By rotating or zooming in on the map, you can explore remarkable landmarks in stunning detail, including the Fountains of Bellagio, the interior seating of The Sphere, and many other iconic features that make Las Vegas unique. For an extra touch of realism, even a helicopter flies overhead every five minutes.',
+    "Built with Black Box Infinite, this is a highly detailed model of the Las Vegas circuit — rotate or zoom in and you'll find the Fountains of Bellagio, the interior of The Sphere, and dozens of other landmarks rendered in real detail. A helicopter even flies over every five minutes, because small touches like that are what make a spatial scene feel alive rather than just accurate.",
   image: '/webp/shot-small-18.webp',
   properties: [
     {

@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's2',
   description:
-    'Native payments were added to the Footshop mobile app using Adyen as the payment provider. The goal was to make checkout faster and reduce friction on mobile. Apple Pay and Google Pay were integrated to support platform-native payment flows',
+    'I integrated Adyen to bring native Apple Pay and Google Pay checkout to the app, cutting payment down to a single tap. Fewer form fields and fewer redirects meant less drop-off at exactly the point customers were most likely to abandon.',
   image: '/jpg/shot-small-2.jpg',
   properties: [
     {

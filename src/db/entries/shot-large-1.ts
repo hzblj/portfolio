@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 'l1',
   description:
-    'Joined Footshop to lead the development of a new mobile app for iOS and Android. The work started as a small MVP focused on core e-commerce flows. Over time, it evolved into a strategic product used as a main mobile channel. The goal was to move fast, validate ideas early, and still keep the codebase ready for long-term growth. Expo and React Native were chosen to ship quickly on both platforms while keeping performance and developer velocity high.',
+    "I joined Footshop to build its mobile app from the ground up for iOS and Android. What began as a lean MVP covering the core shopping flow grew into the company's primary mobile channel. I chose Expo and React Native to ship fast on both platforms without compromising performance, then kept the architecture flexible enough to scale as the product and team grew.",
   image: '/jpg/shot-large-1.jpg',
   properties: [
     {

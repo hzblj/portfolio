@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's8',
   description:
-    'Team radio is played directly from the driver’s headset in a dedicated window. A simple audio player shows a live waveform. Speech is transcribed using Speech framework and rendered as subtitles, with individual segments highlighted in sync with playback.',
+    "Team radio plays in its own floating window with a live waveform. I used Apple's Speech framework to transcribe it into subtitles that highlight in sync with playback, so you can actually follow what a driver is shouting about, not just hear it.",
   image: '/jpg/shot-small-8.jpg',
   properties: [
     {

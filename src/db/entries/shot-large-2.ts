@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 'l2',
   description:
-    'Sportlito allows every fan to witness the most exciting moments of their favourite players and clubs through visual stories. These are produced live by an algorithm based on fans preferences, updated in real-time and easily sharable with others.',
+    'Sportlito turns live football data into Instagram-style story feeds, personalized per fan and generated in real time by an algorithm that tracks goals, cards, and key moments as they happen. I built the mobile app end to end in React Native, from the live-update pipeline to the story player and sharing flow.',
   image: '/webp/shot-large-2.webp',
   properties: [
     {

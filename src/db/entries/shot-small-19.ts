@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's19',
   description:
-    'Each story page can be shared as a pre-generated image. The image matches the exact content shown in the app. Sharing uses the native share dialog for a smooth and familiar experience. Fans can easily send match moments to any messaging or social app.',
+    "Every story is pre-rendered as a shareable image the moment it's created, so tapping share is instant instead of waiting on a screenshot. It hooks into the native share sheet, which made sending a match moment to WhatsApp or Instagram feel like a normal part of the app instead of a bolted-on feature.",
   image: '/webp/shot-small-19.webp',
   properties: [
     {

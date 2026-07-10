@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 'l3',
   description:
-    'Driver cameras are attached to each car in the 3D map and are opened by tapping the driver badge. After opening, a live onboard stream is shown directly in the spatial scene. The camera follows the selected driver and stays anchored to the car position. Along with the video, key stats are shown, including tire type, speed, current gear, and interval to other drivers.',
+    "Tap any driver's badge on the 3D circuit and their live onboard camera opens right there in the spatial scene, anchored to the moving car with tire compound, speed, gear, and gap-to-leader floating alongside it. It's the kind of interaction that only makes sense on a spatial computer — proof that visionOS can do more than mirror a flat screen into a room.",
   image: '/webp/shot-large-3.webp',
   properties: [
     {

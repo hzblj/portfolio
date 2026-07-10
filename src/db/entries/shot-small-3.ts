@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's3',
   description:
-    'Product listing and PDP screens were designed for the Footshop mobile app with a strong focus on performance. FlashList was used to handle long product lists smoothly on both iOS and Android. Layouts adapt dynamically to different product types, campaigns, and screen sizes. Product cards were built as flexible components that can change structure without breaking scroll performance. The result is fast browsing and a consistent shopping experience even with large catalogs.',
+    'I rebuilt the product listing and detail screens around FlashList to keep scrolling smooth on both iOS and Android, even across a catalog with thousands of SKUs. Product cards are flexible components that adapt to different product types and campaigns without ever dropping frame rate.',
   image: '/jpg/shot-small-3.jpg',
   properties: [
     {

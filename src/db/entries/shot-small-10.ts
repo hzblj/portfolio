@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's10',
   description:
-    'A custom pickup points map was built for the Footshop mobile app to handle large amounts of locations. The map helps users quickly find nearby pickup points during checkout. Clustering was implemented to keep the map readable at all zoom levels. The solution avoids heavy third-party abstractions and keeps full control over performance and UX.',
+    "I built a custom pickup-points map for checkout that handles thousands of locations without leaning on a heavy third-party maps SDK. Clustering keeps it readable at every zoom level, and owning the implementation gave me full control over performance and UX instead of fighting someone else's abstraction.",
   image: '/jpg/shot-small-10.jpg',
   properties: [
     {

@@ -8,7 +8,7 @@ const shot: EntryShot = {
   },
   area: 's4',
   description:
-    'We built a custom design system that adapts to both iPhone and iPad. The same components scale, change spacing, and adjust layouts based on device size. This kept the UI consistent while still feeling native on each device. The system reduced duplication and made screens easier to maintain.',
+    'I built a design system where the same components scale, re-space, and re-layout across iPhone and iPad, so field technicians get a UI that feels native on whichever device is in their hand. It also cut a lot of duplicated screen code, which mattered once the app kept growing.',
   image: '/jpg/shot-small-4.jpg',
   properties: [
     {
