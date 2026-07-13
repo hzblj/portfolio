@@ -3,6 +3,7 @@
 import gsap from 'gsap'
 import {type FC, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
+import {useSound} from '@/hooks'
 import {cn} from '@/utils'
 
 import {ModalCloseButton} from './modal-close-button'
@@ -29,10 +30,14 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
 
   const [mounted, setMounted] = useState(isOpen)
 
+  const sound = useSound('modal')
+
   const startClose = useCallback(() => {
     if (!cardRef.current || !backdropRef.current) {
       return
     }
+
+    sound.close()
 
     gsap.killTweensOf([cardRef.current, backdropRef.current, closeButtonRef.current])
 
@@ -53,7 +58,7 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
         onClose()
       },
     })
-  }, [onClose])
+  }, [onClose, sound])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

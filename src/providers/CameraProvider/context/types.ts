@@ -12,8 +12,16 @@ export type CameraState = {
   x3: string
   x4: string
   origin: {x: number; y: number}
+  scale: number
   scrollBehavior?: CameraScrollBehavior
   isModalOpen: boolean
+}
+
+export type CameraZoom = {
+  focal: CameraOffset
+  minScale?: number
+  scaleBy?: number
+  scaleTo?: number
 }
 
 export type CameraTransforms = Pick<CameraState, 'viewport' | 'x1' | 'x2' | 'x3' | 'x4'>

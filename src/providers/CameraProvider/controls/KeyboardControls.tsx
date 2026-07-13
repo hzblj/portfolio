@@ -4,7 +4,7 @@ import {useCallback, useEffect, useRef} from 'react'
 
 import {actionOnScroll, useCameraDispatch} from '../context'
 
-const ALLOWED_KEYS = new Set(['w', 'a', 's', 'd'])
+const ALLOWED_KEYS = new Set(['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'])
 const MOVE_SPEED = 10
 
 export const KeyboardControls = () => {
@@ -19,19 +19,19 @@ export const KeyboardControls = () => {
 
     const pressed = pressedKeys.current
 
-    if (pressed.has('w')) {
+    if (pressed.has('w') || pressed.has('arrowup')) {
       dy = -MOVE_SPEED
     }
 
-    if (pressed.has('s')) {
+    if (pressed.has('s') || pressed.has('arrowdown')) {
       dy = MOVE_SPEED
     }
 
-    if (pressed.has('a')) {
+    if (pressed.has('a') || pressed.has('arrowleft')) {
       dx = -MOVE_SPEED
     }
 
-    if (pressed.has('d')) {
+    if (pressed.has('d') || pressed.has('arrowright')) {
       dx = MOVE_SPEED
     }
 
@@ -47,6 +47,12 @@ export const KeyboardControls = () => {
   const keyDownHandler = useCallback(
     (e: KeyboardEvent) => {
       const key = e.key.toLowerCase()
+
+      // Arrow keys scroll the page natively — WASD doesn't — so suppress that.
+      if (key.startsWith('arrow')) {
+        e.preventDefault()
+      }
+
       pressedKeys.current.add(key)
 
       if (ALLOWED_KEYS.has(key) && animationFrameId.current === null) {

@@ -3,7 +3,7 @@
 import {FC, useCallback, useRef, useState} from 'react'
 
 import {EntryGallery} from '@/db'
-import {useEntranceAnimation} from '@/hooks'
+import {useEntranceAnimation, useSound} from '@/hooks'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardGalleryStrip} from './card-gallery-strip'
@@ -14,6 +14,7 @@ export const CardGallery: FC<EntryGallery> = ({area, animation}) => {
   useEntranceAnimation(refCard, animation)
 
   const dispatch = useCameraDispatch()
+  const sound = useSound('photos')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleOnClose = useCallback(() => {
@@ -22,9 +23,10 @@ export const CardGallery: FC<EntryGallery> = ({area, animation}) => {
   }, [dispatch])
 
   const handleOnOpen = useCallback(() => {
+    sound.open()
     setIsModalOpen(true)
     actionToggleModal(dispatch, true)
-  }, [dispatch])
+  }, [dispatch, sound])
 
   return (
     <div

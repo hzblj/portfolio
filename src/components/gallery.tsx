@@ -5,6 +5,7 @@ import Image from 'next/image'
 import {createRef, type FC, forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 
+import {useSound} from '@/hooks'
 import {toPx} from '@/utils'
 
 import {ModalCloseButton} from './modal-close-button'
@@ -66,10 +67,14 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
   const [mounted, setMounted] = useState(isOpen)
   const [columns, setColumns] = useState(3)
 
+  const sound = useSound('photos')
+
   const startClose = useCallback(() => {
     if (!cardRef.current || !backdropRef.current || !closeButtonRef.current) {
       return
     }
+
+    sound.close()
 
     const items = itemRefs.map(ref => ref.current).filter(Boolean) as HTMLDivElement[]
 
@@ -94,7 +99,7 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
       ease: 'power2.inOut',
       opacity: 0,
     })
-  }, [onClose, itemRefs])
+  }, [onClose, itemRefs, sound])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

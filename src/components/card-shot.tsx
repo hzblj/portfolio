@@ -5,7 +5,7 @@ import Image from 'next/image'
 import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
-import {useEntranceAnimation, useHasHover} from '@/hooks'
+import {useEntranceAnimation, useHasHover, useSound} from '@/hooks'
 import {trackProjectView} from '@/lib'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
@@ -22,6 +22,7 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   useEntranceAnimation(refCard, animation)
 
   const dispatch = useCameraDispatch()
+  const sound = useSound('modal')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleEnter = useCallback((e: PointerEvent) => {
@@ -85,10 +86,11 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   }, [dispatch])
 
   const handleOnOpen = useCallback(() => {
+    sound.open()
     setIsModalOpen(true)
     actionToggleModal(dispatch, true)
     trackProjectView(title)
-  }, [dispatch, title])
+  }, [dispatch, sound, title])
 
   return (
     <Fragment>

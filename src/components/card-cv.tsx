@@ -4,7 +4,7 @@ import {gsap} from 'gsap'
 import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
 
 import {EntryCV} from '@/db'
-import {useEntranceAnimation} from '@/hooks'
+import {useEntranceAnimation, useSound} from '@/hooks'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardCVModal} from './card-cv-modal'
@@ -17,6 +17,7 @@ export const CardCV: FC<EntryCV> = ({area, animation}) => {
   useEntranceAnimation(refCard, animation)
 
   const dispatch = useCameraDispatch()
+  const sound = useSound('modal')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleEnter = useCallback((e: PointerEvent) => {
@@ -69,9 +70,10 @@ export const CardCV: FC<EntryCV> = ({area, animation}) => {
   }, [dispatch])
 
   const handleOnOpen = useCallback(() => {
+    sound.open()
     setIsModalOpen(true)
     actionToggleModal(dispatch, true)
-  }, [dispatch])
+  }, [dispatch, sound])
 
   return (
     <Fragment>

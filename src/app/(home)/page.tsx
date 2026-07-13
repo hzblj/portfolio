@@ -9,11 +9,11 @@ import {
   IntroOverlay,
 } from '@/components'
 import {entries} from '@/db'
-import {CameraProvider, IntroProvider} from '@/providers'
+import {CameraProvider} from '@/providers'
 
 export default async function Home() {
   return (
-    <IntroProvider>
+    <>
       <CameraProvider>
         {entries.map(entry => {
           switch (entry.variant) {
@@ -35,6 +35,6 @@ export default async function Home() {
         })}
       </CameraProvider>
       <IntroOverlay />
-    </IntroProvider>
+    </>
   )
 }

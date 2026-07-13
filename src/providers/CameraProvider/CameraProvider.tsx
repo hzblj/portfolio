@@ -11,7 +11,7 @@ import {useHasHover} from '@/hooks'
 
 import {Viewport} from './components'
 import {Context, createCameraState, useCameraState} from './context'
-import {DragControls, KeyboardControls, ScrollControls, ToucheControls} from './controls'
+import {DragControls, KeyboardControls, ScrollControls, ToucheControls, ZoomControls} from './controls'
 
 const Grid = dynamic(() => import('./components/Grid'), {ssr: false})
 
@@ -45,6 +45,7 @@ const Controls = () => {
     <Fragment>
       {hasHover && !isModalOpen && <ScrollControls />}
       {hasHover && !isModalOpen && <KeyboardControls />}
+      {hasHover && !isModalOpen && <ZoomControls />}
       {!hasHover && !isModalOpen && <ToucheControls friction={0.9} speed={1.2} />}
       {hasHover && !isModalOpen && <DragControls />}
     </Fragment>

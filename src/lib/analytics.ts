@@ -27,6 +27,7 @@ export interface GAEvent {
 export function reportWebVitals(metric: WebVitalsMetric): void {
   if (!isAnalyticsEnabled()) {
     if (process.env.NODE_ENV === 'development') {
+      // biome-ignore lint/suspicious/noConsole: intentional dev-only diagnostic
       console.info('Web Vitals (dev):', metric)
     }
     return
