@@ -950,6 +950,11 @@ magic-string@^0.30.18:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.5"
 
+metal-fx@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/metal-fx/-/metal-fx-1.0.4.tgz#4dfe2a58de5f4a0b89e527692357d7ecaf3875ed"
+  integrity sha512-Zqxp3df47n2yhp7SPMZtPdKQ7Avag8ITxXX1NtbA0bWdU2GJN8MJPNJ2SKtQ2CfXpAWXtCc0CbM64UtiTor3pw==
+
 minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
