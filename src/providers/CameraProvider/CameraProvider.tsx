@@ -7,9 +7,13 @@ import {SplitText} from 'gsap/SplitText'
 import dynamic from 'next/dynamic'
 import {Fragment, type ReactNode, useMemo} from 'react'
 
+// Straight from the module rather than `@/components`: the barrel reaches back
+// into this provider through the cards, and the import would come full circle.
+import {IcoLink} from '@/components/ico-link'
+import {SoundControls} from '@/components/sound-controls'
 import {useHasHover} from '@/hooks'
 
-import {Viewport} from './components'
+import {CameraSession, Viewport} from './components'
 import {Context, createCameraState, useCameraState} from './context'
 import {DragControls, KeyboardControls, ScrollControls, ToucheControls, ZoomControls} from './controls'
 
@@ -45,7 +49,12 @@ const Controls = () => {
     <Fragment>
       {hasHover && !isModalOpen && <ScrollControls />}
       {hasHover && !isModalOpen && <KeyboardControls />}
-      {hasHover && !isModalOpen && <ZoomControls />}
+      {/* The three with a pill in the dock stay mounted through an open modal and
+          fade themselves out instead, so they leave on the same curve the modal
+          arrives on rather than blinking out from under it. */}
+      <SoundControls />
+      {hasHover && <ZoomControls />}
+      <IcoLink />
       {!hasHover && !isModalOpen && <ToucheControls friction={0.9} speed={1.2} />}
       {hasHover && !isModalOpen && <DragControls />}
     </Fragment>
@@ -59,6 +68,7 @@ export const CameraProvider = (props: CameraProviderProps) => {
     <Context defaultState={camera}>
       <Provider {...props} />
       <Controls />
+      <CameraSession />
     </Context>
   )
 }

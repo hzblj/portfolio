@@ -11,6 +11,12 @@ export default function sitemap() {
       url: baseUrl,
     },
     {
+      changeFrequency: 'monthly' as const,
+      lastModified: new Date(),
+      priority: 0.6,
+      url: `${baseUrl}/cv`,
+    },
+    {
       changeFrequency: 'yearly' as const,
       lastModified: new Date(),
       priority: 0.4,

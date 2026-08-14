@@ -1,16 +1,18 @@
 import Image from 'next/image'
 import {FC} from 'react'
 
+import {Config} from '@/config'
 import {EntryShot, EntryShotProperty} from '@/db'
-
+import {CardExpandLink} from './card-expand-link'
 import {LoopVideo} from './loop-video'
 import {Modal} from './modal'
 
 export type CardShotModalProps = Pick<
   EntryShot,
-  'title' | 'image' | 'description' | 'properties' | 'videos' | 'size'
+  'title' | 'image' | 'description' | 'properties' | 'videos' | 'size' | 'slug'
 > & {
   isOpen: boolean
+  instant?: boolean
   onClose: () => void
 }
 
@@ -47,12 +49,28 @@ export const CardShotModal: FC<CardShotModalProps> = ({
   image,
   onClose,
   isOpen,
+  instant,
   videos,
   size,
+  slug,
 }) => (
-  <Modal isOpen={isOpen} onClose={onClose}>
+  <Modal
+    isOpen={isOpen}
+    instant={instant}
+    onClose={onClose}
+    transitionName={Config.viewTransition.card}
+    // In the viewport's corner rather than the artwork's, the same place the CV
+    // puts it — and on a phone, beside the close button at the bottom of the
+    // screen. Goes through `overlay` because the card is transformed and would
+    // capture anything `fixed` inside it — and staying out of the card keeps it
+    // out of that snapshot, so the artwork cross-fades against a clean frame.
+    overlay={<CardExpandLink href={`/${slug}`} label={`${title} case study`} />}
+  >
     <div className="px-[20px] md:px-8 pt-[20px] md:pt-8 pb-2">
-      <div className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden border-[0.75px] border-[#FFFFFF26]">
+      <div
+        className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden border-[0.75px] border-[#FFFFFF26]"
+        style={{viewTransitionName: Config.viewTransition.media}}
+      >
         <Image src={image} alt="shot" fill sizes={size === 'small' ? '289px' : '594px'} style={{objectFit: 'cover'}} />
         {videos && (
           <div className="absolute inset-0 overflow-hidden">

@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import {FC} from 'react'
 
+import {Config} from '@/config'
 import {EntryShot, EntryShotProperty} from '@/db'
-
 import {LoopVideo} from './loop-video'
 
 export type ShotDetailProps = Pick<EntryShot, 'title' | 'image' | 'description' | 'properties' | 'videos' | 'size'>
@@ -34,11 +34,19 @@ const ShotProperty: FC<EntryShotProperty> = ({name, value, url}) => (
 )
 
 export const ShotDetail: FC<ShotDetailProps> = ({properties, title, description, image, videos, size}) => (
-  <div className="flex flex-col w-full z-40 overflow-hidden will-change-transform [backface-visibility:hidden] transform-gpu mx-[12px] md:mx-0 mb-[56px] md:mb-0">
-    <div className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]">
+  // The card and its artwork carry the same view-transition names as the modal
+  // on `/`, so opening a shot expands into this page instead of cutting to it.
+  <div className="flex flex-col w-full">
+    <div
+      className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]"
+      style={{viewTransitionName: Config.viewTransition.card}}
+    >
       <div className="relative z-20">
         <div className="px-[20px] md:px-8 pt-[20px] md:pt-8 pb-2">
-          <div className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden border-[0.75px] border-[#FFFFFF26]">
+          <div
+            className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden border-[0.75px] border-[#FFFFFF26]"
+            style={{viewTransitionName: Config.viewTransition.media}}
+          >
             <Image
               src={image}
               alt="shot"

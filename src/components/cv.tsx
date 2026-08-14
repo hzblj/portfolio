@@ -2,16 +2,23 @@
 
 import classNames from 'classnames'
 import gsap from 'gsap'
-import {FC, ReactNode, useLayoutEffect, useRef} from 'react'
+import {ScrollTrigger} from 'gsap/ScrollTrigger'
+import {FC, ReactNode, type RefObject, useLayoutEffect, useRef} from 'react'
 
 import {CVPosition, CVSection, CVSectionLink, CVSectionProject, cv} from '@/db'
 import {cn} from '@/utils'
 
 import {LinkExternal} from './link-external'
 
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
 const SectionLeft: FC<{year: string}> = ({year}) => (
   <div className="w-[88px] h-[17px] flex-shrink-0">
-    <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/40">{year}</span>
+    <span data-cv-reveal="true" className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/40">
+      {year}
+    </span>
   </div>
 )
 
@@ -24,7 +31,15 @@ const Segments: FC<Pick<CVSection, 'positions'>> = ({positions}) => {
   }
 
   return (
-    <div className="absolute left-[-13px] top-[7px] flex flex-col items-center justify-center gap-[2px]">
+    // Revealed with the positions it runs alongside. Left out of the reveal it
+    // sat there fully drawn next to labels that had not arrived yet, which read
+    // as broken rather than as a rail waiting to be filled. One node, not one
+    // per dot: sliding a dotted rail in piece by piece draws the eye to the
+    // rail, and the rail is not the content.
+    <div
+      data-cv-reveal="true"
+      className="absolute left-[-13px] top-[7px] flex flex-col items-center justify-center gap-[2px]"
+    >
       {positions.map((_, index) => (
         <div key={index.toString()} className="flex flex-col items-center justify-center gap-[2px]">
           <Dot />
@@ -129,6 +144,7 @@ const SectionLink: FC<CVSectionLink> = ({name, url}) => (
     <a
       href={url}
       target="_blank"
+      data-cv-reveal="true"
       className="block font-normal text-[14px] leading-[22px] tracking-[0px] text-white/50 underline decoration-white/20 decoration-[1.5px] underline-offset-4 hover:decoration-white/40 transition-colors duration-500 ease-out"
     >
       {name}
@@ -252,7 +268,7 @@ const Section = ({year, ...props}: CVSection) => (
 
 const SectionItem: FC<{name?: string; url?: string; type: string}> = ({name, url, type}) => {
   return (
-    <div className="flex items-center">
+    <div data-cv-reveal="true" className="flex items-center">
       <span className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/40 w-[70.37px] mr-[35.98px]">
         {type}
       </span>
@@ -283,7 +299,9 @@ const SectionLanguagesAndLocations: FC = () => (
   <div className="flex flex-row gap-[51px] flex-wrap">
     <div className="flex flex-col gap-[56px]">
       <div className="h-[17px]">
-        <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Languages</h1>
+        <h1 data-cv-reveal="true" className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">
+          Languages
+        </h1>
       </div>
       <div className="flex flex-col gap-[19.19px]">
         <SectionItem type="Native" name="Czech" />
@@ -293,7 +311,9 @@ const SectionLanguagesAndLocations: FC = () => (
     <div className="flex flex-1" />
     <div className="flex flex-col gap-[56px]">
       <div className="h-[17px]">
-        <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Locations</h1>
+        <h1 data-cv-reveal="true" className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">
+          Locations
+        </h1>
       </div>
       <div className="flex flex-col gap-[19.19px]">
         <SectionItem type="Based in" name="Prague, Czechia" />
@@ -304,84 +324,169 @@ const SectionLanguagesAndLocations: FC = () => (
 )
 
 type RevealOptions = {
-  sectionSelector?: string
+  root: RefObject<HTMLElement | null>
   nodeSelector?: string
   nodeStagger?: number
+  introStagger?: number
   nodeDuration?: number
-  sectionGap?: number
   ease?: gsap.EaseString
   from?: gsap.TweenVars
   to?: gsap.TweenVars
   enable?: boolean
+  skipIntro?: boolean
 }
 
+/** Fraction of the viewport a line has to reach before it reveals. */
+const REVEAL_LINE = 0.92
+
+/**
+ * The nearest scrolling ancestor, or undefined for the document.
+ *
+ * The CV shows up in two places that scroll differently: its own page, where
+ * the document scrolls, and the modal, which scrolls a container of its own.
+ * ScrollTrigger has to be told which, and finding it beats threading a ref down
+ * through the modal for the component's benefit.
+ */
+const findScroller = (node: HTMLElement | null) => {
+  let element = node?.parentElement ?? null
+
+  while (element && element !== document.body) {
+    const {overflowY} = getComputedStyle(element)
+
+    if (overflowY === 'auto' || overflowY === 'scroll') {
+      return element
+    }
+
+    element = element.parentElement
+  }
+
+  return undefined
+}
+
+/**
+ * Reveals the CV line by line, as each line arrives.
+ *
+ * It used to chain every section onto one timeline that started at mount. With
+ * this much CV that timeline runs the best part of a minute, so scrolling down
+ * landed you on lines still queued behind the ones above — reading exactly like
+ * content loading in slowly, when it was already there and nothing was waiting
+ * on the scroll at all.
+ *
+ * Per-line triggers, then. `batch` is what keeps that from turning into sixty
+ * separate pops: it collects the lines that cross the line together and gives
+ * them one staggered tween, so a screenful arrives in sequence while the
+ * sequence itself is still driven by where you have scrolled to.
+ *
+ * The first screenful is handled apart from it. Everything up there is already
+ * past the reveal line on arrival, so `batch` would take it as one wave and
+ * drop the whole top of the page in at once — the opposite of the point. It
+ * gets its own staggered tween instead, and the batching starts below the fold.
+ */
 const useCvSequentialReveal = ({
-  sectionSelector = '[data-cv-section]',
+  root,
   nodeSelector = '[data-cv-reveal]',
-  nodeStagger = 0.06,
-  nodeDuration = 0.6,
-  sectionGap = 0.06,
+  nodeStagger = 0.05,
+  introStagger = 0.055,
+  nodeDuration = 0.5,
   ease = 'power2.out',
   from = {autoAlpha: 0, y: 20},
   to = {autoAlpha: 1, y: 0},
   enable = true,
-}: RevealOptions = {}) => {
+  skipIntro = false,
+}: RevealOptions) => {
   useLayoutEffect(() => {
-    if (!enable) {
+    if (!enable || !root.current) {
       return
     }
 
-    const ctx = gsap.context(() => {
-      const sections = gsap.utils.toArray<HTMLElement>(sectionSelector)
+    const scroller = findScroller(root.current)
 
-      if (!sections.length) {
+    const ctx = gsap.context(() => {
+      const nodes = gsap.utils.toArray<HTMLElement>(nodeSelector)
+
+      if (!nodes.length) {
         return
       }
 
-      const master = gsap.timeline({defaults: {ease}})
+      gsap.set(nodes, {...from})
 
-      sections.forEach((section, i) => {
-        const nodes = gsap.utils.toArray<HTMLElement>(section.querySelectorAll(nodeSelector))
+      // Both rects are viewport-relative, so this works the same whether the
+      // scrolling thing is a container part-way down the screen or the document.
+      const bounds = scroller?.getBoundingClientRect()
+      const revealLine = (bounds?.top ?? 0) + (scroller?.clientHeight ?? window.innerHeight) * REVEAL_LINE
 
-        if (!nodes.length) {
-          return
-        }
+      const onScreen: HTMLElement[] = []
+      const belowFold: HTMLElement[] = []
 
-        const sectionTL = gsap.timeline()
-
-        sectionTL.fromTo(
-          nodes,
-          {...from},
-          {...to, duration: nodeDuration, force3D: true, stagger: nodeStagger, willChange: 'transform, opacity'}
-        )
-
-        master.add(sectionTL, i === 0 ? 0 : `>${sectionGap}`)
+      nodes.forEach(node => {
+        ;(node.getBoundingClientRect().top < revealLine ? onScreen : belowFold).push(node)
       })
-    })
+
+      if (onScreen.length) {
+        // A modal restored from the session is not being opened, so its first
+        // screen is simply already there.
+        gsap.to(onScreen, {
+          ...to,
+          duration: skipIntro ? 0 : nodeDuration,
+          ease,
+          force3D: true,
+          stagger: skipIntro ? 0 : introStagger,
+        })
+      }
+
+      if (!belowFold.length) {
+        return
+      }
+
+      ScrollTrigger.batch(belowFold, {
+        // Caps how long one wave can run: without it, a dense screenful would
+        // trail on well after you had scrolled past it.
+        batchMax: 8,
+        interval: 0.08,
+        // A line that has arrived has arrived — replaying it on the way back up
+        // would fight the reader.
+        once: true,
+        onEnter: batch =>
+          gsap.to(batch, {
+            ...to,
+            duration: nodeDuration,
+            ease,
+            force3D: true,
+            overwrite: true,
+            stagger: nodeStagger,
+          }),
+        scroller,
+        start: `top ${REVEAL_LINE * 100}%`,
+      })
+    }, root)
 
     return () => ctx.revert()
-  }, [sectionSelector, nodeSelector, nodeStagger, nodeDuration, sectionGap, ease, from, to, enable])
+  }, [root, nodeSelector, nodeStagger, introStagger, nodeDuration, ease, from, to, enable, skipIntro])
 }
 
 export type CVProps = {
   children?: ReactNode
   animated?: boolean
+  /** Restored rather than opened: show the first screen without replaying it. */
+  instant?: boolean
 }
 
-export const CV: FC<CVProps> = ({children, animated = false}) => {
+export const CV: FC<CVProps> = ({children, animated = false, instant = false}) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const workExperience = cv.workExperience
   const sideProjects = cv.sideProjects
   const education = cv.education
 
-  useCvSequentialReveal({enable: animated})
+  useCvSequentialReveal({enable: animated, root: ref, skipIntro: instant})
 
   return (
     <div className="h-full w-full flex flex-col max-w-[572px]">
       <div ref={ref} className="w-full h-full flex flex-col gap-[44px] md:gap-[56px]">
         <div className="h-[17px]">
-          <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Work Experience</h1>
+          <h1 data-cv-reveal="true" className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">
+            Work Experience
+          </h1>
         </div>
 
         <div className="flex flex-col gap-[56px]">
@@ -394,7 +499,12 @@ export const CV: FC<CVProps> = ({children, animated = false}) => {
 
         <div className="flex flex-col gap-[56px]">
           <div className="h-[17px]">
-            <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Side Projects</h1>
+            <h1
+              data-cv-reveal="true"
+              className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white"
+            >
+              Side Projects
+            </h1>
           </div>
           {sideProjects.map((section, index) => (
             <div key={index.toString()} className="flex flex-col w-full">
@@ -405,7 +515,12 @@ export const CV: FC<CVProps> = ({children, animated = false}) => {
 
         <div className="flex flex-col gap-[56px]">
           <div className="h-[17px]">
-            <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Education</h1>
+            <h1
+              data-cv-reveal="true"
+              className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white"
+            >
+              Education
+            </h1>
           </div>
           {education.map((section, index) => (
             <div key={index.toString()} className="flex flex-col w-full">
@@ -416,7 +531,12 @@ export const CV: FC<CVProps> = ({children, animated = false}) => {
 
         <div className="flex flex-col gap-[56px]">
           <div className="h-[17px]">
-            <h1 className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">Connect</h1>
+            <h1
+              data-cv-reveal="true"
+              className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white"
+            >
+              Connect
+            </h1>
           </div>
           <SectionConnect />
         </div>

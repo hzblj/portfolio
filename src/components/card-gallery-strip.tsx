@@ -132,6 +132,7 @@ export const CardGalleryStrip: FC = () => {
           />
         ))}
       </div>
+      <div className="absolute inset-0 texture-paper texture-paper-dark" />
     </div>
   )
 }

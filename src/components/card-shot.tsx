@@ -2,18 +2,28 @@
 
 import {gsap} from 'gsap'
 import Image from 'next/image'
-import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
+import {FC, Fragment, PointerEvent, useCallback, useLayoutEffect, useRef, useState} from 'react'
 
 import {EntryShot} from '@/db'
 import {useEntranceAnimation, useHasHover, useSound} from '@/hooks'
 import {trackProjectView} from '@/lib'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
-
+import {claimOpenCard, releaseOpenCard, setOpenCard} from './card-session'
 import {CardShotHover} from './card-shot-hover'
 import {CardShotModal} from './card-shot-modal'
 import {CardShotVideo} from './card-shot-video'
 
-export const CardShot: FC<EntryShot> = ({area, properties, title, description, image, videos, size, animation}) => {
+export const CardShot: FC<EntryShot> = ({
+  area,
+  properties,
+  title,
+  description,
+  image,
+  videos,
+  size,
+  slug,
+  animation,
+}) => {
   const refCard = useRef<HTMLDivElement>(null)
   const refTitle = useRef<HTMLDivElement>(null)
   const refVideoIcon = useRef<HTMLDivElement>(null)
@@ -24,6 +34,23 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
   const dispatch = useCameraDispatch()
   const sound = useSound('modal')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  // Set only when the modal comes back from the session rather than from a
+  // click: a return is not an opening, so it should not replay the flourish.
+  const [isRestored, setIsRestored] = useState(false)
+
+  // Client-only and before paint, so the card is simply already open on arrival
+  // — the modal is portalled into `#main`, which does not exist on the server.
+  useLayoutEffect(() => {
+    if (!claimOpenCard(slug)) {
+      return
+    }
+
+    setIsModalOpen(true)
+    setIsRestored(true)
+    actionToggleModal(dispatch, true)
+
+    return () => releaseOpenCard(slug)
+  }, [dispatch, slug])
 
   const handleEnter = useCallback((e: PointerEvent) => {
     if (e.pointerType !== 'mouse') {
@@ -82,15 +109,19 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
 
   const handleOnClose = useCallback(() => {
     setIsModalOpen(false)
+    setIsRestored(false)
     actionToggleModal(dispatch, false)
+    setOpenCard(null)
   }, [dispatch])
 
   const handleOnOpen = useCallback(() => {
     sound.open()
     setIsModalOpen(true)
+    setIsRestored(false)
     actionToggleModal(dispatch, true)
+    setOpenCard(slug)
     trackProjectView(title)
-  }, [dispatch, sound, title])
+  }, [dispatch, slug, sound, title])
 
   return (
     <Fragment>
@@ -107,7 +138,7 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
           role="button"
           className="flex flex-col w-full grow overflow-hidden relative items-center justify-center cursor-pointer"
         >
-          <div className="w-full h-full flex justify-center items-center relative overflow-hidden">
+          <div className="w-full h-full flex justify-center items-center relative overflow-hidden isolate">
             <Image
               src={image}
               alt={title}
@@ -118,6 +149,9 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
               style={{objectFit: 'cover'}}
             />
             <CardShotVideo ref={refVideoIcon} videos={videos} image={image} hasHover={hasHover} />
+            {/* Last, so the hover video keeps the grain too. `isolate` above
+                keeps the blend inside the artwork. */}
+            <div className="absolute inset-0 texture-paper texture-paper-dark" />
           </div>
           {hasHover && <CardShotHover ref={refTitle} title={title} />}
         </div>
@@ -125,12 +159,14 @@ export const CardShot: FC<EntryShot> = ({area, properties, title, description, i
 
       <CardShotModal
         isOpen={isModalOpen}
+        instant={isRestored}
         onClose={handleOnClose}
         properties={properties}
         title={title}
         description={description}
         image={image}
         size={size}
+        slug={slug}
         videos={videos}
       />
     </Fragment>

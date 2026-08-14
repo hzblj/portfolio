@@ -1,6 +1,6 @@
 import {type ReactNode} from 'react'
 
-import {ControlsDock, PersonJsonLd, SoundControls} from '@/components'
+import {ControlsDock, PersonJsonLd} from '@/components'
 import {Config} from '@/config'
 import {IntroProvider, SoundProvider} from '@/providers'
 import {toPx} from '@/utils'
@@ -26,7 +26,6 @@ export default function RootLayout({children}: Props) {
           </div>
         </main>
         <ControlsDock />
-        <SoundControls />
       </IntroProvider>
     </SoundProvider>
   )

@@ -1,11 +1,13 @@
 'use client'
 
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {createPortal} from 'react-dom'
 
-import {cn} from '@/utils'
+import {useAdaptiveGlass, useControlFade} from '@/hooks'
+import {callAll, cn} from '@/utils'
 
 import {MAX_ZOOM, MIN_ZOOM, stepZoom, WHEEL_NOTCH_THRESHOLD, ZOOM_TRACKPAD_SENSITIVITY, ZOOM_WHEEL_STEP} from '../const'
+import {useCameraState} from '../context'
 import {useZoomController} from './useZoomController'
 
 // Compared with an epsilon so floating-point drift near the bounds doesn't
@@ -20,6 +22,14 @@ const screenCenter = () => ({x: window.innerWidth / 2, y: window.innerHeight / 2
 
 export const ZoomControls = () => {
   const {scale, zoomBy, zoomTo} = useZoomController(MIN_ZOOM)
+  const {isModalOpen} = useCameraState()
+
+  // Out with an opening modal, back with its close. The pill stays mounted while
+  // it is gone so it can fade on the shared control curve instead of blinking
+  // out of the dock — the gestures below come off either way.
+  const fade = useControlFade(!isModalOpen)
+  const glass = useAdaptiveGlass()
+  const ref = useMemo(() => callAll(fade, glass), [fade, glass])
 
   const [mounted, setMounted] = useState(false)
   const pointer = useRef({x: 0, y: 0})
@@ -31,6 +41,10 @@ export const ZoomControls = () => {
   }, [])
 
   useEffect(() => {
+    if (isModalOpen) {
+      return
+    }
+
     const controller = new AbortController()
     const {signal} = controller
 
@@ -83,7 +97,7 @@ export const ZoomControls = () => {
     return () => {
       controller.abort()
     }
-  }, [zoomBy])
+  }, [isModalOpen, zoomBy])
 
   if (!mounted) {
     return null
@@ -96,7 +110,8 @@ export const ZoomControls = () => {
 
   return createPortal(
     <div
-      className="order-2 flex select-none items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1 text-white backdrop-blur-xl"
+      ref={ref}
+      className="glass order-2 flex select-none items-center gap-1 rounded-full p-1 backdrop-blur-xl"
       onPointerDown={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}
     >
@@ -104,7 +119,7 @@ export const ZoomControls = () => {
         aria-label="Zoom out"
         className={cn(
           'flex h-9 w-9 items-center justify-center rounded-full text-xl leading-none transition-colors',
-          canZoomOut ? 'hover:bg-white/15' : 'cursor-not-allowed opacity-30'
+          canZoomOut ? 'glass-hover cursor-pointer' : 'cursor-not-allowed opacity-30'
         )}
         disabled={!canZoomOut}
         onClick={() => zoomTo(stepZoom(scale, -1), screenCenter())}
@@ -117,7 +132,7 @@ export const ZoomControls = () => {
         aria-label="Reset zoom"
         className={cn(
           'min-w-[3.25rem] rounded-full px-2 text-center text-sm tabular-nums transition-colors',
-          canZoomOut ? 'hover:bg-white/15' : 'cursor-default opacity-60'
+          canZoomOut ? 'glass-hover cursor-pointer' : 'cursor-default opacity-60'
         )}
         disabled={!canZoomOut}
         onClick={() => zoomTo(MIN_ZOOM, screenCenter())}
@@ -130,7 +145,7 @@ export const ZoomControls = () => {
         aria-label="Zoom in"
         className={cn(
           'flex h-9 w-9 items-center justify-center rounded-full text-xl leading-none transition-colors',
-          canZoomIn ? 'hover:bg-white/15' : 'cursor-not-allowed opacity-30'
+          canZoomIn ? 'glass-hover cursor-pointer' : 'cursor-not-allowed opacity-30'
         )}
         disabled={!canZoomIn}
         onClick={() => zoomTo(stepZoom(scale, 1), screenCenter())}

@@ -6,6 +6,9 @@ import type {Metadata, Viewport} from 'next'
 import {type ReactNode} from 'react'
 
 import {GoogleAnalytics, WebVitals} from '@/components'
+// Imported straight from the module rather than `@/providers`: the barrel would
+// pull the camera and sound providers into every route's client bundle.
+import {NavigationProvider} from '@/providers/NavigationProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -104,7 +107,7 @@ export default function RootLayout({children}: Props) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        <NavigationProvider>{children}</NavigationProvider>
         <GoogleAnalytics />
         <WebVitals />
       </body>

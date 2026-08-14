@@ -1,16 +1,17 @@
 'use client'
 
 import {gsap} from 'gsap'
-import {FC, Fragment, PointerEvent, useCallback, useRef, useState} from 'react'
+import {FC, Fragment, PointerEvent, useCallback, useLayoutEffect, useRef, useState} from 'react'
 
 import {EntryCV} from '@/db'
 import {useEntranceAnimation, useSound} from '@/hooks'
 import {actionToggleModal, useCameraDispatch} from '@/providers'
 
 import {CardCVModal} from './card-cv-modal'
+import {claimOpenCard, releaseOpenCard, setOpenCard} from './card-session'
 import {CV} from './cv'
 
-export const CardCV: FC<EntryCV> = ({area, animation}) => {
+export const CardCV: FC<EntryCV> = ({area, slug, animation}) => {
   const refCard = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLDivElement>(null)
   const tlRef = useRef<gsap.core.Tween | gsap.core.Timeline | null>(null)
@@ -19,6 +20,23 @@ export const CardCV: FC<EntryCV> = ({area, animation}) => {
   const dispatch = useCameraDispatch()
   const sound = useSound('modal')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  // Set only when the modal comes back from the session rather than from a
+  // click: a return is not an opening, so it should not replay the flourish.
+  const [isRestored, setIsRestored] = useState(false)
+
+  // Client-only and before paint, so the card is simply already open on arrival
+  // — the modal is portalled into `#main`, which does not exist on the server.
+  useLayoutEffect(() => {
+    if (!claimOpenCard(slug)) {
+      return
+    }
+
+    setIsModalOpen(true)
+    setIsRestored(true)
+    actionToggleModal(dispatch, true)
+
+    return () => releaseOpenCard(slug)
+  }, [dispatch, slug])
 
   const handleEnter = useCallback((e: PointerEvent) => {
     if (e.pointerType !== 'mouse') {
@@ -66,14 +84,18 @@ export const CardCV: FC<EntryCV> = ({area, animation}) => {
 
   const handleOnClose = useCallback(() => {
     setIsModalOpen(false)
+    setIsRestored(false)
     actionToggleModal(dispatch, false)
+    setOpenCard(null)
   }, [dispatch])
 
   const handleOnOpen = useCallback(() => {
     sound.open()
     setIsModalOpen(true)
+    setIsRestored(false)
     actionToggleModal(dispatch, true)
-  }, [dispatch, sound])
+    setOpenCard(slug)
+  }, [dispatch, slug, sound])
 
   return (
     <Fragment>
@@ -109,7 +131,7 @@ export const CardCV: FC<EntryCV> = ({area, animation}) => {
           </div>
         </div>
       </div>
-      <CardCVModal isOpen={isModalOpen} onClose={handleOnClose} />
+      <CardCVModal isOpen={isModalOpen} instant={isRestored} onClose={handleOnClose} />
     </Fragment>
   )
 }

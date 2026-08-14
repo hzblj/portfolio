@@ -127,7 +127,7 @@ export const CopyButton: FC<CopyButtonProps> = ({value, label = 'Copy', classNam
       onClick={handleCopy}
       aria-label={copied ? 'Copied' : label}
       className={cn(
-        'group relative flex shrink-0 items-center justify-center rounded-full',
+        'group relative flex shrink-0 cursor-pointer items-center justify-center rounded-full',
         'border border-white/12 bg-white/6 text-white/60 backdrop-blur-md',
         'transition-[color,background-color,border-color] duration-300 ease-out',
         'hover:border-white/25 hover:bg-white/12 hover:text-white',
