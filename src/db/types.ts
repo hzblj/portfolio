@@ -140,3 +140,25 @@ export type CV = {
   education: CVSections
   connect: Contact[]
 }
+
+export type IcoRecord = {
+  label: string
+  hint?: string
+  value: string
+  url?: string
+}
+
+export type Ico = {
+  ico: string
+  name: string
+  headline: string
+  since: string
+  vat: string
+  location: string
+  records: IcoRecord[]
+  source: {
+    name: string
+    url: string
+    updatedAt: string
+  }
+}

@@ -10,6 +10,12 @@ export default function sitemap() {
       priority: 1,
       url: baseUrl,
     },
+    {
+      changeFrequency: 'yearly' as const,
+      lastModified: new Date(),
+      priority: 0.4,
+      url: `${baseUrl}/ico`,
+    },
   ]
 
   const shotRoutes = entries
