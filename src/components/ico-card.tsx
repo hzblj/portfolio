@@ -96,19 +96,6 @@ const Blobs = () => (
   </div>
 )
 
-/** The little contact chip every card in a wallet has. */
-const Chip = () => (
-  <div
-    aria-hidden="true"
-    className="relative h-[26px] w-[34px] overflow-hidden rounded-[6px] bg-[linear-gradient(135deg,rgba(255,255,255,0.72)_0%,rgba(255,255,255,0.28)_38%,rgba(255,255,255,0.6)_66%,rgba(255,255,255,0.22)_100%)] shadow-[inset_0_0_0_0.75px_rgba(255,255,255,0.4)]"
-  >
-    <div className="absolute inset-y-[5px] left-[10px] w-[0.75px] bg-black/25" />
-    <div className="absolute inset-y-[5px] left-[22px] w-[0.75px] bg-black/25" />
-    <div className="absolute inset-x-[4px] top-[9px] h-[0.75px] bg-black/25" />
-    <div className="absolute inset-x-[4px] top-[16px] h-[0.75px] bg-black/25" />
-  </div>
-)
-
 const Label: FC<{children: string; className?: string}> = ({children, className}) => (
   <span
     className={cn('block text-[9px] font-medium uppercase leading-[100%] tracking-[0.16em] text-white/45', className)}
@@ -267,10 +254,7 @@ export const IcoCard: FC = () => {
               style={{transform: 'translateZ(26px)', transformStyle: 'preserve-3d'}}
             >
               <div className="flex items-start justify-between">
-                <div className="flex flex-col gap-[15px]">
-                  <Label>Business details</Label>
-                  <Chip />
-                </div>
+                <Label>Business details</Label>
                 <div className="flex items-center gap-[7px]">
                   <span className="ico-pulse size-[5px] rounded-full bg-[#4ade80]" />
                   <Label>Active · CZ</Label>
