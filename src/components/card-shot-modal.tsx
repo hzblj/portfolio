@@ -58,7 +58,6 @@ export const CardShotModal: FC<CardShotModalProps> = ({
     isOpen={isOpen}
     instant={instant}
     onClose={onClose}
-    transitionName={Config.viewTransition.card}
     // In the viewport's corner rather than the artwork's, the same place the CV
     // puts it — and on a phone, beside the close button at the bottom of the
     // screen. Goes through `overlay` because the card is transformed and would

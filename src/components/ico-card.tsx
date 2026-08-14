@@ -101,9 +101,12 @@ const Waves = () => (
 /** Light pooling on the plate — steel greys, so nothing tints the black. */
 const Blobs = () => (
   <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-    <div className="ico-blob ico-blob-a absolute -top-[30%] -left-[16%] size-[74%] bg-[#8f9dae]" />
-    <div className="ico-blob ico-blob-b absolute top-[18%] -right-[20%] size-[70%] bg-[#5d6673]" />
-    <div className="ico-blob ico-blob-c absolute -bottom-[34%] left-[22%] size-[64%] bg-[#454a52]" />
+    {/* Sized for the spread the blur used to add, and coloured through `color`
+        rather than `background`: the pool is a gradient of `currentColor` —
+        see `.ico-blob` in app.css. Each one keeps the centre it had. */}
+    <div className="ico-blob ico-blob-a absolute -top-[40%] -left-[26%] size-[94%] text-[#8f9dae]" />
+    <div className="ico-blob ico-blob-b absolute top-[8%] -right-[30%] size-[90%] text-[#5d6673]" />
+    <div className="ico-blob ico-blob-c absolute -bottom-[43%] left-[13%] size-[82%] text-[#454a52]" />
   </div>
 )
 
@@ -315,7 +318,7 @@ export const IcoCard: FC = () => {
           <div className="relative aspect-[1.5858] w-full rounded-3xl" style={{transformStyle: 'preserve-3d'}}>
             <div
               aria-hidden="true"
-              className="ico-halo absolute -inset-8 -z-10"
+              className="ico-halo absolute -inset-20 -z-10"
               style={{transform: 'translateZ(-80px)'}}
             />
 

@@ -75,9 +75,11 @@ export default async function SlugPage({params}: Props) {
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
         {/* Ellipses, not circles: they give the slow turn something to show, and
             three long axes crossing at different rates never repeat a shape. */}
-        <div className="scene-light scene-light-a -top-[24%] left-[2%] h-[46vmax] w-[64vmax] bg-[#1b3fb5] opacity-[0.20]" />
-        <div className="scene-light scene-light-b top-[26%] -right-[18%] h-[56vmax] w-[44vmax] bg-[#5b2bc9] opacity-[0.16]" />
-        <div className="scene-light scene-light-c -bottom-[28%] left-[16%] h-[40vmax] w-[58vmax] bg-[#0f6f8c] opacity-[0.13]" />
+        {/* The colour is the text colour: the glow is a gradient of
+            `currentColor`, not a fill — see `.scene-light` in app.css. */}
+        <div className="scene-light scene-light-a -top-[24%] left-[2%] h-[46vmax] w-[64vmax] text-[#1b3fb5] opacity-[0.20]" />
+        <div className="scene-light scene-light-b top-[26%] -right-[18%] h-[56vmax] w-[44vmax] text-[#5b2bc9] opacity-[0.16]" />
+        <div className="scene-light scene-light-c -bottom-[28%] left-[16%] h-[40vmax] w-[58vmax] text-[#0f6f8c] opacity-[0.13]" />
         <div className="scene-grain absolute inset-0 opacity-[0.05]" />
         {/* Pulled down behind the card so the copy keeps its contrast, and down
             again at the edges — the light ends up pooling around the card. */}
@@ -88,13 +90,11 @@ export default async function SlugPage({params}: Props) {
           desktop, the bottom of the screen on a phone — so crossing over only
           turns the arrows round. */}
       <CardCollapseLink />
-      {/* Padding on the outside, the width cap on the inside: the card has to
-          come out the exact size and place it is in the modal — same `py-10`,
-          same 512, same margin under it on a phone — or the shared element
-          scales its own text mid-flight and every line ghosts. That margin is
-          also what keeps the last property clear of the pill down there. */}
-      <div className="relative flex min-h-full w-full justify-center px-3 py-10 md:px-4">
-        <div className="mb-[56px] flex w-full max-w-[512px] flex-col justify-center md:mb-0">
+      {/* Laid out like the CV: one column on the ambient, started below the top
+          edge rather than centred in the screen, so a long shot and a short one
+          both begin in the same place. */}
+      <div className="relative flex min-h-full w-full justify-center px-5 pt-[116px]">
+        <div className="flex w-full max-w-[512px] flex-col">
           <ShotDetail
             title={entry.title}
             image={entry.image}
@@ -103,6 +103,8 @@ export default async function SlugPage({params}: Props) {
             videos={entry.videos}
             size={entry.size}
           />
+          {/* Keeps the last property clear of the pill on the bottom edge. */}
+          <div className="flex h-[116px] w-full flex-shrink-0" />
         </div>
       </div>
     </main>
