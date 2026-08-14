@@ -285,6 +285,66 @@ body {
   object-position: center top;
 }
 
+/* The open card is glass — no background of its own, just `backdrop-filter` —
+   and glass does not survive being snapshotted. Left inside the root capture it
+   comes out as a hole, and only turns back into glass once the transition is
+   over and the live card paints again, which reads as the surface blinking on.
+
+   So it is lifted out under a name of its own and the glass is rebuilt one
+   level up. The group box is a real box, exactly the card, and what sits behind
+   it in the transition layer is the root snapshot — still holding the grid,
+   since only the card's own painting was taken out of it. Blurring that gives
+   the same frosted result the live card produces. A flat colour could not: the
+   glass takes its colour from wherever the camera happens to be parked.
+
+   The card exists on one side only, so the group would otherwise hold a frosted
+   rectangle over the page it is not part of — before the card arrives coming
+   back, after it has gone on the way out. Fading the group takes the frost with
+   the card, on the curve the rest of the page moves on. */
+html[data-view-transition]::view-transition-group(modal-surface) {
+  border-radius: 44px;
+  transform-origin: center;
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  backdrop-filter: blur(var(--card-blur));
+}
+
+@media (width >= 768px) {
+  html[data-view-transition]::view-transition-group(modal-surface) {
+    border-radius: 52px;
+  }
+}
+
+/* The group carries the fade, for the frost and for what is printed on it
+   alike — a second fade on the snapshot would only double it up. */
+html[data-view-transition]::view-transition-old(modal-surface),
+html[data-view-transition]::view-transition-new(modal-surface) {
+  animation: none;
+}
+
+/* `scale` rather than `transform`: the group is positioned by its transform,
+   and writing to that would drop the card out of its own place. */
+html[data-view-transition="forward"]::view-transition-group(modal-surface) {
+  animation: modal-surface-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+html[data-view-transition="back"]::view-transition-group(modal-surface) {
+  animation: modal-surface-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes modal-surface-out {
+  to {
+    opacity: 0;
+    scale: 1.06;
+  }
+}
+
+@keyframes modal-surface-in {
+  from {
+    opacity: 0;
+    scale: 1.06;
+  }
+}
+
 /* The expand and collapse arrows sit in the same pill, in the same corner, so
    the default cross-fade shows both sets at once and reads as a blink rather
    than a change. Handing over instead — one spins out before the other spins in

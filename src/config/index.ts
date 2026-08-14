@@ -39,6 +39,10 @@ export const Config = {
     // The artwork, which is the one thing both sides render: the page wears no
     // card, so there is no card to morph — that one cross-fades with the root.
     media: 'shot-media',
+    // The open card itself, on the one side that has one. Not there to morph
+    // into anything: a name is what keeps it out of the root snapshot, which is
+    // where its glass would be lost — see the rule in app.css.
+    surface: 'modal-surface',
     // The expand/collapse control, shared by the shots and the CV, named in two
     // parts. The pill is named so it rides over the morph rather than fading
     // with everything else around it, and the glyph takes a name of its own so

@@ -154,7 +154,13 @@ export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'sma
           )}
           onClick={e => e.stopPropagation()}
         >
-          <div className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]">
+          {/* Named so the card is captured on its own rather than inside the
+              root snapshot, where its glass would not survive the capture. Only
+              one modal is ever open, so a constant name is unique. */}
+          <div
+            className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]"
+            style={{viewTransitionName: Config.viewTransition.surface}}
+          >
             <div className="relative z-20">{children}</div>
           </div>
         </div>
