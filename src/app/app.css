@@ -314,6 +314,27 @@ html[data-view-transition]::view-transition-group(modal-surface) {
   }
 }
 
+/* Groups paint in the order they were captured, and that order is not the same
+   in both directions: coming back, the artwork is captured from the page while
+   the card is only captured from the modal that follows it, so the card lands
+   on top and its 136px of frost flattens the picture to grey for the length of
+   the morph. Going in the two are captured together and fall the right way
+   round, which is why it only ever showed on the way back. Stacked by hand, so
+   the order is the same whichever way you are heading: the card is a surface,
+   and everything the card carries sits on it. */
+html[data-view-transition]::view-transition-group(modal-surface) {
+  z-index: 1;
+}
+
+html[data-view-transition]::view-transition-group(shot-media) {
+  z-index: 2;
+}
+
+html[data-view-transition]::view-transition-group(card-toggle),
+html[data-view-transition]::view-transition-group(card-toggle-icon) {
+  z-index: 3;
+}
+
 /* The group carries the fade, for the frost and for what is printed on it
    alike — a second fade on the snapshot would only double it up. */
 html[data-view-transition]::view-transition-old(modal-surface),

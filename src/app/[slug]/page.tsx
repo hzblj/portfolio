@@ -92,9 +92,17 @@ export default async function SlugPage({params}: Props) {
       <CardCollapseLink />
       {/* Laid out like the CV: one column on the ambient, started below the top
           edge rather than centred in the screen, so a long shot and a short one
-          both begin in the same place. */}
-      <div className="relative flex min-h-full w-full justify-center px-5 pt-[116px]">
-        <div className="flex w-full max-w-[512px] flex-col">
+          both begin in the same place.
+
+          The column is the open card's box down to the padding — same 12px
+          margin, same 512 cap, same inset — because the artwork inside it is a
+          shared element. A shared element that changes size mid-flight is drawn
+          `cover` at both ends, so the two sides show the same photograph at two
+          different crops and it reads as the picture doubling and sliding into
+          itself. Matched boxes leave the morph nothing to do but carry the
+          picture across. */}
+      <div className="relative flex min-h-full w-full justify-center px-3 pt-[116px] md:px-0">
+        <div className="flex w-full max-w-[512px] flex-col px-[20px] md:px-8">
           <ShotDetail
             title={entry.title}
             image={entry.image}
