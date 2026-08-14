@@ -218,23 +218,31 @@ body:has([data-page-scroll]) {
   touch-action: pan-y;
 }
 
-/* Ambient glow bleeding out from under the card. */
+/* Anodised black metal instead of frosted glass. No border of its own: the
+   metal-fx ring is the edge, and the machined bevel sits just inside it. */
+.ico-plate {
+  background:
+    linear-gradient(147deg, #2b3138 0%, #171b20 7%, #0b0d10 20%, #060709 42%, #0a0d10 56%, #040506 72%, #15191e 100%),
+    #050607;
+}
+
+/* Ambient glow bleeding out from under the card — graphite, not chromatic. */
 .ico-halo {
   border-radius: 40px;
   background:
-    radial-gradient(60% 55% at 26% 18%, rgba(64, 122, 255, 0.34) 0%, transparent 70%),
-    radial-gradient(55% 55% at 82% 30%, rgba(150, 88, 255, 0.28) 0%, transparent 72%),
-    radial-gradient(60% 60% at 50% 92%, rgba(0, 208, 176, 0.2) 0%, transparent 72%);
+    radial-gradient(60% 55% at 26% 18%, rgba(158, 176, 200, 0.22) 0%, transparent 70%),
+    radial-gradient(55% 55% at 82% 30%, rgba(126, 136, 154, 0.18) 0%, transparent 72%),
+    radial-gradient(60% 60% at 50% 92%, rgba(96, 106, 120, 0.14) 0%, transparent 72%);
   filter: blur(56px);
   opacity: calc(0.5 + var(--glare) * 0.5);
   transition: opacity 0.7s ease-out;
 }
 
-/* Organic blobs drifting inside the glass. */
+/* Light pooling on the plate — greyscale, so the black never picks up a hue. */
 .ico-blob {
   filter: blur(46px);
   mix-blend-mode: screen;
-  opacity: 0.32;
+  opacity: 0.16;
   will-change: transform, border-radius;
 }
 
@@ -244,12 +252,103 @@ body:has([data-page-scroll]) {
 
 .ico-blob-b {
   animation: ico-blob-b 34s ease-in-out infinite;
-  opacity: 0.26;
+  opacity: 0.13;
 }
 
 .ico-blob-c {
   animation: ico-blob-c 30s ease-in-out infinite;
-  opacity: 0.2;
+  opacity: 0.11;
+}
+
+/* Broad anisotropic band — the wide soft reflection brushed metal throws. */
+.ico-metal-drift {
+  animation: ico-metal-drift 30s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Screen, not overlay: on a near-black plate only additive light shows up.
+   Tight ramps keep the bands specular instead of washing into a gradient. */
+.ico-metal-sheen {
+  background: linear-gradient(
+    101deg,
+    rgba(255, 255, 255, 0) 4%,
+    rgba(202, 219, 240, 0.06) 8%,
+    rgba(226, 238, 252, 0.34) 11%,
+    rgba(202, 219, 240, 0.05) 15%,
+    rgba(255, 255, 255, 0) 21%,
+    rgba(255, 246, 232, 0.05) 32%,
+    rgba(255, 250, 240, 0.16) 35%,
+    rgba(255, 255, 255, 0) 41%,
+    rgba(168, 188, 212, 0.05) 56%,
+    rgba(214, 232, 252, 0.26) 60%,
+    rgba(168, 188, 212, 0.04) 64%,
+    rgba(255, 255, 255, 0) 72%,
+    rgba(228, 238, 250, 0.13) 86%,
+    rgba(255, 255, 255, 0) 93%
+  );
+  background-size: 150% 100%;
+  background-position: calc(50% + var(--shift) * 22%) 0;
+  mix-blend-mode: screen;
+  opacity: calc(0.8 + var(--glare) * 0.2);
+}
+
+@keyframes ico-metal-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-4%, 1.5%, 0);
+  }
+}
+
+/* Fine brushed grain, masked to the lit bands: on real brushed metal the
+   grain only catches light where the band does. */
+.ico-metal-brush {
+  background-image:
+    repeating-linear-gradient(
+      101deg,
+      rgba(255, 255, 255, 0.16) 0px,
+      rgba(255, 255, 255, 0) 2px,
+      rgba(255, 255, 255, 0.1) 4px,
+      rgba(255, 255, 255, 0) 7px
+    ),
+    repeating-linear-gradient(
+      101deg,
+      rgba(255, 255, 255, 0.08) 0px,
+      rgba(255, 255, 255, 0) 1px,
+      rgba(255, 255, 255, 0.05) 2px,
+      rgba(255, 255, 255, 0) 3px
+    );
+  mix-blend-mode: screen;
+  opacity: calc(0.42 + var(--glare) * 0.4);
+  mask-image:
+    linear-gradient(
+      101deg,
+      rgba(255, 255, 255, 0.05) 3%,
+      #fff 11%,
+      rgba(255, 255, 255, 0.06) 20%,
+      rgba(255, 255, 255, 0.72) 35%,
+      rgba(255, 255, 255, 0.05) 45%,
+      #fff 60%,
+      rgba(255, 255, 255, 0.06) 71%,
+      rgba(255, 255, 255, 0.66) 86%,
+      rgba(255, 255, 255, 0.08) 96%
+    ), radial-gradient(170% 140% at 24% -12%, #fff 0%, rgba(255, 255, 255, 0.55) 55%, rgba(255, 255, 255, 0.18) 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* Machined edge: a lit top bevel, a dark base, and depth pulled into the middle. */
+.ico-metal-bevel {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 2px 5px -2px rgba(255, 255, 255, 0.16),
+    inset 1px 0 0 rgba(255, 255, 255, 0.09),
+    inset -1px 0 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.75),
+    inset 0 -6px 14px -8px rgba(0, 0, 0, 0.9),
+    inset 0 0 60px 6px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes ico-blob-a {
@@ -303,6 +402,7 @@ body:has([data-page-scroll]) {
 /* Organic waves flowing across the lower half of the card. */
 .ico-waves {
   mix-blend-mode: screen;
+  opacity: 0.3;
   mask-image: linear-gradient(163deg, transparent 14%, rgba(255, 255, 255, 0.42) 48%, #fff 100%);
 }
 
@@ -338,15 +438,16 @@ body:has([data-page-scroll]) {
   }
 }
 
-/* Specular highlight tracking the pointer. */
+/* Specular highlight tracking the pointer — tight and cold, the way metal
+   catches a light source compared with the soft bloom glass gives. */
 .ico-glare {
   background:
-    radial-gradient(120px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.14) 0%, transparent 70%),
+    radial-gradient(80px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.2) 0%, transparent 72%),
     radial-gradient(
-      320px circle at var(--mx) var(--my),
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(190, 220, 255, 0.07) 36%,
-      transparent 66%
+      280px circle at var(--mx) var(--my),
+      rgba(230, 238, 248, 0.13) 0%,
+      rgba(170, 186, 206, 0.05) 38%,
+      transparent 68%
     );
   mix-blend-mode: screen;
   opacity: var(--glare);
@@ -365,9 +466,9 @@ body:has([data-page-scroll]) {
   );
   background-size: 240% 100%;
   background-position: calc(50% + var(--shift) * 26%) 0;
-  filter: blur(7px) saturate(1.35);
+  filter: blur(9px) saturate(0.5);
   mix-blend-mode: color-dodge;
-  opacity: calc(0.03 + var(--glare) * 0.075);
+  opacity: calc(0.012 + var(--glare) * 0.035);
   mask-image: radial-gradient(
     420px circle at var(--mx) var(--my),
     #fff 0%,
@@ -383,15 +484,15 @@ body:has([data-page-scroll]) {
   inset: -20%;
   background: linear-gradient(
     102deg,
-    transparent 34%,
-    rgba(255, 255, 255, 0.1) 45%,
-    rgba(255, 255, 255, 0.32) 50%,
-    rgba(255, 255, 255, 0.1) 55%,
-    transparent 66%
+    transparent 36%,
+    rgba(196, 212, 232, 0.06) 46%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(196, 212, 232, 0.06) 54%,
+    transparent 64%
   );
   transform: translate3d(calc(var(--shift) * 46%), 0, 0);
-  opacity: calc(var(--glare) * 0.55);
-  mix-blend-mode: overlay;
+  opacity: calc(0.18 + var(--glare) * 0.7);
+  mix-blend-mode: screen;
 }
 
 /* Film grain so the gradients never band. */
@@ -400,6 +501,19 @@ body:has([data-page-scroll]) {
   background-size: 200px 200px;
   mix-blend-mode: soft-light;
   opacity: 0.09;
+}
+
+/* On the plate the noise has to add light, or the brushed lines stay a
+   perfectly regular screen door. */
+.ico-grain-metal {
+  mix-blend-mode: screen;
+  opacity: 0.055;
+}
+
+/* Etched into the plate: a dark bite below, a lit lip above. */
+.ico-engraved {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.85)) drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.14))
+    drop-shadow(0 0 14px rgba(226, 236, 248, 0.16));
 }
 
 .ico-pulse {
@@ -445,6 +559,7 @@ body:has([data-page-scroll]) {
   .ico-blob-c,
   .ico-waves-drift,
   .ico-wave,
+  .ico-metal-drift,
   .ico-pulse,
   .ico-scene-light-a,
   .ico-scene-light-b {

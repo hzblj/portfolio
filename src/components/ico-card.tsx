@@ -57,7 +57,7 @@ const WAVES = Array.from({length: WAVE_COUNT}, (_, index) => ({
 }))
 
 const Waves = () => (
-  <div aria-hidden="true" className="ico-waves pointer-events-none absolute inset-0 overflow-hidden rounded-3xl">
+  <div aria-hidden="true" className="ico-waves pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
     <svg
       className="ico-waves-drift absolute inset-0 size-full"
       viewBox={`0 0 ${WAVE_VIEWBOX.width} ${WAVE_VIEWBOX.height}`}
@@ -66,10 +66,10 @@ const Waves = () => (
       <title>Organic waves</title>
       <defs>
         <linearGradient id="ico-wave" x1="0" y1="0" x2="1" y2="0.4">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.06" />
-          <stop offset="34%" stopColor="#8fd3ff" stopOpacity="0.34" />
-          <stop offset="72%" stopColor="#ffffff" stopOpacity="0.42" />
-          <stop offset="100%" stopColor="#c0a5ff" stopOpacity="0.16" />
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.04" />
+          <stop offset="34%" stopColor="#c3ceda" stopOpacity="0.26" />
+          <stop offset="72%" stopColor="#ffffff" stopOpacity="0.34" />
+          <stop offset="100%" stopColor="#7c8794" stopOpacity="0.12" />
         </linearGradient>
       </defs>
       {WAVES.map(wave => (
@@ -88,11 +88,26 @@ const Waves = () => (
   </div>
 )
 
+/** Light pooling on the plate — steel greys, so nothing tints the black. */
 const Blobs = () => (
-  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl">
-    <div className="ico-blob ico-blob-a absolute -top-[30%] -left-[16%] size-[74%] bg-[#2f6bff]" />
-    <div className="ico-blob ico-blob-b absolute top-[18%] -right-[20%] size-[70%] bg-[#7a3cff]" />
-    <div className="ico-blob ico-blob-c absolute -bottom-[34%] left-[22%] size-[64%] bg-[#00d0b0]" />
+  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
+    <div className="ico-blob ico-blob-a absolute -top-[30%] -left-[16%] size-[74%] bg-[#8f9dae]" />
+    <div className="ico-blob ico-blob-b absolute top-[18%] -right-[20%] size-[70%] bg-[#5d6673]" />
+    <div className="ico-blob ico-blob-c absolute -bottom-[34%] left-[22%] size-[64%] bg-[#454a52]" />
+  </div>
+)
+
+/**
+ * The metal itself: a broad anisotropic reflection band, the fine brushed
+ * grain running with it, and a machined bevel around the edge.
+ */
+const Metal = () => (
+  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
+    <div className="ico-metal-drift absolute -inset-[18%]">
+      <div className="ico-metal-sheen absolute inset-0" />
+    </div>
+    <div className="ico-metal-brush absolute inset-0" />
+    <div className="ico-metal-bevel absolute inset-0 rounded-[inherit]" />
   </div>
 )
 
@@ -238,16 +253,26 @@ export const IcoCard: FC = () => {
               style={{transform: 'translateZ(-80px)'}}
             />
 
-            <div aria-hidden="true" className="card card-radius-24 absolute inset-0 shadow-[0_40px_110px_-34px_#000]" />
-            <Blobs />
-            <Waves />
-            <div aria-hidden="true" className="ico-holo pointer-events-none absolute inset-0 rounded-3xl" />
-            <div aria-hidden="true" className="ico-glare pointer-events-none absolute inset-0 rounded-3xl" />
+            <div aria-hidden="true" className="absolute inset-0 rounded-3xl shadow-[0_40px_110px_-34px_#000]" />
+
+            {/*
+              Everything opaque is inset by the metal ring's own width — the
+              MetalFx canvas paints at z-index 0, below this content, so a plate
+              drawn edge-to-edge would swallow the ring.
+            */}
             <div
               aria-hidden="true"
-              className="ico-sheen pointer-events-none absolute inset-0 overflow-hidden rounded-3xl"
-            />
-            <div aria-hidden="true" className="ico-grain pointer-events-none absolute inset-0 rounded-3xl" />
+              className="pointer-events-none absolute inset-[2.5px] overflow-hidden rounded-[21.5px]"
+            >
+              <div className="ico-plate absolute inset-0" />
+              <Blobs />
+              <Metal />
+              <Waves />
+              <div className="ico-holo absolute inset-0" />
+              <div className="ico-glare absolute inset-0" />
+              <div className="ico-sheen absolute inset-0 overflow-hidden" />
+              <div className="ico-grain ico-grain-metal absolute inset-0" />
+            </div>
 
             <div
               className="relative flex h-full flex-col justify-between p-[20px] sm:p-[28px]"
@@ -264,7 +289,7 @@ export const IcoCard: FC = () => {
               <div className="flex items-end justify-between gap-4" style={{transform: 'translateZ(14px)'}}>
                 <div className="flex flex-col gap-[9px]">
                   <Label>IČO · Business ID</Label>
-                  <span className="block bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.68)_100%)] bg-clip-text text-[26px] font-medium leading-[100%] tracking-[0.06em] text-transparent tabular-nums drop-shadow-[0_0_12px_rgba(120,180,255,0.28)] sm:text-[32px]">
+                  <span className="ico-engraved block bg-[linear-gradient(180deg,#ffffff_0%,rgba(226,232,240,0.62)_46%,rgba(255,255,255,0.9)_100%)] bg-clip-text text-[26px] font-medium leading-[100%] tracking-[0.06em] text-transparent tabular-nums sm:text-[32px]">
                     {ico.ico}
                   </span>
                 </div>
