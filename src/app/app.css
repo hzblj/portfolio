@@ -258,56 +258,25 @@ body {
 /* ---------------------------------------------------------------------------
    Shot modal → /[slug] detail — shared-element morph
 
-   The card and its artwork carry matching view-transition names on both pages,
-   so the browser hands us one group per pair and animates the box between the
-   two positions. Timings borrow the iOS sheet curve: quick to leave, long to
-   settle.
+   The artwork carries the same view-transition name on both pages, so the
+   browser hands us one group for the pair and animates the box between the two
+   positions. Everything around it — the card on the grid, the page it lands on
+   — is left to the root cross-fade, since the page wears no card of its own for
+   a card to morph into. Timings borrow the iOS sheet curve: quick to leave,
+   long to settle.
 --------------------------------------------------------------------------- */
 
-::view-transition-group(shot-card),
 ::view-transition-group(shot-media),
-::view-transition-old(shot-card),
-::view-transition-new(shot-card),
 ::view-transition-old(shot-media),
 ::view-transition-new(shot-media) {
   animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* The card is glass — no background of its own, just `backdrop-filter`. A
-   captured element is painted in isolation with nothing behind it to sample, so
-   the blur resolves to nothing and the card comes out of the snapshot as a hole
-   with only its text and border in it. Mid-transition the cross-fading page
-   shows straight through that hole, brightest wherever the grid behind happens
-   to be bright, which reads as a grey band around the artwork.
-
-   So the glass is rebuilt one level up. The group box is a real box, exactly
-   the card at every frame, and what sits behind it in the transition layer is
-   the `root` snapshot — which still holds the grid and the backdrop, since only
-   the card's own painting was lifted out of it. Blurring that gives the same
-   frosted result the live card produces, at both ends and everywhere between,
-   instead of a flat colour guessing at it. A guess could not work anyway: the
-   glass takes its colour from whatever the camera happens to be parked over.
-
-   No `animation` here — the group's is the browser's, and it carries the morph. */
-::view-transition-group(shot-card) {
-  border-radius: 44px;
-  -webkit-backdrop-filter: blur(var(--card-blur));
-  backdrop-filter: blur(var(--card-blur));
-}
-
-@media (width >= 768px) {
-  ::view-transition-group(shot-card) {
-    border-radius: 52px;
-  }
-}
-
 /* Snapshots are replaced elements sized to the box they were captured from, so
-   they stretch if the group resizes. Both sides render the card at the same
-   width, so this only has to cover the odd viewport where they differ by a
-   pixel — cropping there beats squashing every line of text. */
-::view-transition-old(shot-card),
-::view-transition-new(shot-card),
+   they stretch if the group resizes. The artwork is the same width on both
+   sides, so this only has to cover the odd viewport where they differ by a
+   pixel — cropping there beats squashing the picture. */
 ::view-transition-old(shot-media),
 ::view-transition-new(shot-media) {
   width: 100%;
@@ -451,24 +420,41 @@ body:has([data-smooth-scroll]) {
     #050607;
 }
 
-/* Ambient glow bleeding out from under the card — graphite, not chromatic. */
+/* Ambient glow bleeding out from under the card — graphite, not chromatic.
+   Three ramps rather than three shapes under a blur: the card tilts and scales
+   under the pointer, and a filtered layer has to be re-rasterised every frame
+   it does, which is what made arriving on this page stutter on a phone. The
+   stops carry the softness the blur used to, and the element is sized for the
+   spread the blur used to give it. */
 .ico-halo {
-  border-radius: 40px;
+  /* Every ellipse has to die out inside the box — a blur had no edge to run
+     into, a gradient does, and one that still carries colour where the element
+     stops draws the element as a rectangle. Radius never exceeds the distance
+     from its own centre to the nearest side. */
   background:
-    radial-gradient(60% 55% at 26% 18%, rgba(158, 176, 200, 0.22) 0%, transparent 70%),
-    radial-gradient(55% 55% at 82% 30%, rgba(126, 136, 154, 0.18) 0%, transparent 72%),
-    radial-gradient(60% 60% at 50% 92%, rgba(96, 106, 120, 0.14) 0%, transparent 72%);
-  filter: blur(56px);
+    radial-gradient(36% 32% at 38% 34%, rgba(158, 176, 200, 0.22) 0%, rgba(158, 176, 200, 0.08) 46%, transparent 100%),
+    radial-gradient(32% 32% at 66% 42%, rgba(126, 136, 154, 0.18) 0%, rgba(126, 136, 154, 0.06) 48%, transparent 100%),
+    radial-gradient(36% 28% at 52% 70%, rgba(96, 106, 120, 0.15) 0%, rgba(96, 106, 120, 0.05) 48%, transparent 100%);
   opacity: calc(0.5 + var(--glare) * 0.5);
   transition: opacity 0.7s ease-out;
 }
 
-/* Light pooling on the plate — greyscale, so the black never picks up a hue. */
+/* Light pooling on the plate — greyscale, so the black never picks up a hue.
+   Same story as the halo, and the morphing border-radius goes with the blur:
+   under 46px of it the shape was never legible anyway, and animating a radius
+   costs a repaint of the layer on every frame. The drift is what read as
+   organic, and the drift stays. */
 .ico-blob {
-  filter: blur(46px);
+  background-image: radial-gradient(
+    closest-side,
+    currentColor 0%,
+    color-mix(in srgb, currentColor 66%, transparent) 44%,
+    color-mix(in srgb, currentColor 24%, transparent) 72%,
+    transparent 100%
+  );
   mix-blend-mode: screen;
   opacity: 0.16;
-  will-change: transform, border-radius;
+  will-change: transform;
 }
 
 .ico-blob-a {
@@ -579,15 +565,12 @@ body:has([data-smooth-scroll]) {
 @keyframes ico-blob-a {
   0%,
   100% {
-    border-radius: 58% 42% 47% 53% / 52% 45% 55% 48%;
     transform: translate3d(calc(var(--shift) * 14px), 0, 0) rotate(0deg) scale(1);
   }
   33% {
-    border-radius: 44% 56% 62% 38% / 41% 58% 42% 59%;
     transform: translate3d(calc(var(--shift) * 14px + 6%), -7%, 0) rotate(52deg) scale(1.12);
   }
   66% {
-    border-radius: 63% 37% 39% 61% / 61% 39% 61% 39%;
     transform: translate3d(calc(var(--shift) * 14px - 5%), 5%, 0) rotate(-34deg) scale(0.94);
   }
 }
@@ -595,15 +578,12 @@ body:has([data-smooth-scroll]) {
 @keyframes ico-blob-b {
   0%,
   100% {
-    border-radius: 46% 54% 58% 42% / 57% 43% 57% 43%;
     transform: translate3d(calc(var(--shift) * -18px), 0, 0) rotate(0deg) scale(1.04);
   }
   40% {
-    border-radius: 62% 38% 41% 59% / 39% 62% 38% 61%;
     transform: translate3d(calc(var(--shift) * -18px - 7%), 6%, 0) rotate(-46deg) scale(0.9);
   }
   70% {
-    border-radius: 39% 61% 55% 45% / 52% 51% 49% 48%;
     transform: translate3d(calc(var(--shift) * -18px + 4%), -5%, 0) rotate(38deg) scale(1.14);
   }
 }
@@ -611,15 +591,12 @@ body:has([data-smooth-scroll]) {
 @keyframes ico-blob-c {
   0%,
   100% {
-    border-radius: 52% 48% 43% 57% / 44% 56% 44% 56%;
     transform: translate3d(calc(var(--shift) * 22px), 0, 0) rotate(0deg) scale(0.98);
   }
   45% {
-    border-radius: 60% 40% 57% 43% / 58% 41% 59% 42%;
     transform: translate3d(calc(var(--shift) * 22px + 8%), -6%, 0) rotate(41deg) scale(1.16);
   }
   75% {
-    border-radius: 43% 57% 48% 52% / 50% 47% 53% 50%;
     transform: translate3d(calc(var(--shift) * 22px - 6%), 4%, 0) rotate(-29deg) scale(0.92);
   }
 }
@@ -760,14 +737,39 @@ body:has([data-smooth-scroll]) {
 
 /* Page-level ambient lights behind a card — the slow drift of colour a dark
    macOS desktop has, so a standalone page reads as lit rather than switched
-   off. Shared by /ico and the project pages. */
+   off. Shared by /ico and the project pages.
+
+   Painted as a ramp rather than as a shape under `filter: blur()`. A blur is
+   re-rasterised every time the compositor touches the layer, and arriving here
+   through the card-to-page morph touches it on every frame of the morph: three
+   vmax-sized blurs cost ten of the 440ms transition's frames on WebKit, which
+   is most of what made opening a card judder. A radial ramp is the same
+   softness resolved once, at no per-frame cost.
+
+   The ramp lives on a pseudo-element inset well past the box, because that is
+   what the blur did — spread the light far outside the element it came from.
+   The element keeps its own size, so each light stays placed where it was. */
 .scene-light {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
   mix-blend-mode: screen;
   pointer-events: none;
   will-change: translate, scale, rotate;
+}
+
+/* Stops are eyeballed against the blur they replace: a broad core, then a long
+   tail that is all but gone before the edge, so no light ends on a seam. */
+.scene-light::after {
+  content: "";
+  position: absolute;
+  inset: -52%;
+  background: radial-gradient(
+    closest-side,
+    currentColor 0%,
+    color-mix(in srgb, currentColor 72%, transparent) 31%,
+    color-mix(in srgb, currentColor 30%, transparent) 59%,
+    color-mix(in srgb, currentColor 7%, transparent) 81%,
+    transparent 100%
+  );
 }
 
 /* Three clocks per light instead of one, and no two of them share a factor, so

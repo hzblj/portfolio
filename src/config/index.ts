@@ -36,13 +36,13 @@ export const Config = {
   // detail page. Both sides must agree, and only one shot can be open at a
   // time, so plain constants are enough — names have to be unique per document.
   viewTransition: {
-    card: 'shot-card',
+    // The artwork, which is the one thing both sides render: the page wears no
+    // card, so there is no card to morph — that one cross-fades with the root.
     media: 'shot-media',
     // The expand/collapse control, shared by the shots and the CV, named in two
-    // parts. The pill needs a name of its own or the artwork covers it: groups
-    // paint in the order their elements do, and inside the card snapshot the
-    // pill sits under `media`. The glyph needs a third name so the two arrow
-    // sets can hand over instead of dissolving through each other.
+    // parts. The pill is named so it rides over the morph rather than fading
+    // with everything else around it, and the glyph takes a name of its own so
+    // the two arrow sets can hand over instead of dissolving through each other.
     toggle: 'card-toggle',
     toggleIcon: 'card-toggle-icon',
   },

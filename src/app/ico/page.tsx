@@ -76,9 +76,11 @@ export default function Ico() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
 
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="scene-light scene-light-a -top-[18%] left-[6%] size-[52vmax] bg-[#1c4bd8] opacity-[0.22]" />
-        <div className="scene-light scene-light-b top-[34%] -right-[12%] size-[46vmax] bg-[#6a24d6] opacity-[0.18]" />
-        <div className="scene-light -bottom-[22%] left-[24%] size-[44vmax] bg-[#00a389] opacity-[0.14]" />
+        {/* The colour is the text colour: the glow is a gradient of
+            `currentColor`, not a fill — see `.scene-light` in app.css. */}
+        <div className="scene-light scene-light-a -top-[18%] left-[6%] size-[52vmax] text-[#1c4bd8] opacity-[0.22]" />
+        <div className="scene-light scene-light-b top-[34%] -right-[12%] size-[46vmax] text-[#6a24d6] opacity-[0.18]" />
+        <div className="scene-light -bottom-[22%] left-[24%] size-[44vmax] text-[#00a389] opacity-[0.14]" />
         <div className="scene-grain absolute inset-0 opacity-[0.06]" />
         <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_45%,transparent_0%,rgba(0,0,0,0.72)_100%)]" />
       </div>

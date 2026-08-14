@@ -17,8 +17,6 @@ export type ModalProps = {
   children: ReactNode
   onClose(): void
   variant?: ModalVariant
-  /** Marks the card as a shared element, so it can morph into a page of its own. */
-  transitionName?: string
   /** Opens at rest, no enter animation — for a modal restored rather than opened. */
   instant?: boolean
   /**
@@ -41,15 +39,7 @@ const modalVariants: Record<ModalVariant, string> = {
 // and the modal is missing from the snapshot, and the morph back out of a
 // project page has nothing to land on. Closing needs no such latch either —
 // `onClose` only fires once the exit animation is done.
-export const Modal: FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  children,
-  variant = 'small',
-  transitionName,
-  instant,
-  overlay,
-}) => {
+export const Modal: FC<ModalProps> = ({isOpen, onClose, children, variant = 'small', instant, overlay}) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLDivElement>(null)
@@ -164,10 +154,7 @@ export const Modal: FC<ModalProps> = ({
           )}
           onClick={e => e.stopPropagation()}
         >
-          <div
-            className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]"
-            style={{viewTransitionName: transitionName}}
-          >
+          <div className="relative card-modal overflow-hidden rounded-[44px] md:rounded-[52px]">
             <div className="relative z-20">{children}</div>
           </div>
         </div>
