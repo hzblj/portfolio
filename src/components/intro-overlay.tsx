@@ -7,12 +7,20 @@ import ReactDOM from 'react-dom'
 import {useIntro} from '@/providers'
 
 export const IntroOverlay = () => {
-  const {setIntroComplete} = useIntro()
+  const {introComplete, setIntroComplete} = useIntro()
   const overlayRef = useRef<HTMLDivElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
   const [mounted, setMounted] = useState(false)
+  // Read once, on the first render of this mount: `introComplete` flips to true
+  // at the end of the reveal, and reacting to that would be reading our own
+  // output. What matters is whether the session had already seen it.
+  const alreadySeenRef = useRef(introComplete)
 
   useLayoutEffect(() => {
+    if (alreadySeenRef.current) {
+      return
+    }
+
     setMounted(true)
   }, [])
 

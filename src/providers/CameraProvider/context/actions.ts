@@ -3,7 +3,7 @@ import {isBool, toPx} from '@/utils'
 import {calculateScale, clampZoom, HEIGHT, WIDTH} from '../const'
 import {CameraAction, CameraOffset, CameraState, CameraTransforms, CameraZoom} from './types'
 
-const recalculateTransforms = (state: CameraState): CameraTransforms => {
+export const recalculateTransforms = (state: CameraState): CameraTransforms => {
   const camera = state.camera
   const origin = state.origin
 

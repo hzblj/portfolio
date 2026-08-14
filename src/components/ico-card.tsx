@@ -2,7 +2,6 @@
 
 import gsap from 'gsap'
 import {MetalFx} from 'metal-fx'
-import Link from 'next/link'
 import {type FC, type PointerEvent, useCallback, useEffect, useLayoutEffect, useRef} from 'react'
 
 import {type IcoRecord, ico} from '@/db'
@@ -16,6 +15,17 @@ const TILT = {
   scale: 1.016,
   z: 40,
 }
+
+/**
+ * Touch has no hover, so the same gesture runs off a held finger instead — and
+ * lighter, because on a phone the finger sits on top of what it is tilting.
+ * `hover` scales rotation, lift, scale and glare together, so one gain is enough.
+ */
+const TOUCH_GAIN = 0.55
+
+/** A tap is over long before the ease-in has gone anywhere, so a touch release
+ *  holds the light for a beat — without it the gesture only reads while dragging. */
+const TOUCH_HOLD = 420
 
 /** Flowing organic waves — deterministic so server and client agree. */
 const WAVE_VIEWBOX = {height: 260, width: 480}
@@ -152,6 +162,8 @@ export const IcoCard: FC = () => {
   const refCard = useRef<HTMLDivElement>(null)
   const target = useRef({hover: 0, x: 0, y: 0})
   const state = useRef({hover: 0, x: 0, y: 0})
+  const refRelease = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const refHeld = useRef(false)
 
   // The entrance runs on the wrapper so the tilt ticker keeps sole ownership of
   // the card's own transform — two writers on one property fight each other.
@@ -202,30 +214,80 @@ export const IcoCard: FC = () => {
 
     gsap.ticker.add(update)
 
-    return () => gsap.ticker.remove(update)
+    return () => {
+      gsap.ticker.remove(update)
+      clearTimeout(refRelease.current)
+    }
   }, [])
 
-  const handleMove = useCallback((event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== 'mouse' || !refCard.current) {
+  const aim = useCallback((event: PointerEvent<HTMLDivElement>) => {
+    if (!refCard.current) {
       return
     }
 
+    clearTimeout(refRelease.current)
+
     const rect = refCard.current.getBoundingClientRect()
 
-    target.current.hover = 1
+    target.current.hover = event.pointerType === 'mouse' ? 1 : TOUCH_GAIN
     target.current.x = gsap.utils.clamp(-1, 1, ((event.clientX - rect.left) / rect.width - 0.5) * 2)
     target.current.y = gsap.utils.clamp(-1, 1, ((event.clientY - rect.top) / rect.height - 0.5) * 2)
   }, [])
 
-  const handleLeave = useCallback(() => {
+  const release = useCallback(() => {
+    clearTimeout(refRelease.current)
+
+    refHeld.current = false
     target.current.hover = 0
     target.current.x = 0
     target.current.y = 0
   }, [])
 
+  // A mouse steers by hovering; a finger or pen only while it is held down.
+  const handleMove = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType === 'mouse' || refHeld.current) {
+        aim(event)
+      }
+    },
+    [aim]
+  )
+
+  // Touch fires no move until it has moved, so the press itself has to light up.
+  const handleDown = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType !== 'mouse') {
+        refHeld.current = true
+        aim(event)
+      }
+    },
+    [aim]
+  )
+
+  // Lifting a finger ends the gesture — and fires `pointerleave` straight after,
+  // so both paths schedule the same hold rather than one undoing the other.
+  // A mouse leaving is a real exit and lets go at once.
+  const handleRelease = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType === 'mouse') {
+        release()
+
+        return
+      }
+
+      clearTimeout(refRelease.current)
+      refHeld.current = false
+      refRelease.current = setTimeout(release, TOUCH_HOLD)
+    },
+    [release]
+  )
+
   return (
     <div ref={refStage} className="flex w-full max-w-[456px] flex-col items-center gap-[38px]">
-      <div ref={refIntro} className="w-full [perspective:1400px] [perspective-origin:50%_45%]">
+      {/* `data-ico-intro` is what app.css hides until the entrance runs — the
+          card fades in from the wrapper, so the wrapper is what has to start
+          hidden in the served HTML. */}
+      <div ref={refIntro} data-ico-intro="true" className="w-full [perspective:1400px] [perspective-origin:50%_45%]">
         {/*
           The metal ring lives on the tilting wrapper so it rotates with the card.
           Only the ring is wanted here: the wandering halo is off, and reflections
@@ -233,9 +295,13 @@ export const IcoCard: FC = () => {
         */}
         <MetalFx
           ref={refCard}
+          onPointerDown={handleDown}
           onPointerMove={handleMove}
-          onPointerLeave={handleLeave}
-          onPointerCancel={handleLeave}
+          onPointerUp={handleRelease}
+          onPointerLeave={handleRelease}
+          // A cancel means the browser took the gesture over for a scroll — drop
+          // it immediately rather than holding a tilt over a moving page.
+          onPointerCancel={release}
           preset="chromatic"
           theme="dark"
           borderRadius={24}
@@ -271,7 +337,7 @@ export const IcoCard: FC = () => {
               <div className="ico-holo absolute inset-0" />
               <div className="ico-glare absolute inset-0" />
               <div className="ico-sheen absolute inset-0 overflow-hidden" />
-              <div className="ico-grain ico-grain-metal absolute inset-0" />
+              <div className="scene-grain scene-grain-metal absolute inset-0" />
             </div>
 
             <div
@@ -286,14 +352,20 @@ export const IcoCard: FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-end justify-between gap-4" style={{transform: 'translateZ(14px)'}}>
-                <div className="flex flex-col gap-[9px]">
-                  <Label>IČO · Business ID</Label>
+              <div className="flex flex-col gap-[9px]" style={{transform: 'translateZ(14px)'}}>
+                <Label>IČO · Business ID</Label>
+                {/* The button rides beside the number rather than out at the card's
+                    edge, so the pair reads as one thing: the ID and its copy. */}
+                <div className="flex items-center gap-[11px]">
                   <span className="ico-engraved block bg-[linear-gradient(180deg,#ffffff_0%,rgba(226,232,240,0.62)_46%,rgba(255,255,255,0.9)_100%)] bg-clip-text text-[26px] font-medium leading-[100%] tracking-[0.06em] text-transparent tabular-nums sm:text-[32px]">
                     {ico.ico}
                   </span>
+                  {/* Inter's ascent and descent bracket the lining figures almost
+                      symmetrically at `leading-[100%]`, so the numerals' optical
+                      middle already is the box's middle — `items-center` centres
+                      the button on them without a nudge. */}
+                  <CopyButton value={ico.ico} label="Copy business ID" size="sm" />
                 </div>
-                <CopyButton value={ico.ico} label="Copy business ID" className="mb-[2px]" />
               </div>
 
               <div className="flex items-end justify-between gap-5">
@@ -327,14 +399,6 @@ export const IcoCard: FC = () => {
           </span>
         </div>
       </div>
-
-      <Link
-        href="/"
-        data-ico-reveal="true"
-        className="text-[13px] font-normal leading-[100%] tracking-[0px] text-white/35 transition-colors duration-500 ease-out hover:text-white/70"
-      >
-        ← Back to portfolio
-      </Link>
     </div>
   )
 }

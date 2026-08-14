@@ -58,6 +58,62 @@
   --card-border-angle: 160deg;
 }
 
+/* Frosted glass for the floating controls — the corner dock and the expand and
+   collapse pills. The four tokens are what `useAdaptiveGlass` rewrites once it
+   has read what the control is sitting over; the values here are the dark tone
+   it starts from, and the only tone shown to anyone who has asked for reduced
+   transparency. Keep them in step with `TONES.dark` in `use-adaptive-glass.ts`.
+
+   Long enough a crossfade that a flip reads as the glass turning over rather
+   than a repaint, and slow enough to forgive a late one. */
+@utility glass {
+  --glass-tint: rgba(255, 255, 255, 0.1);
+  --glass-ink: rgba(255, 255, 255, 1);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-hover: rgba(255, 255, 255, 0.18);
+
+  color: var(--glass-ink);
+  background-color: var(--glass-tint);
+  border: 1px solid var(--glass-border);
+  transition:
+    background-color 320ms ease-out,
+    border-color 320ms ease-out,
+    color 320ms ease-out;
+}
+
+/* The hover wash, for the pill itself where the pill is the control and for the
+   buttons inside it where it is not. A rule of its own rather than a
+   `hover:bg-[…]` utility so it always outranks the `glass` background it has to
+   paint over, whichever order the two land in. */
+@utility glass-hover {
+  &:hover {
+    background-color: var(--glass-hover);
+  }
+}
+
+/* Printed-on-paper grain for photography. Sits as an `absolute inset-0` sibling
+   over the image; the host needs its own stacking context (transform, clip-path
+   or `isolate`) so the blend stays inside the frame. */
+@utility texture-paper {
+  --texture-blend: soft-light;
+  --texture-opacity: 0.3;
+
+  background-image: url("/jpg/texture-paper.jpg");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: var(--texture-blend);
+  opacity: var(--texture-opacity);
+  pointer-events: none;
+}
+
+/* Canvas previews. Soft-light lifts the blacks of a photo, which at card size
+   reads as haze rather than paper — multiply only deepens where the sheet has
+   tooth, so the artwork keeps its contrast. */
+@utility texture-paper-dark {
+  --texture-blend: multiply;
+  --texture-opacity: 0.14;
+}
+
 @layer utilities {
   .responsive-scale {
     @apply scale-100;
@@ -200,6 +256,146 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Shot modal → /[slug] detail — shared-element morph
+
+   The card and its artwork carry matching view-transition names on both pages,
+   so the browser hands us one group per pair and animates the box between the
+   two positions. Timings borrow the iOS sheet curve: quick to leave, long to
+   settle.
+--------------------------------------------------------------------------- */
+
+::view-transition-group(shot-card),
+::view-transition-group(shot-media),
+::view-transition-old(shot-card),
+::view-transition-new(shot-card),
+::view-transition-old(shot-media),
+::view-transition-new(shot-media) {
+  animation-duration: 440ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* The card is glass — no background of its own, just `backdrop-filter`. A
+   captured element is painted in isolation with nothing behind it to sample, so
+   the blur resolves to nothing and the card comes out of the snapshot as a hole
+   with only its text and border in it. Mid-transition the cross-fading page
+   shows straight through that hole, brightest wherever the grid behind happens
+   to be bright, which reads as a grey band around the artwork.
+
+   So the glass is rebuilt one level up. The group box is a real box, exactly
+   the card at every frame, and what sits behind it in the transition layer is
+   the `root` snapshot — which still holds the grid and the backdrop, since only
+   the card's own painting was lifted out of it. Blurring that gives the same
+   frosted result the live card produces, at both ends and everywhere between,
+   instead of a flat colour guessing at it. A guess could not work anyway: the
+   glass takes its colour from whatever the camera happens to be parked over.
+
+   No `animation` here — the group's is the browser's, and it carries the morph. */
+::view-transition-group(shot-card) {
+  border-radius: 44px;
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  backdrop-filter: blur(var(--card-blur));
+}
+
+@media (width >= 768px) {
+  ::view-transition-group(shot-card) {
+    border-radius: 52px;
+  }
+}
+
+/* Snapshots are replaced elements sized to the box they were captured from, so
+   they stretch if the group resizes. Both sides render the card at the same
+   width, so this only has to cover the odd viewport where they differ by a
+   pixel — cropping there beats squashing every line of text. */
+::view-transition-old(shot-card),
+::view-transition-new(shot-card),
+::view-transition-old(shot-media),
+::view-transition-new(shot-media) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* The expand and collapse arrows sit in the same pill, in the same corner, so
+   the default cross-fade shows both sets at once and reads as a blink rather
+   than a change. Handing over instead — one spins out before the other spins in
+   — turns it into the control flipping. The pill around them needs no rule: it
+   is identical on both sides, so its own cross-fade is invisible. */
+/* The pill is frosted glass, and a snapshot cannot carry a `backdrop-filter` —
+   same story as the card. Rebuilt on the group, which is the pill's box at every
+   frame, so it stays glass across the morph instead of thinning to its 10 %
+   white. Keep the blur in step with `iconButtonClassName`. */
+::view-transition-group(card-toggle) {
+  border-radius: 9999px;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+
+::view-transition-old(card-toggle-icon),
+::view-transition-new(card-toggle-icon) {
+  transform-origin: center;
+}
+
+::view-transition-old(card-toggle-icon) {
+  animation: card-toggle-icon-out 170ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(card-toggle-icon) {
+  animation: card-toggle-icon-in 250ms 170ms cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+@keyframes card-toggle-icon-out {
+  to {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+}
+
+@keyframes card-toggle-icon-in {
+  from {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+  }
+}
+
+/* Everything that is not the card — the grid behind the modal, the backdrop —
+   moves the way iOS pushes context around, and which way depends on where you
+   are heading. `data-view-transition` is set on <html> for the duration of the
+   navigation; without a direction only the shared elements move, which is the
+   right fallback for any transition that is not this one. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Going in: the grid you are leaving lifts towards you and gets out of the way,
+   so the card reads as the thing you moved into. */
+html[data-view-transition="forward"]::view-transition-old(root) {
+  animation: shot-context-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* Coming out: the mirror. The grid you are returning to settles back down from
+   where the card left it, rather than fading up out of nothing. */
+html[data-view-transition="back"]::view-transition-new(root) {
+  animation: shot-context-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes shot-context-out {
+  to {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes shot-context-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+/* ---------------------------------------------------------------------------
    /ico — 3D business card: pointer-driven lighting + organic motion
 --------------------------------------------------------------------------- */
 
@@ -216,6 +412,35 @@ body {
 html:has([data-page-scroll]),
 body:has([data-page-scroll]) {
   touch-action: pan-y;
+}
+
+/* A page running GSAP's smoother needs more than that: the smoother drives the
+   document scroll, and html/body are held shut and viewport-height for the
+   camera on `/`, which would leave it nothing to move. Handed back by attribute
+   rather than per page, so it lands before hydration too. */
+html:has([data-smooth-scroll]),
+body:has([data-smooth-scroll]) {
+  height: auto;
+  overflow: visible;
+  touch-action: pan-y;
+}
+
+/* The entrance is a GSAP `fromTo`, so its hidden start only lands once the
+   effect runs — after hydration. Until then the server-rendered markup paints
+   at full opacity and the card and the text under it flash before dropping out
+   to be faded in. Shipping that start state as CSS means it applies on the
+   first paint instead.
+
+   Behind `scripting: enabled` so it can only ever hide what GSAP is there to
+   bring back: with scripting off the rule is dropped, and a browser too old to
+   know the feature drops it too and simply behaves as it did before. GSAP's
+   inline styles outrank it from the first frame of the timeline onwards. */
+@media (scripting: enabled) {
+  [data-ico-intro],
+  [data-ico-reveal] {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 /* Anodised black metal instead of frosted glass. No border of its own: the
@@ -496,7 +721,7 @@ body:has([data-page-scroll]) {
 }
 
 /* Film grain so the gradients never band. */
-.ico-grain {
+.scene-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
   mix-blend-mode: soft-light;
@@ -505,7 +730,7 @@ body:has([data-page-scroll]) {
 
 /* On the plate the noise has to add light, or the brushed lines stay a
    perfectly regular screen door. */
-.ico-grain-metal {
+.scene-grain-metal {
   mix-blend-mode: screen;
   opacity: 0.055;
 }
@@ -533,23 +758,129 @@ body:has([data-page-scroll]) {
   }
 }
 
-/* Page-level ambient lights behind the card. */
-.ico-scene-light {
-  --shift: 0;
+/* Page-level ambient lights behind a card — the slow drift of colour a dark
+   macOS desktop has, so a standalone page reads as lit rather than switched
+   off. Shared by /ico and the project pages. */
+.scene-light {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
   mix-blend-mode: screen;
   pointer-events: none;
-  will-change: transform;
+  will-change: translate, scale, rotate;
 }
 
-.ico-scene-light-a {
-  animation: ico-blob-a 44s ease-in-out infinite;
+/* Three clocks per light instead of one, and no two of them share a factor, so
+   the pose only comes round again after tens of minutes — a single loop, however
+   long, eventually reads as a loop. They ride `translate`, `scale` and `rotate`
+   rather than `transform`: as separate properties they compose instead of
+   overwriting each other, and all three still animate on the compositor.
+   Shape is left alone on purpose. Under a 90px blur a morphing border-radius is
+   invisible at this size and only costs a repaint every frame. */
+.scene-light-a {
+  animation:
+    scene-wander-a 19s ease-in-out infinite,
+    scene-swell 17s ease-in-out infinite,
+    scene-turn 47s linear infinite;
 }
 
-.ico-scene-light-b {
-  animation: ico-blob-b 52s ease-in-out infinite;
+.scene-light-b {
+  animation:
+    scene-wander-b 23s ease-in-out infinite,
+    scene-swell 13s ease-in-out -7s infinite,
+    scene-turn-back 41s linear infinite;
+}
+
+.scene-light-c {
+  animation:
+    scene-wander-c 17s ease-in-out infinite,
+    scene-swell 19s ease-in-out -5s infinite,
+    scene-turn 53s linear infinite;
+}
+
+/* Uneven stops: evenly spaced ones read as a pendulum however slow they are. */
+@keyframes scene-wander-a {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  21% {
+    translate: 9vmax -7vmax;
+  }
+  44% {
+    translate: 4vmax 11vmax;
+  }
+  63% {
+    translate: -11vmax 5vmax;
+  }
+  82% {
+    translate: -5vmax -9vmax;
+  }
+}
+
+@keyframes scene-wander-b {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  18% {
+    translate: -11vmax 5vmax;
+  }
+  41% {
+    translate: -4vmax -11vmax;
+  }
+  67% {
+    translate: 9vmax -4vmax;
+  }
+  86% {
+    translate: 5vmax 9vmax;
+  }
+}
+
+@keyframes scene-wander-c {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  26% {
+    translate: 7vmax 9vmax;
+  }
+  48% {
+    translate: -9vmax 7vmax;
+  }
+  71% {
+    translate: -7vmax -7vmax;
+  }
+  90% {
+    translate: 11vmax -4vmax;
+  }
+}
+
+@keyframes scene-swell {
+  0%,
+  100% {
+    scale: 1;
+  }
+  38% {
+    scale: 1.18;
+  }
+  71% {
+    scale: 0.88;
+  }
+}
+
+/* Only reads on the elliptical lights, which is the point — it turns their long
+   axis, so two lights crossing never overlap the same way twice. */
+@keyframes scene-turn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@keyframes scene-turn-back {
+  to {
+    rotate: -1turn;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -561,8 +892,9 @@ body:has([data-page-scroll]) {
   .ico-wave,
   .ico-metal-drift,
   .ico-pulse,
-  .ico-scene-light-a,
-  .ico-scene-light-b {
+  .scene-light-a,
+  .scene-light-b,
+  .scene-light-c {
     animation: none;
   }
 }

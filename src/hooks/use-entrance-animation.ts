@@ -1,14 +1,18 @@
 import {gsap} from 'gsap'
-import {type RefObject, useEffect, useLayoutEffect} from 'react'
+import {type RefObject, useEffect, useLayoutEffect, useRef} from 'react'
 
 import type {AnimationConfig} from '@/db/types'
 import {useIntro} from '@/providers'
 
 export const useEntranceAnimation = (ref: RefObject<HTMLDivElement | null>, animation?: AnimationConfig) => {
   const {introComplete} = useIntro()
+  // The cards fly in behind the intro reveal. Coming back from a project page
+  // the intro is already spent, so staging them offscreen only to fly them in
+  // again would turn a return into a rebuild — leave them where they belong.
+  const skipEntranceRef = useRef(introComplete)
 
   useLayoutEffect(() => {
-    if (!animation || !ref.current) {
+    if (skipEntranceRef.current || !animation || !ref.current) {
       return
     }
 
@@ -24,7 +28,7 @@ export const useEntranceAnimation = (ref: RefObject<HTMLDivElement | null>, anim
   }, [animation, ref])
 
   useEffect(() => {
-    if (!introComplete || !animation || !ref.current) {
+    if (skipEntranceRef.current || !introComplete || !animation || !ref.current) {
       return
     }
 

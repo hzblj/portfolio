@@ -9,6 +9,7 @@ import {useSound} from '@/hooks'
 import {toPx} from '@/utils'
 
 import {ModalCloseButton} from './modal-close-button'
+import {ModalControlsDock} from './modal-controls-dock'
 
 const indexShifter: Record<number, number> = {
   0: 0,
@@ -35,7 +36,7 @@ const GalleryItem = forwardRef<HTMLDivElement, GalleryItemProps>(({index, column
   return (
     <div
       ref={ref}
-      className="w-full max-w-[356px] h-auto aspect-[356/630] pointer-events-auto opacity-0 will-change-[opacity,transform] transform-gpu"
+      className="relative w-full max-w-[356px] h-auto aspect-[356/630] pointer-events-auto opacity-0 will-change-[opacity,transform] transform-gpu overflow-hidden rounded-2xl border border-solid border-white/15 bg-black"
       style={{marginTop: toPx(marginTop)}}
     >
       <Image
@@ -44,10 +45,13 @@ const GalleryItem = forwardRef<HTMLDivElement, GalleryItemProps>(({index, column
         alt={`Gallery image ${index + 1}`}
         width={356}
         height={630}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover rounded-[inherit]"
         style={{objectFit: 'cover'}}
         draggable={false}
       />
+      {/* The wrapper is a stacking context (transform-gpu), so the grain blends
+          with the photo rather than with the backdrop behind it. */}
+      <div className="absolute inset-0 z-10 texture-paper" />
     </div>
   )
 })
@@ -78,24 +82,49 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
 
     const items = itemRefs.map(ref => ref.current).filter(Boolean) as HTMLDivElement[]
 
+    // The entrance stagger may still be running — let the exit own the items
+    // outright, otherwise the two tweens fight over opacity mid-close.
+    gsap.killTweensOf([...items, backdropRef.current, closeButtonRef.current])
+
+    // Ripple out from whatever the viewport is actually centred on. A fixed
+    // origin means that from the top of the grid the close begins off-screen
+    // and the first beat reads as nothing happening at all.
+    const viewportCenter = window.innerHeight / 2
+    const originIndex = items.reduce<{distance: number; index: number}>(
+      (closest, item, index) => {
+        const {top, height} = item.getBoundingClientRect()
+        const distance = Math.abs(top + height / 2 - viewportCenter)
+
+        return distance < closest.distance ? {distance, index} : closest
+      },
+      {distance: Number.POSITIVE_INFINITY, index: 0}
+    ).index
+
     gsap.to(items, {
-      duration: 0.4,
-      ease: 'power3.in',
+      duration: 0.32,
+      ease: 'power2.in',
       onComplete: () => {
         setMounted(false)
         onClose()
       },
       opacity: 0,
-      scale: 0.95,
+      scale: 0.94,
       stagger: {
-        amount: 0.3,
-        from: 'end',
+        amount: 0.22,
+        from: originIndex,
       },
-      y: 40,
+      y: 28,
+    })
+
+    gsap.to(closeButtonRef.current, {
+      duration: 0.2,
+      ease: 'power2.in',
+      opacity: 0,
+      scale: 0.8,
     })
 
     gsap.to(backdropRef.current, {
-      duration: 0.7 * (DATA.length - 1),
+      duration: 0.45,
       ease: 'power2.inOut',
       opacity: 0,
     })
@@ -235,7 +264,11 @@ export const Gallery: FC<GalleryProps> = ({isOpen, onClose}) => {
           </div>
         </div>
       </div>
-      <ModalCloseButton ref={closeButtonRef} onClose={startClose} />
+      {/* Alone in the dock — nothing to expand into from a gallery — so the
+          cluster is just the one pill, centred where it always is. */}
+      <ModalControlsDock>
+        <ModalCloseButton ref={closeButtonRef} onClose={startClose} />
+      </ModalControlsDock>
     </div>,
     modalRoot
   )
