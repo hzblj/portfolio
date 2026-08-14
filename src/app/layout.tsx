@@ -101,43 +101,8 @@ type Props = Readonly<{
 }>
 
 export default function RootLayout({children}: Props) {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    address: {
-      '@type': 'PostalAddress',
-      addressCountry: 'CZ',
-      addressLocality: 'Prague',
-    },
-    email: 'hello@janblazej.dev',
-    image: 'https://janblazej.dev/png/profile@3x.png',
-    jobTitle: 'Lead Mobile Developer & Founder',
-    knowsAbout: [
-      'React Native',
-      'Expo',
-      'TypeScript',
-      'iOS Development',
-      'Android Development',
-      'Mobile App Development',
-      'Swift',
-      'visionOS',
-      'RealityKit',
-    ],
-    name: 'Jan Blazej',
-    sameAs: ['https://www.linkedin.com/in/hzblj', 'https://github.com/hzblj', 'https://www.instagram.com/hzblj'],
-    url: 'https://janblazej.dev',
-    worksFor: {
-      '@type': 'Organization',
-      name: 'Footshop',
-      url: 'https://footshop.com',
-    },
-  }
-
   return (
     <html lang="en">
-      <head>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
-      </head>
       <body className={inter.className}>
         {children}
         <GoogleAnalytics />

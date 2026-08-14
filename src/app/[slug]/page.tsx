@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import Link from 'next/link'
 import {notFound} from 'next/navigation'
 
-import {ShotDetail} from '@/components'
+import {PersonJsonLd, ShotDetail} from '@/components'
 import {entries, getEntryBySlug} from '@/db'
 
 type Props = {
@@ -67,6 +67,7 @@ export default async function SlugPage({params}: Props) {
   if (entry.variant === 'shot') {
     return (
       <div className="w-full min-h-screen flex items-center justify-center p-4">
+        <PersonJsonLd />
         <div className="max-w-[600px] w-full">
           <div className="card-modal">
             <div className="mb-4 px-[20px] md:px-8 pt-4">
