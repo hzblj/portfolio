@@ -30,26 +30,29 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   const description = entry.description.slice(0, 160) + (entry.description.length > 160 ? '...' : '')
 
   return {
+    // Without this every case study inherits the root's `/`, which tells a
+    // crawler that all thirty-odd of them are the same page as the home page.
+    alternates: {
+      canonical: `/${slug}`,
+    },
     description,
     keywords: [entry.title, productName, ...entry.properties.map(p => p.value), 'mobile development', 'case study'],
     openGraph: {
       description,
-      images: [
-        {
-          alt: entry.title,
-          height: entry.size === 'small' ? 289 : 594,
-          url: entry.image,
-          width: entry.size === 'small' ? 289 : 594,
-        },
-      ],
+      // `og:image` comes from `opengraph-image.tsx` beside this file: the
+      // shot's own artwork, laid out for the 1.91:1 a social card crops to.
+      // Naming the source file here instead would hand every platform a 4:3
+      // photograph to cut a strip out of.
+      locale: 'en_US',
+      siteName: 'Jan Blazej Portfolio',
       title: entry.title,
       type: 'article',
+      url: `/${slug}`,
     },
     title: entry.title,
     twitter: {
       card: 'summary_large_image',
       description,
-      images: [entry.image],
       title: entry.title,
     },
   }

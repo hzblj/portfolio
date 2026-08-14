@@ -1,7 +1,8 @@
+import {Config} from '@/config'
 import {entries} from '@/db'
 
 export default function sitemap() {
-  const baseUrl = 'https://janblazej.dev'
+  const baseUrl = Config.site
 
   const routes = [
     {
