@@ -1,3 +1,5 @@
+import {Config} from '@/config'
+
 export default function robots() {
   return {
     rules: [
@@ -7,6 +9,6 @@ export default function robots() {
         userAgent: '*',
       },
     ],
-    sitemap: 'https://janblazej.dev/sitemap.xml',
+    sitemap: `${Config.site}/sitemap.xml`,
   }
 }

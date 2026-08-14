@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 
 import {IcoCard, PageCloseLink} from '@/components'
+import {Config} from '@/config'
 import {ico} from '@/db'
 
 /**
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
     description: `Business details — IČO ${ico.ico}, ${ico.location}.`,
     images: [ogImage],
     title: `IČO ${ico.ico} · ${ico.name}`,
-    url: 'https://janblazej.dev/ico',
+    url: `${Config.site}/ico`,
   },
   title: 'IČO & Business Details',
   twitter: {
@@ -71,7 +72,7 @@ const jsonLd = {
     value: ico.ico,
   },
   name: ico.name,
-  url: 'https://janblazej.dev/ico',
+  url: `${Config.site}/ico`,
 }
 
 export default function Ico() {

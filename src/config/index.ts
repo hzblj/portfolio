@@ -28,6 +28,11 @@ export const Config = {
     mapUrl: 'https://maps.app.goo.gl/7TbuX47ttiZbRms27',
   },
   origin: {x: -188, y: -172},
+  // The host every absolute URL the site publishes has to carry — canonicals,
+  // `og:` tags, the sitemap, the structured data. The apex redirects here, so
+  // anything naming it sends a crawler one hop short of where it meant to point,
+  // and a canonical that redirects is a canonical arguing with itself.
+  site: 'https://www.janblazej.dev',
   viewport: {
     height: 1638,
     width: 2448,

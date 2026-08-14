@@ -6,6 +6,7 @@ import type {Metadata, Viewport} from 'next'
 import {type ReactNode} from 'react'
 
 import {GoogleAnalytics, WebVitals} from '@/components'
+import {Config} from '@/config'
 // Imported straight from the module rather than `@/providers`: the barrel would
 // pull the camera and sound providers into every route's client bundle.
 import {NavigationProvider} from '@/providers/NavigationProvider'
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     statusBarStyle: 'black-translucent',
   },
-  authors: [{name: 'Jan Blazej', url: 'https://janblazej.dev'}],
+  authors: [{name: 'Jan Blazej', url: Config.site}],
   creator: 'Jan Blazej',
   description:
     'Experienced Lead Mobile Developer specializing in React Native, Expo, and TypeScript. Building high-performance mobile applications for iOS and Android. Based in Prague, Czechia.',
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
     'RealityKit',
   ],
   manifest: '/site.webmanifest',
-  metadataBase: new URL('https://janblazej.dev'),
+  metadataBase: new URL(Config.site),
   openGraph: {
     description:
       'Experienced Lead Mobile Developer specializing in React Native, Expo, and TypeScript. Building high-performance mobile applications for iOS and Android.',
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
     siteName: 'Jan Blazej Portfolio',
     title: 'Jan Blazej - Lead Mobile Developer & Founder',
     type: 'website',
-    url: 'https://janblazej.dev',
+    url: Config.site,
   },
   publisher: 'Jan Blazej',
   robots: {
