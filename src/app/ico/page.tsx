@@ -8,7 +8,11 @@ import {ico} from '@/db'
  * frosted glass, the waves and the metal ring that CSS-in-SVG can't reproduce.
  * To refresh it, screenshot /ico in a 720×378 viewport at a 1.667 device pixel
  * ratio with everything below the card hidden, emulating reduced motion and
- * keeping the pointer off the card — that renders it flat and unhovered.
+ * keeping the pointer off the card — that renders it flat and unhovered. The
+ * padding on the card's container has to go with the records it was leaving
+ * room for, or the card sits low in the frame instead of in the middle of it.
+ *
+ * Being a render of the live card, it goes stale whenever the card changes.
  */
 const ogImage = {
   alt: `IČO ${ico.ico} · ${ico.name}`,
