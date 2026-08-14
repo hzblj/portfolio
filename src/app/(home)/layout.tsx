@@ -1,6 +1,6 @@
 import {type ReactNode} from 'react'
 
-import {ControlsDock, SoundControls} from '@/components'
+import {ControlsDock, PersonJsonLd, SoundControls} from '@/components'
 import {Config} from '@/config'
 import {IntroProvider, SoundProvider} from '@/providers'
 import {toPx} from '@/utils'
@@ -13,6 +13,7 @@ export default function RootLayout({children}: Props) {
   return (
     <SoundProvider>
       <IntroProvider>
+        <PersonJsonLd />
         <main id="main" className="bg-black block relative">
           <div
             className="overflow-hidden responsive-scale will-change-[transform,opacity] origin-[0px_0px]"

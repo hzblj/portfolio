@@ -3,17 +3,52 @@ import type {Metadata} from 'next'
 import {IcoCard} from '@/components'
 import {ico} from '@/db'
 
+/**
+ * A headless render of the live card itself, so the social preview keeps the
+ * frosted glass, the waves and the metal ring that CSS-in-SVG can't reproduce.
+ * To refresh it, screenshot /ico in a 720×378 viewport at a 1.667 device pixel
+ * ratio with everything below the card hidden, emulating reduced motion and
+ * keeping the pointer off the card — that renders it flat and unhovered.
+ */
+const ogImage = {
+  alt: `IČO ${ico.ico} · ${ico.name}`,
+  height: 630,
+  url: '/png/og-ico.png',
+  width: 1200,
+}
+
 export const metadata: Metadata = {
   alternates: {
     canonical: '/ico',
   },
   description: `Business details of ${ico.name}, IČO ${ico.ico} — self-employed developer registered in Prague, Czechia.`,
+  // Overrides the site-wide keywords: this page is about the sole
+  // proprietorship, so it shouldn't carry employer or portfolio terms.
+  keywords: [
+    `IČO ${ico.ico}`,
+    ico.name,
+    'IČO',
+    'DIČ',
+    'fakturační údaje',
+    'billing details',
+    'business ID',
+    'OSVČ',
+    'freelance developer Prague',
+    'ARES',
+  ],
   openGraph: {
     description: `Business details — IČO ${ico.ico}, ${ico.location}.`,
+    images: [ogImage],
     title: `IČO ${ico.ico} · ${ico.name}`,
     url: 'https://janblazej.dev/ico',
   },
   title: 'IČO & Business Details',
+  twitter: {
+    card: 'summary_large_image',
+    description: `Business details — IČO ${ico.ico}, ${ico.location}.`,
+    images: [ogImage.url],
+    title: `IČO ${ico.ico} · ${ico.name}`,
+  },
 }
 
 const jsonLd = {

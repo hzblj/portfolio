@@ -224,7 +224,11 @@ export const IcoCard: FC = () => {
   return (
     <div ref={refStage} className="flex w-full max-w-[456px] flex-col items-center gap-[38px]">
       <div ref={refIntro} className="w-full [perspective:1400px] [perspective-origin:50%_45%]">
-        {/* The metal ring lives on the tilting wrapper so it rotates with the card. */}
+        {/*
+          The metal ring lives on the tilting wrapper so it rotates with the card.
+          Only the ring is wanted here: the wandering halo is off, and reflections
+          stay off by never passing `reflectionTargets`.
+        */}
         <MetalFx
           ref={refCard}
           onPointerMove={handleMove}
@@ -236,6 +240,7 @@ export const IcoCard: FC = () => {
           ringCssPx={2.5}
           scale={1.8}
           strength={0.9}
+          disableGlow
           normalizeHostStyles={false}
           className="ico-card !flex w-full will-change-transform"
         >
