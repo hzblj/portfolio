@@ -45,10 +45,21 @@ export const useLayer = ({
   ringWidth = 0,
   ringColor = WHITE,
 }: LayerOptions) => {
-  const {size: host, fade} = useEntity()
+  const {size: host, invalidate, isVisible} = useEntity()
   const material = useDisposable(useMemo(() => createLayerMaterial(), []))
   const mesh = useRef<Mesh>(null)
   const [placement] = useState(createPlacement)
+  const [drawn] = useState(() => ({
+    blur: Number.NaN,
+    height: Number.NaN,
+    mix: Number.NaN,
+    opacity: Number.NaN,
+    radius: Number.NaN,
+    time: Number.NaN,
+    width: Number.NaN,
+    x: Number.NaN,
+    y: Number.NaN,
+  }))
 
   useLayoutEffect(() => {
     const {uniforms} = material
@@ -65,31 +76,61 @@ export const useLayer = ({
     uniforms.uRingWidth.value = ringWidth
     setRGBA(uniforms.uRingColor.value, ringColor)
     setRGBA(uniforms.uColor.value, color)
-  }, [alphaGamma, bleed, clip, clipRadius, color, fit, map, mapPosition, material, ringColor, ringWidth])
+    invalidate()
+
+    return invalidate
+  }, [alphaGamma, bleed, clip, clipRadius, color, fit, invalidate, map, mapPosition, material, ringColor, ringWidth])
 
   useFrame(() => {
     const node = mesh.current
 
-    if (!node) {
+    if (!node || !isVisible()) {
       return
     }
 
     const {x, y, width, height, scale} = place(placement, rect, motion, pivot)
     const {uniforms} = material
+    const blur = offsetOf(motion, 'blur')
+    const alpha = opacity * factorOf(motion, 'opacity')
+    const mix = video?.texture ? video.mix : 0
+    const time = video?.texture ? (video.texture.image as HTMLVideoElement).currentTime : 0
 
     node.position.set(x + width / 2 - host.width / 2, host.height / 2 - y - height / 2, 0)
     node.scale.set(Math.max(width + 2 * bleed, 1e-3), Math.max(height + 2 * bleed, 1e-3), 1)
 
     uniforms.uRect.value.set(x, y, width, height)
     uniforms.uRadius.value = radius * scale
-    uniforms.uBlur.value = offsetOf(motion, 'blur')
-    uniforms.uOpacity.value = opacity * factorOf(motion, 'opacity') * fade.opacity
+    uniforms.uBlur.value = blur
+    uniforms.uOpacity.value = alpha
 
     if (video) {
       const size = video.texture ? naturalSize(video.texture) : {height: 0, width: 0}
       uniforms.uVideo.value = video.texture
-      uniforms.uVideoMix.value = video.texture ? video.mix : 0
+      uniforms.uVideoMix.value = mix
       uniforms.uVideoSize.value.set(size.width, size.height)
+    }
+
+    if (
+      x !== drawn.x ||
+      y !== drawn.y ||
+      width !== drawn.width ||
+      height !== drawn.height ||
+      scale !== drawn.radius ||
+      blur !== drawn.blur ||
+      alpha !== drawn.opacity ||
+      mix !== drawn.mix ||
+      time !== drawn.time
+    ) {
+      drawn.x = x
+      drawn.y = y
+      drawn.width = width
+      drawn.height = height
+      drawn.radius = scale
+      drawn.blur = blur
+      drawn.opacity = alpha
+      drawn.mix = mix
+      drawn.time = time
+      invalidate()
     }
   })
 

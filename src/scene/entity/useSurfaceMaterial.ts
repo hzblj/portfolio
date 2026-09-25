@@ -1,4 +1,3 @@
-import {useFrame} from '@react-three/fiber'
 import {useLayoutEffect, useMemo} from 'react'
 import {createSurfaceMaterial, type RGBA, setRGBA, useDisposable} from '../graphics'
 import {useEntity} from './EntityContext'
@@ -10,7 +9,7 @@ type SurfaceLook = {
 }
 
 export const useSurfaceMaterial = ({fill, border, radius}: SurfaceLook) => {
-  const {size, fade} = useEntity()
+  const {size, invalidate} = useEntity()
   const material = useDisposable(useMemo(() => createSurfaceMaterial(), []))
 
   useLayoutEffect(() => {
@@ -30,11 +29,11 @@ export const useSurfaceMaterial = ({fill, border, radius}: SurfaceLook) => {
     } else {
       setRGBA(uniforms.uBorder.value, border)
     }
-  }, [border, fill, material, radius, size])
 
-  useFrame(() => {
-    material.uniforms.uOpacity.value = fade.opacity
-  })
+    invalidate()
+
+    return invalidate
+  }, [border, fill, invalidate, material, radius, size])
 
   return material
 }

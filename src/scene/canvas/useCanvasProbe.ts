@@ -4,6 +4,7 @@ import {Vector2, WebGLRenderTarget} from 'three'
 
 import {registerCanvasSampler} from '@/lib/backdrop'
 
+import {sceneVersion} from '../entity'
 import {glass} from '../graphics'
 
 const PROBE_TEXEL = 8
@@ -13,8 +14,10 @@ const WANTED_FOR = 1000
 const createProbe = () => ({
   data: new Uint8Array(4),
   height: 1,
+  reading: false,
   takenAt: Number.NEGATIVE_INFINITY,
   target: new WebGLRenderTarget(1, 1, {depthBuffer: false}),
+  version: -1,
   wantedAt: Number.NEGATIVE_INFINITY,
   width: 1,
 })
@@ -51,18 +54,20 @@ export const useCanvasProbe = () => {
     ({gl, scene, camera, size}: RootState) => {
       const now = performance.now()
 
-      if (now - probe.wantedAt > WANTED_FOR || now - probe.takenAt < REFRESH) {
+      if (
+        probe.reading ||
+        probe.version === sceneVersion() ||
+        now - probe.wantedAt > WANTED_FOR ||
+        now - probe.takenAt < REFRESH
+      ) {
         return
       }
 
       const width = Math.max(1, Math.ceil(size.width / PROBE_TEXEL))
       const height = Math.max(1, Math.ceil(size.height / PROBE_TEXEL))
 
-      if (probe.width !== width || probe.height !== height) {
+      if (probe.target.width !== width || probe.target.height !== height) {
         probe.target.setSize(width, height)
-        probe.data = new Uint8Array(width * height * 4)
-        probe.width = width
-        probe.height = height
       }
 
       resolution.copy(glass.uResolution.value)
@@ -71,10 +76,24 @@ export const useCanvasProbe = () => {
       gl.setRenderTarget(probe.target)
       gl.clear()
       gl.render(scene, camera)
-      gl.readRenderTargetPixels(probe.target, 0, 0, width, height, probe.data)
       gl.setRenderTarget(null)
       glass.uResolution.value.copy(resolution)
-      probe.takenAt = now
+
+      const data = new Uint8Array(width * height * 4)
+      probe.reading = true
+      probe.version = sceneVersion()
+      gl.readRenderTargetPixelsAsync(probe.target, 0, 0, width, height, data).then(
+        () => {
+          probe.data = data
+          probe.width = width
+          probe.height = height
+          probe.takenAt = performance.now()
+          probe.reading = false
+        },
+        () => {
+          probe.reading = false
+        }
+      )
     },
     [probe]
   )

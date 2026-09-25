@@ -8,7 +8,8 @@ export type EntityValue = {
   slug: string
   slot: number
   size: EntitySize
-  fade: {opacity: number}
+  invalidate: () => void
+  isVisible: () => boolean
   worldRect: () => Rect
 }
 

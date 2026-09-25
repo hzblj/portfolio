@@ -1,3 +1,4 @@
+export * from './bake'
 export * from './Entity'
 export * from './EntityContext'
 export * from './FocusRing'

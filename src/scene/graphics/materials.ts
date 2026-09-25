@@ -12,6 +12,7 @@ import {
 
 import backdropFragment from './shaders/backdrop.frag.glsl'
 import blurFragment from './shaders/blur.frag.glsl'
+import cacheFragment from './shaders/cache.frag.glsl'
 import common from './shaders/common.glsl'
 import fullscreenVertex from './shaders/fullscreen.vert.glsl'
 import layerFragment from './shaders/layer.frag.glsl'
@@ -104,6 +105,16 @@ export const createPaperMaterial = () =>
       uStrength: {value: 0.14},
     },
     vertexShader: quadVertex,
+  })
+
+export const createCacheMaterial = () =>
+  new ShaderMaterial({
+    ...overlay,
+    fragmentShader: cacheFragment,
+    uniforms: {
+      uMap: {value: null as Texture | null},
+      uOpacity: {value: 1},
+    },
   })
 
 export const createBackdropMaterial = () =>

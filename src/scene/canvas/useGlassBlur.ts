@@ -4,6 +4,7 @@ import {WebGLRenderTarget} from 'three'
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass.js'
 
 import {worldToScreen} from '../camera'
+import {gridVersion} from '../entity'
 import {createBlurMaterial, GRID_LAYER, glass, OVERLAY_LAYER, useDisposable} from '../graphics'
 import {morph} from '../state'
 
@@ -13,7 +14,8 @@ const BLUR_TEXEL = 16
 const createTarget = () => new WebGLRenderTarget(1, 1, {depthBuffer: false})
 
 export const useGlassBlur = () => {
-  const [targets] = useState(() => [createTarget(), createTarget()] as const)
+  const [targets] = useState(() => [createTarget(), createTarget(), createTarget()] as const)
+  const [grid] = useState(() => ({version: -1}))
   const blur = useDisposable(useMemo(() => createBlurMaterial(), []))
   const quad = useDisposable(useMemo(() => new FullScreenQuad(blur), [blur]))
 
@@ -28,22 +30,28 @@ export const useGlassBlur = () => {
 
   return useCallback(
     ({gl, scene, camera, size}: RootState) => {
-      const [first, second] = targets
+      const [captured, first, second] = targets
       const width = Math.max(1, Math.ceil(size.width / BLUR_TEXEL))
       const height = Math.max(1, Math.ceil(size.height / BLUR_TEXEL))
       const bounds = morph.glassRect ? worldToScreen(morph.glassRect) : {...size, x: 0, y: 0}
 
-      if (first.width !== width || first.height !== height) {
-        first.setSize(width, height)
-        second.setSize(width, height)
+      if (captured.width !== width || captured.height !== height) {
+        for (const target of targets) {
+          target.setSize(width, height)
+        }
+
+        grid.version = -1
       }
 
-      glass.uBackdrop.value = null
-      camera.layers.set(GRID_LAYER)
-      gl.setRenderTarget(first)
-      gl.clear()
-      gl.render(scene, camera)
-      camera.layers.enable(OVERLAY_LAYER)
+      if (grid.version !== gridVersion()) {
+        glass.uBackdrop.value = null
+        camera.layers.set(GRID_LAYER)
+        gl.setRenderTarget(captured)
+        gl.clear()
+        gl.render(scene, camera)
+        camera.layers.enable(OVERLAY_LAYER)
+        grid.version = gridVersion()
+      }
 
       blur.uniforms.uBounds.value.set(
         bounds.x / size.width,
@@ -53,7 +61,7 @@ export const useGlassBlur = () => {
       )
       blur.uniforms.uSigma.value = BLUR_RADIUS / BLUR_TEXEL
 
-      blur.uniforms.uInput.value = first.texture
+      blur.uniforms.uInput.value = captured.texture
       blur.uniforms.uStep.value.set(1 / width, 0)
       gl.setRenderTarget(second)
       quad.render(gl)
@@ -65,6 +73,6 @@ export const useGlassBlur = () => {
 
       glass.uBackdrop.value = first.texture
     },
-    [blur, quad, targets]
+    [blur, grid, quad, targets]
   )
 }

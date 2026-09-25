@@ -11,6 +11,7 @@ export const cameraInput = {
 
 export const view = {
   height: 0,
+  movedAt: 0,
   scale: 1,
   width: 0,
   x: 0,
@@ -19,9 +20,15 @@ export const view = {
 
 export const updateView = (width: number, height: number) => {
   const scale = calculateScale(width) * cameraInput.scale
+  const x = cameraInput.camera.x - cameraInput.origin.x + width / (2 * scale)
+  const y = cameraInput.camera.y - cameraInput.origin.y + height / (2 * scale)
 
-  view.x = cameraInput.camera.x - cameraInput.origin.x + width / (2 * scale)
-  view.y = cameraInput.camera.y - cameraInput.origin.y + height / (2 * scale)
+  if (x !== view.x || y !== view.y || scale !== view.scale) {
+    view.movedAt = performance.now()
+  }
+
+  view.x = x
+  view.y = y
   view.width = width
   view.height = height
   view.scale = scale
