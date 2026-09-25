@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import {useRouter} from 'next/navigation'
 import {type FC, type MouseEvent, useCallback} from 'react'
 
-import {Config} from '@/config'
 import {useAdaptiveGlass} from '@/hooks'
-import {useCanGoBack, useViewTransitionNavigate} from '@/providers'
+import {useCanGoBack} from '@/providers/NavigationProvider'
 import {cn} from '@/utils'
 
 import {iconButtonClassName, iconButtonGlyphClassName, pageControlClassName} from './icon-button'
@@ -15,9 +15,12 @@ export type CardCollapseLinkProps = {
 }
 
 /**
- * The counterpart to [CardExpandLink]: same pill, same corner, arrows turned
- * inwards. Sitting where the expand control sat makes the morph read as one
- * control flipping rather than two buttons swapping places.
+ * The counterpart to the expand pill on an open card: same pill, same corner,
+ * arrows turned inwards.
+ *
+ * The grid is still mounted under the page with the card parked in this page's
+ * layout, so going back only uncovers it and it takes the card back into its
+ * modal from exactly here.
  *
  * Goes back through history when there is somewhere to go back to, so returning
  * lands on the grid exactly as it was left — panned, zoomed and past its intro —
@@ -25,7 +28,7 @@ export type CardCollapseLinkProps = {
  * `/` href for cold landings, crawlers and middle-clicks.
  */
 export const CardCollapseLink: FC<CardCollapseLinkProps> = ({className}) => {
-  const navigate = useViewTransitionNavigate()
+  const router = useRouter()
   const canGoBack = useCanGoBack()
   const glass = useAdaptiveGlass<HTMLAnchorElement>()
 
@@ -38,11 +41,13 @@ export const CardCollapseLink: FC<CardCollapseLinkProps> = ({className}) => {
 
       event.preventDefault()
 
-      // A cold landing has nothing to go back to, but it is still the same
-      // gesture — collapsing out of the page — so it reads the same way.
-      navigate(canGoBack() ? {direction: 'back'} : {direction: 'back', to: '/'})
+      if (canGoBack()) {
+        router.back()
+      } else {
+        router.push('/')
+      }
     },
-    [canGoBack, navigate]
+    [canGoBack, router]
   )
 
   return (
@@ -53,15 +58,8 @@ export const CardCollapseLink: FC<CardCollapseLinkProps> = ({className}) => {
       aria-label="Back to the portfolio"
       title="Back to the portfolio"
       className={cn(iconButtonClassName, pageControlClassName, className)}
-      style={{viewTransitionName: Config.viewTransition.toggle}}
     >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-hidden="true"
-        className={iconButtonGlyphClassName}
-        style={{viewTransitionName: Config.viewTransition.toggleIcon}}
-      >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={iconButtonGlyphClassName}>
         <path
           d="M20 10h-6V4M20 4l-6 6"
           stroke="currentColor"

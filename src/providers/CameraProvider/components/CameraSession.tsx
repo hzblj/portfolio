@@ -2,7 +2,7 @@
 
 import {useEffect, useLayoutEffect, useRef} from 'react'
 
-import {recalculateTransforms, useCameraDispatch, useCameraState} from '../context'
+import {useCameraDispatch, useCameraState} from '../context'
 
 type ParkedCamera = {
   camera: {x: number; y: number}
@@ -37,17 +37,12 @@ export const CameraSession = () => {
 
     hasRestoredRef.current = true
 
-    // Restored after hydration rather than seeded into the initial state: the
-    // viewport transform is server-rendered, and a stored position would not
-    // match what came off the server. A layout effect still lands it before the
-    // first paint, so there is no jump to see.
+    // Restored after hydration rather than seeded into the initial state, so the
+    // server render and the first client render agree. A layout effect still
+    // lands it before the first paint, so there is no jump to see.
     const {camera: parkedCamera, scale: parkedScale} = parked
 
-    dispatch(draft => {
-      const restored = {...draft, camera: parkedCamera, scale: parkedScale}
-
-      return {...restored, ...recalculateTransforms(restored)}
-    })
+    dispatch(draft => ({...draft, camera: parkedCamera, scale: parkedScale}))
   }, [dispatch])
 
   useEffect(() => {

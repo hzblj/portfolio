@@ -19,15 +19,10 @@ export const Config = {
     scale: 0.95,
   },
   fullName: 'Jan Blazej',
-  layout: {
-    height: 3318,
-    width: 4368,
-  },
   location: {
     city: 'Prague, Czechia',
     mapUrl: 'https://maps.app.goo.gl/7TbuX47ttiZbRms27',
   },
-  origin: {x: -188, y: -172},
   // The host every absolute URL the site publishes has to carry — canonicals,
   // `og:` tags, the sitemap, the structured data. The apex redirects here, so
   // anything naming it sends a crawler one hop short of where it meant to point,
@@ -36,23 +31,5 @@ export const Config = {
   viewport: {
     height: 1638,
     width: 2448,
-  },
-  // Shared-element names bridging the shot modal on `/` and the `/[slug]`
-  // detail page. Both sides must agree, and only one shot can be open at a
-  // time, so plain constants are enough — names have to be unique per document.
-  viewTransition: {
-    // The artwork, which is the one thing both sides render: the page wears no
-    // card, so there is no card to morph — that one cross-fades with the root.
-    media: 'shot-media',
-    // The open card itself, on the one side that has one. Not there to morph
-    // into anything: a name is what keeps it out of the root snapshot, which is
-    // where its glass would be lost — see the rule in app.css.
-    surface: 'modal-surface',
-    // The expand/collapse control, shared by the shots and the CV, named in two
-    // parts. The pill is named so it rides over the morph rather than fading
-    // with everything else around it, and the glyph takes a name of its own so
-    // the two arrow sets can hand over instead of dissolving through each other.
-    toggle: 'card-toggle',
-    toggleIcon: 'card-toggle-icon',
   },
 } as const

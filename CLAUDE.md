@@ -17,34 +17,51 @@ yarn db:validate      # Validate database entry slugs
 
 ## Architecture
 
-This is a **Next.js 15 App Router** portfolio site with a custom **2D camera navigation system** — the entire home page is a pannable/zoomable canvas of cards, not a traditional scrolling page.
+This is a **Next.js 16 App Router** portfolio site with a custom **2D camera navigation system** — the entire home page is a pannable/zoomable canvas of cards rendered with **WebGL (React Three Fiber)**, not a traditional scrolling page.
 
 ### Camera System (`src/providers/CameraProvider/`)
 
-The core abstraction. `CameraProvider` wraps the home page and manages:
-- **Camera state** — `{x, y}` position, viewport CSS transform, 4 grid transforms (x1–x4) for infinite-scroll illusion
-- **Controls** — `ScrollControls`, `KeyboardControls`, `DragControls`, `ToucheControls` handle all input types
-- **Viewport + Grid** — `Viewport` applies the CSS transform; `Grid` renders 4 translated copies of the card grid
-- State is React Context + useState with action functions (`actionOnScroll`, `actionToggleModal`)
+`CameraProvider` owns the camera and its input, with no rendering of its own:
+- **Camera state** — `{x, y}` position, `origin`, zoom `scale`, `isModalOpen` (React Context + useState, actions `actionOnScroll`, `actionOnZoom`, `actionToggleModal`)
+- **Controls** — `ScrollControls`, `KeyboardControls`, `DragControls`, `ToucheControls`, `ZoomControls`
+- `CameraSession` parks the camera across route changes
+
+### Scene (`src/scene/`)
+
+`<Scene />` lives in the `(home)` route-group layout, shared by `/`, `/[slug]` and `/cv`, so the canvas survives navigating between them: off `/` it stops drawing, the camera controls pause and an expanded card waits under the page for the way back. It only mounts on `/` (a cold landing on a page never loads WebGL). `Scene.tsx` + `index.ts` at the root, everything else in domain folders:
+- `camera/` — `CameraBridge` copies the DOM camera into a per-frame `view`; `CameraRig` points the orthographic camera; world ↔ screen helpers
+- `grid/` — the grid template (mirrors the old CSS `grid-template-areas`), area rects, the tile `PERIOD`, geometry helpers
+- `entity/` — `Entity` repeats one card across 4 slots for the endless canvas; `Surface` (card body + pointer hit target), `Layer`, `TextLayer`, `PaperLayer`
+- `cards/` — one folder per entry variant (`shot`, `profile`, `contact`, `technologies`, `map`, `gallery`, `cv`), components + hooks
+- `graphics/` — materials, textures (images, SVGs and Canvas 2D text), `shaders/*.glsl` (loaded as strings via `raw-loader`, see `next.config.ts`)
+- `canvas/` — the R3F `Canvas`, the renderer with the backdrop blur pass, the modal backdrop
+- `morph/` — the card flying from the grid into its modal (WebGL until it lands, then handed to the DOM in one frame)
+- `modal/` — the DOM modal the morph lands in (and expands from into its page, and back), and the gallery modal
+- `ambient/` — the pages' ambient light, one element kept alive across the hand-over between modal and page
+- `state/` — zustand store (open card, gallery) and the mutable per-frame `morph` state
+- `interaction/` — cursor, hotspots inside a card, external links
+
+Per-frame values (camera, morph progress, tweens) live in plain mutable objects read in `useFrame`, never in React state.
 
 ### Entry/Card System
 
 Content is data-driven. Each portfolio piece, the profile, contact info, CV, etc. is an **Entry** typed in `src/db/types.ts`:
 - Entry variants: `shot | contact | map | cv | profile | gallery | technologies`
 - All entries live in `src/db/entries/` as individual TypeScript files
-- `src/db/index.ts` exports the combined `entries` array and helper functions (`getEntry`, `getEntryBySlug`)
-- The home page (`src/app/(home)/page.tsx`) maps entries to card components via a switch on `entry.variant`
-- Cards are positioned on the grid via CSS `grid-area` using each entry's `area` field (e.g. `s1`, `l2`)
+- `src/db/index.ts` exports the combined `entries` array and helper functions (`getEntryBySlug`)
+- `src/scene/cards/Cards.tsx` maps entries to card entities via a switch on `entry.variant`
+- Cards are placed by their `area` field (e.g. `s1`, `l2`) using the template in `src/scene/grid/layout.ts`
 
 ### Layout & Scaling
 
-The virtual canvas is 4368×3318px with a 2448×1638px viewport (defined in `src/config/index.ts`). Responsive scaling is handled via CSS breakpoints in `src/app/app.css` (`.responsive-scale`) — supports mobile through 5K+ displays.
+One grid tile is 2448×1638px (`Config.viewport`), repeated in both directions. The breakpoint scale (`calculateScale` in `CameraProvider/const`) times the zoom gives CSS pixels per grid pixel.
 
 ### Routing
 
 - `/` — Interactive camera-based portfolio grid
-- `/[slug]` — Individual project detail pages (statically generated from shot entries)
-- `/cv` — CV page
+- `/[slug]` — Individual project detail pages (statically generated from shot entries), in the `(home)` group
+- `/cv` — CV page, in the `(home)` group
+- `/ico` — Business details, entered from the dock through a view transition
 - `/api/projects` — JSON endpoint returning all entries
 
 ### Animations

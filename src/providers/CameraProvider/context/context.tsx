@@ -3,9 +3,8 @@
 import {createContext, type ReactNode, useContext, useState} from 'react'
 
 import {Config} from '@/config'
-import {toPx} from '@/utils'
 
-import {calculateScale, HEIGHT, WIDTH} from '../const'
+import {calculateScale} from '../const'
 import {CameraAction, CameraState} from './types'
 
 const calculateCenterOfViewport = () => {
@@ -37,12 +36,6 @@ export const createCameraState = (): CameraState => {
     isModalOpen: false,
     origin: {x, y},
     scale: 1,
-    scrollBehavior: 'natural',
-    viewport: 'scale(1) translate3d(0px, 0px, 0px)',
-    x1: `translate3d(${toPx(x)}, ${toPx(y)}, 0px)`,
-    x2: `translate3d(${toPx(WIDTH + x)}, ${toPx(y)}, 0px)`,
-    x3: `translate3d(${toPx(x)}, ${toPx(HEIGHT + y)}, 0px)`,
-    x4: `translate3d(${toPx(WIDTH + x)}, ${toPx(HEIGHT + y)}, 0px)`,
   }
 }
 

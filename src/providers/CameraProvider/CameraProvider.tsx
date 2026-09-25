@@ -4,20 +4,15 @@ import {gsap} from 'gsap'
 import {CustomEase} from 'gsap/CustomEase'
 import {ScrollSmoother} from 'gsap/ScrollSmoother'
 import {SplitText} from 'gsap/SplitText'
-import dynamic from 'next/dynamic'
 import {Fragment, type ReactNode, useMemo} from 'react'
 
-// Straight from the module rather than `@/components`: the barrel reaches back
-// into this provider through the cards, and the import would come full circle.
 import {IcoLink} from '@/components/ico-link'
 import {SoundControls} from '@/components/sound-controls'
 import {useHasHover} from '@/hooks'
 
-import {CameraSession, Viewport} from './components'
+import {CameraSession} from './components'
 import {Context, createCameraState, useCameraState} from './context'
 import {DragControls, KeyboardControls, ScrollControls, ToucheControls, ZoomControls} from './controls'
-
-const Grid = dynamic(() => import('./components/Grid'), {ssr: false})
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollSmoother, CustomEase, SplitText)
@@ -26,19 +21,7 @@ if (typeof window !== 'undefined') {
 
 export type CameraProviderProps = {
   children: ReactNode
-}
-
-const Provider = ({children}: CameraProviderProps) => {
-  const {x1, x2, x3, x4, viewport} = useCameraState()
-
-  return (
-    <Viewport transform={viewport}>
-      <Grid transform={x1}>{children}</Grid>
-      <Grid transform={x2}>{children}</Grid>
-      <Grid transform={x3}>{children}</Grid>
-      <Grid transform={x4}>{children}</Grid>
-    </Viewport>
-  )
+  paused?: boolean
 }
 
 const Controls = () => {
@@ -61,13 +44,13 @@ const Controls = () => {
   )
 }
 
-export const CameraProvider = (props: CameraProviderProps) => {
+export const CameraProvider = ({children, paused = false}: CameraProviderProps) => {
   const camera = useMemo(() => createCameraState(), [])
 
   return (
     <Context defaultState={camera}>
-      <Provider {...props} />
-      <Controls />
+      {children}
+      {!paused && <Controls />}
       <CameraSession />
     </Context>
   )

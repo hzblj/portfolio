@@ -6,7 +6,13 @@ import ReactDOM from 'react-dom'
 
 import {useIntro} from '@/providers'
 
-export const IntroOverlay = () => {
+type TargetRect = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>
+
+export type IntroOverlayProps = {
+  getTargetRect: () => TargetRect | null
+}
+
+export const IntroOverlay = ({getTargetRect}: IntroOverlayProps) => {
   const {introComplete, setIntroComplete} = useIntro()
   const overlayRef = useRef<HTMLDivElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
@@ -32,16 +38,15 @@ export const IntroOverlay = () => {
     let cancelled = false
 
     const run = () => {
-      const profileCard = document.querySelector('[data-area="profile"]')
+      const rect = getTargetRect()
 
-      if (!profileCard || !overlayRef.current || !lineRef.current) {
+      if (!rect || !overlayRef.current || !lineRef.current) {
         if (!cancelled) {
           requestAnimationFrame(run)
         }
         return
       }
 
-      const rect = profileCard.getBoundingClientRect()
       const line = lineRef.current
       const overlay = overlayRef.current
 
@@ -108,7 +113,7 @@ export const IntroOverlay = () => {
     return () => {
       cancelled = true
     }
-  }, [mounted, setIntroComplete])
+  }, [getTargetRect, mounted, setIntroComplete])
 
   if (!mounted) {
     return null

@@ -5,9 +5,9 @@
  * there is no API for sampling a composited backdrop — so the colour is rebuilt
  * from the DOM instead. Hit-test a handful of points across the region, then
  * composite the stack each one returns front to back: artwork answers from a
- * 16×16 thumbnail of its decoded frame, everything else from its computed
- * background colour, and whatever transparency is left falls through to the
- * page, which is black.
+ * 16×16 thumbnail of its decoded frame, a canvas from whatever sampler its
+ * owner registered, everything else from its computed background colour, and
+ * whatever transparency is left falls through to the page, which is black.
  *
  * Approximate on purpose. Gradient backgrounds are skipped — every one on the
  * site is a few per cent of white over the real colour — `object-position` is
@@ -203,9 +203,35 @@ const sampleMedia = (media: HTMLImageElement | HTMLVideoElement, x: number, y: n
   return {a: thumb.data[i + 3] / 255, b: thumb.data[i + 2], g: thumb.data[i + 1], r: thumb.data[i]}
 }
 
+export type CanvasSampler = (x: number, y: number) => Rgb | null
+
+const canvasSamplers = new WeakMap<HTMLCanvasElement, CanvasSampler>()
+
+/**
+ * A canvas has no DOM to read, so whoever draws it can answer for it: a WebGL
+ * scene hands in a function that reads its own last frame at a viewport point.
+ */
+export const registerCanvasSampler = (canvas: HTMLCanvasElement, sampler: CanvasSampler) => {
+  canvasSamplers.set(canvas, sampler)
+
+  return () => {
+    canvasSamplers.delete(canvas)
+  }
+}
+
+const sampleCanvas = (canvas: HTMLCanvasElement, x: number, y: number): Rgba | null => {
+  const color = canvasSamplers.get(canvas)?.(x, y)
+
+  return color ? {...color, a: 1} : null
+}
+
 const sampleElement = (el: Element, x: number, y: number): Rgba | null => {
   if (el instanceof HTMLImageElement || el instanceof HTMLVideoElement) {
     return sampleMedia(el, x, y)
+  }
+
+  if (el instanceof HTMLCanvasElement) {
+    return sampleCanvas(el, x, y)
   }
 
   // SVG glyphs and the like: too thin to matter, and letting them answer would

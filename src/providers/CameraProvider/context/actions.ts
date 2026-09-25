@@ -1,38 +1,11 @@
-import {isBool, toPx} from '@/utils'
+import {isBool} from '@/utils'
 
-import {calculateScale, clampZoom, HEIGHT, WIDTH} from '../const'
-import {CameraAction, CameraOffset, CameraState, CameraTransforms, CameraZoom} from './types'
-
-export const recalculateTransforms = (state: CameraState): CameraTransforms => {
-  const camera = state.camera
-  const origin = state.origin
-
-  const baseX = Math.floor((camera.x - origin.x) / WIDTH)
-  const baseY = Math.floor((camera.y - origin.y) / HEIGHT)
-
-  const viewport = `scale(${state.scale}) translate3d(${toPx(-camera.x)}, ${toPx(-camera.y)}, 0px)`
-
-  const x1 = `translate3d(${toPx(origin.x + baseX * WIDTH)}, ${toPx(origin.y + baseY * HEIGHT)}, 0px)`
-
-  const x2 = `translate3d(${toPx(origin.x + (baseX + 1) * WIDTH)}, ${toPx(origin.y + baseY * HEIGHT)}, 0px)`
-
-  const x3 = `translate3d(${toPx(origin.x + baseX * WIDTH)}, ${toPx(origin.y + (baseY + 1) * HEIGHT)}, 0px)`
-
-  const x4 = `translate3d(${toPx(origin.x + (baseX + 1) * WIDTH)}, ${toPx(origin.y + (baseY + 1) * HEIGHT)}, 0px)`
-
-  return {
-    viewport,
-    x1,
-    x2,
-    x3,
-    x4,
-  }
-}
+import {calculateScale, clampZoom} from '../const'
+import {CameraAction, CameraOffset, CameraState, CameraZoom} from './types'
 
 export const actionOnScroll = (dispatch: CameraAction, offset: CameraOffset) =>
   dispatch(draft => {
     const {x, y} = offset
-    const direction = draft.scrollBehavior === 'backwards' ? -1 : 1
 
     // Pan happens in unscaled grid space, but the viewport is rendered at
     // `scale`. Dividing by it keeps panning 1:1 with on-screen pixels while
@@ -42,15 +15,12 @@ export const actionOnScroll = (dispatch: CameraAction, offset: CameraOffset) =>
     const newState: CameraState = {
       ...draft,
       camera: {
-        x: draft.camera.x + (direction * x) / scale,
-        y: draft.camera.y + (direction * y) / scale,
+        x: draft.camera.x + x / scale,
+        y: draft.camera.y + y / scale,
       },
     }
 
-    return {
-      ...newState,
-      ...recalculateTransforms(newState),
-    }
+    return newState
   })
 
 // Zoom toward a fixed screen point (`focal`, in client pixels): keep the grid
@@ -80,10 +50,7 @@ export const actionOnZoom = (dispatch: CameraAction, {focal, minScale, scaleBy, 
       scale: nextScale,
     }
 
-    return {
-      ...newState,
-      ...recalculateTransforms(newState),
-    }
+    return newState
   })
 
 export const actionToggleModal = (dispatch: CameraAction, isOpen?: boolean) =>

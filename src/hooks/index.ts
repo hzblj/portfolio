@@ -1,6 +1,4 @@
 export * from './use-adaptive-glass'
 export * from './use-control-fade'
-export * from './use-entrance-animation'
 export * from './use-has-hover'
-export * from './use-intersection-observer'
 export * from './use-sound'

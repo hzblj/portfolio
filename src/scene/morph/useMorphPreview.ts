@@ -1,0 +1,55 @@
+import {useFrame} from '@react-three/fiber'
+import {useLayoutEffect, useMemo, useState} from 'react'
+
+import {CV_PREVIEW_HEIGHT, CV_WIDTH, cvPreviewClip, cvPreviewRect, useCvPreview} from '../cards'
+import {createLayerMaterial, useDisposable} from '../graphics'
+import {lerp, lerpRect} from '../grid'
+import {type CardSource, morph} from '../state'
+import {placeInWorld, showArtwork} from './placement'
+import {revealedPart} from './targets'
+import type {MorphFrame} from './useMorphFrame'
+import {useOverlayMesh} from './useOverlayMesh'
+
+const fadeOut = (t: number) => 1 - Math.min(1, Math.max(0, (t - 0.5) / 0.4))
+
+const offsetBy = <T extends {x: number; y: number}>(rect: T, {x, y}: {x: number; y: number}): T => ({
+  ...rect,
+  x: rect.x + x,
+  y: rect.y + y,
+})
+
+export const useMorphPreview = (source: CardSource, frame: MorphFrame) => {
+  const preview = useCvPreview()
+  const material = useDisposable(useMemo(() => createLayerMaterial(), []))
+  const mesh = useOverlayMesh()
+  const [from] = useState(() => offsetBy(cvPreviewRect(), source.rect))
+  const [fromClip] = useState(() => offsetBy(cvPreviewClip(source.rect.width), source.rect))
+
+  useLayoutEffect(() => {
+    material.uniforms.uMap.value = preview
+    material.uniforms.uHasMap.value = 1
+  }, [material, preview])
+
+  useFrame(() => {
+    if (morph.stage === 'dom') {
+      return
+    }
+
+    const {targets} = frame
+    const t = morph.progress
+    const column = targets?.media
+    const to = column ? {...column, height: CV_PREVIEW_HEIGHT * (column.width / CV_WIDTH)} : from
+    const sheet = lerpRect(from, to, t)
+    const clip = targets ? lerpRect(fromClip, revealedPart(targets.surface), t) : fromClip
+
+    placeInWorld(mesh.mesh.current, sheet)
+    showArtwork(mesh.mesh.current)
+
+    material.uniforms.uRect.value.set(sheet.x, sheet.y, sheet.width, sheet.height)
+    material.uniforms.uClip.value.set(clip.x, clip.y, clip.width, clip.height)
+    material.uniforms.uClipRadius.value = lerp(16, targets?.surfaceRadius ?? 16, t)
+    material.uniforms.uOpacity.value = morph.swapsContent ? 1 : fadeOut(t)
+  })
+
+  return {material, mesh}
+}

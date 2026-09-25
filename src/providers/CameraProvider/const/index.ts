@@ -1,13 +1,8 @@
-import {Config} from '@/config'
-
-export const WIDTH = Config.viewport.width
-export const HEIGHT = Config.viewport.height
-
 // On desktop, zoom is restricted to enlarging the canvas (>= 1): zooming out
-// below 1 would let the visible area in grid space grow past a single tile and
-// break the 2x2 infinite-scroll illusion on large displays.
+// below 1 would let the visible area in grid space grow past a single tile, and
+// every card is only ever drawn in two copies per axis.
 //
-// On mobile the viewport is tiny relative to the 4368x3318 canvas, so there is
+// On mobile the viewport is tiny relative to one 2448x1638 tile, so there is
 // plenty of safe zoom-out headroom (gaps only appear well below ~0.3x even on a
 // large tablet) — pinch there is allowed to shrink down to MOBILE_MIN_ZOOM.
 export const MIN_ZOOM = 1

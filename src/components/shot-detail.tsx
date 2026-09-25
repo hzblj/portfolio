@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import {FC} from 'react'
 
-import {Config} from '@/config'
 import {EntryShot, EntryShotProperty} from '@/db'
 import {LoopVideo} from './loop-video'
 
@@ -36,13 +35,12 @@ const ShotProperty: FC<EntryShotProperty> = ({name, value, url}) => (
 export const ShotDetail: FC<ShotDetailProps> = ({properties, title, description, image, videos, size}) => (
   // No card here, the way the CV has none: on its own page the shot is the page,
   // and a pane of glass around it only draws a second frame inside the first.
-  // The artwork keeps its view-transition name, so opening a shot still carries
-  // the picture across from the grid rather than cutting to it — what dissolves
-  // is the card that was holding it.
+  // The open card on the grid renders this same markup, so the page it hands
+  // over to lines up exactly; `data-morph` marks the parts the morph flies.
   <div className="flex flex-col w-full">
     <div
+      data-morph="media"
       className="relative w-full h-[250px] md:h-[336px] rounded-[28px] md:rounded-[20px] flex justify-center items-center overflow-hidden border-[0.75px] border-[#FFFFFF26]"
-      style={{viewTransitionName: Config.viewTransition.media}}
     >
       <Image src={image} alt="shot" fill sizes={size === 'small' ? '289px' : '594px'} style={{objectFit: 'cover'}} />
       {videos && (
@@ -51,7 +49,7 @@ export const ShotDetail: FC<ShotDetailProps> = ({properties, title, description,
         </div>
       )}
     </div>
-    <div>
+    <div data-morph="details">
       <div>
         <h2 className="text-[16px] font-normal tracking-normal align-middle mt-[40px] text-white leading-[100%]">
           {title}

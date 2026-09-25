@@ -31,33 +31,6 @@
   backdrop-filter: blur(var(--card-blur));
 }
 
-@utility card-cv {
-  --card-border-angle: 134.62deg;
-  --card-border-gradient: linear-gradient(
-    var(--card-border-angle),
-    rgba(255, 255, 255, 0.45) 8.56%,
-    rgba(255, 255, 255, 0.0001) 37.96%,
-    rgba(255, 255, 255, 0.0001) 50.19%,
-    rgba(255, 255, 255, 0.15) 80.06%
-  );
-}
-
-@utility card-map {
-  --card-bg: var(--color-black, #000);
-}
-@utility card-radius-24 {
-  --card-radius: 24px;
-}
-@utility card-no-blur {
-  --card-blur: 0px;
-}
-@utility card-border-2 {
-  --card-border-width: 2px;
-}
-@utility card-angle-160 {
-  --card-border-angle: 160deg;
-}
-
 /* Frosted glass for the floating controls — the corner dock and the expand and
    collapse pills. The four tokens are what `useAdaptiveGlass` rewrites once it
    has read what the control is sitting over; the values here are the dark tone
@@ -106,76 +79,6 @@
   pointer-events: none;
 }
 
-/* Canvas previews. Soft-light lifts the blacks of a photo, which at card size
-   reads as haze rather than paper — multiply only deepens where the sheet has
-   tooth, so the artwork keeps its contrast. */
-@utility texture-paper-dark {
-  --texture-blend: multiply;
-  --texture-opacity: 0.14;
-}
-
-@layer utilities {
-  .responsive-scale {
-    @apply scale-100;
-  }
-
-  /* Mobile */
-  @media (width <= 767px) {
-    .responsive-scale {
-      @apply scale-[0.86];
-    }
-  }
-
-  /* Tablet (768–1023) → stays 1.0 */
-  @media (768px <= width <= 1023px) {
-    .responsive-scale {
-      @apply scale-100;
-    }
-  }
-
-  /* Small desktop (1024–1919) → stays 1.0 */
-  @media (1024px <= width <= 1919px) {
-    .responsive-scale {
-      @apply scale-100;
-    }
-  }
-
-  /* Full HD (1920–2559) → stays 1.0 */
-  @media (1920px <= width <= 2559px) {
-    .responsive-scale {
-      @apply scale-100;
-    }
-  }
-
-  /* QHD / 4xl (2560–3439) */
-  @media (2560px <= width <= 3439px) {
-    .responsive-scale {
-      @apply scale-[1.10];
-    }
-  }
-
-  /* Ultrawide (3440–3839) */
-  @media (3440px <= width <= 3839px) {
-    .responsive-scale {
-      @apply scale-[1.5];
-    }
-  }
-
-  /* 5xl / 4K (3840–5119) */
-  @media (3840px <= width <= 5119px) {
-    .responsive-scale {
-      @apply scale-[1.75];
-    }
-  }
-
-  /* 6xl / 5K+ (>=5120) */
-  @media (width >= 5120px) {
-    .responsive-scale {
-      @apply scale-[2];
-    }
-  }
-}
-
 html {
   width: 100%;
   height: 100%;
@@ -216,19 +119,6 @@ body {
   background-color: var(--color-black);
 }
 
-.content-grid {
-  grid-template-columns: repeat(8, 290px);
-  grid-template-rows: repeat(7, 218px);
-  grid-template-areas:
-    "s1 s2 l1 l1 s3 s4 s5 s6"
-    "gallery gallery l1 l1 contact contact s7 s8"
-    "gallery gallery s9 s10 s11 s12 cv s13"
-    "s14 s15 s16 profile profile s17 cv s18"
-    "map map s19 s20 s21 s22 cv s23"
-    "s24 l2 l2 technologies technologies s25 l3 l3"
-    "s26 l2 l2 s27 s28 s29 l3 l3";
-}
-
 .card::before {
   content: "";
   position: absolute;
@@ -255,190 +145,32 @@ body {
   backdrop-filter: blur(var(--card-blur));
 }
 
-/* ---------------------------------------------------------------------------
-   Shot modal → /[slug] detail — shared-element morph
-
-   The artwork carries the same view-transition name on both pages, so the
-   browser hands us one group for the pair and animates the box between the two
-   positions. Everything around it — the card on the grid, the page it lands on
-   — is left to the root cross-fade, since the page wears no card of its own for
-   a card to morph into. Timings borrow the iOS sheet curve: quick to leave,
-   long to settle.
---------------------------------------------------------------------------- */
-
-::view-transition-group(shot-media),
-::view-transition-old(shot-media),
-::view-transition-new(shot-media) {
-  animation-duration: 440ms;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-/* Snapshots are replaced elements sized to the box they were captured from, so
-   they stretch if the group resizes. The artwork is the same width on both
-   sides, so this only has to cover the odd viewport where they differ by a
-   pixel — cropping there beats squashing the picture. */
-::view-transition-old(shot-media),
-::view-transition-new(shot-media) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-}
-
-/* The open card is glass — no background of its own, just `backdrop-filter` —
-   and glass does not survive being snapshotted. Left inside the root capture it
-   comes out as a hole, and only turns back into glass once the transition is
-   over and the live card paints again, which reads as the surface blinking on.
-
-   So it is lifted out under a name of its own and the glass is rebuilt one
-   level up. The group box is a real box, exactly the card, and what sits behind
-   it in the transition layer is the root snapshot — still holding the grid,
-   since only the card's own painting was taken out of it. Blurring that gives
-   the same frosted result the live card produces. A flat colour could not: the
-   glass takes its colour from wherever the camera happens to be parked.
-
-   The card exists on one side only, so the group would otherwise hold a frosted
-   rectangle over the page it is not part of — before the card arrives coming
-   back, after it has gone on the way out. Fading the group takes the frost with
-   the card, on the curve the rest of the page moves on. */
-html[data-view-transition]::view-transition-group(modal-surface) {
-  border-radius: 44px;
-  transform-origin: center;
-  -webkit-backdrop-filter: blur(var(--card-blur));
-  backdrop-filter: blur(var(--card-blur));
-}
-
-@media (width >= 768px) {
-  html[data-view-transition]::view-transition-group(modal-surface) {
-    border-radius: 52px;
-  }
-}
-
-/* Groups paint in the order they were captured, and that order is not the same
-   in both directions: coming back, the artwork is captured from the page while
-   the card is only captured from the modal that follows it, so the card lands
-   on top and its 136px of frost flattens the picture to grey for the length of
-   the morph. Going in the two are captured together and fall the right way
-   round, which is why it only ever showed on the way back. Stacked by hand, so
-   the order is the same whichever way you are heading: the card is a surface,
-   and everything the card carries sits on it. */
-html[data-view-transition]::view-transition-group(modal-surface) {
-  z-index: 1;
-}
-
-html[data-view-transition]::view-transition-group(shot-media) {
-  z-index: 2;
-}
-
-html[data-view-transition]::view-transition-group(card-toggle),
-html[data-view-transition]::view-transition-group(card-toggle-icon) {
-  z-index: 3;
-}
-
-/* The group carries the fade, for the frost and for what is printed on it
-   alike — a second fade on the snapshot would only double it up. */
-html[data-view-transition]::view-transition-old(modal-surface),
-html[data-view-transition]::view-transition-new(modal-surface) {
-  animation: none;
-}
-
-/* `scale` rather than `transform`: the group is positioned by its transform,
-   and writing to that would drop the card out of its own place. */
-html[data-view-transition="forward"]::view-transition-group(modal-surface) {
-  animation: modal-surface-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
-}
-
-html[data-view-transition="back"]::view-transition-group(modal-surface) {
-  animation: modal-surface-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
-}
-
-@keyframes modal-surface-out {
-  to {
-    opacity: 0;
-    scale: 1.06;
-  }
-}
-
-@keyframes modal-surface-in {
-  from {
-    opacity: 0;
-    scale: 1.06;
-  }
-}
-
-/* The expand and collapse arrows sit in the same pill, in the same corner, so
-   the default cross-fade shows both sets at once and reads as a blink rather
-   than a change. Handing over instead — one spins out before the other spins in
-   — turns it into the control flipping. The pill around them needs no rule: it
-   is identical on both sides, so its own cross-fade is invisible. */
-/* The pill is frosted glass, and a snapshot cannot carry a `backdrop-filter` —
-   same story as the card. Rebuilt on the group, which is the pill's box at every
-   frame, so it stays glass across the morph instead of thinning to its 10 %
-   white. Keep the blur in step with `iconButtonClassName`. */
-::view-transition-group(card-toggle) {
-  border-radius: 9999px;
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-}
-
-::view-transition-old(card-toggle-icon),
-::view-transition-new(card-toggle-icon) {
-  transform-origin: center;
-}
-
-::view-transition-old(card-toggle-icon) {
-  animation: card-toggle-icon-out 170ms cubic-bezier(0.4, 0, 1, 1) both;
-}
-
-::view-transition-new(card-toggle-icon) {
-  animation: card-toggle-icon-in 250ms 170ms cubic-bezier(0, 0, 0.2, 1) both;
-}
-
-@keyframes card-toggle-icon-out {
-  to {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0.5);
-  }
-}
-
-@keyframes card-toggle-icon-in {
-  from {
-    opacity: 0;
-    transform: rotate(90deg) scale(0.5);
-  }
-}
-
-/* Everything that is not the card — the grid behind the modal, the backdrop —
-   moves the way iOS pushes context around, and which way depends on where you
-   are heading. `data-view-transition` is set on <html> for the duration of the
-   navigation; without a direction only the shared elements move, which is the
-   right fallback for any transition that is not this one. */
+/* The pages entered through a view transition — /ico, from the dock — move the
+   way iOS pushes context around, and which way depends on where you are
+   heading. `data-view-transition` is set on <html> for the duration of the
+   navigation. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Going in: the grid you are leaving lifts towards you and gets out of the way,
-   so the card reads as the thing you moved into. */
 html[data-view-transition="forward"]::view-transition-old(root) {
-  animation: shot-context-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: page-context-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
-/* Coming out: the mirror. The grid you are returning to settles back down from
-   where the card left it, rather than fading up out of nothing. */
 html[data-view-transition="back"]::view-transition-new(root) {
-  animation: shot-context-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: page-context-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
-@keyframes shot-context-out {
+@keyframes page-context-out {
   to {
     opacity: 0;
     transform: scale(1.06);
   }
 }
 
-@keyframes shot-context-in {
+@keyframes page-context-in {
   from {
     opacity: 0;
     transform: scale(1.06);

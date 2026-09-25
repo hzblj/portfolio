@@ -1,6 +1,5 @@
 'use client'
 
-import classNames from 'classnames'
 import gsap from 'gsap'
 import {ScrollTrigger} from 'gsap/ScrollTrigger'
 import {FC, ReactNode, type RefObject, useLayoutEffect, useRef} from 'react'
@@ -124,7 +123,7 @@ const SectionTechnologies: FC<Pick<CVSection, 'technologies'> & {className?: str
     <div>
       <span
         data-cv-reveal="true"
-        className={classNames(
+        className={cn(
           'block font-normal text-[14px] leading-[100%] tracking-[0px] text-white/50 h-[17px]',
           props.className
         )}

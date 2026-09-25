@@ -1,30 +1,21 @@
 import {type ReactNode} from 'react'
 
-import {ControlsDock, PersonJsonLd} from '@/components'
-import {Config} from '@/config'
+import {ControlsDock} from '@/components'
 import {IntroProvider, SoundProvider} from '@/providers'
-import {toPx} from '@/utils'
+import {Scene} from '@/scene'
 
 type Props = Readonly<{
   children: ReactNode
 }>
 
-export default function RootLayout({children}: Props) {
+export default function HomeLayout({children}: Props) {
   return (
     <SoundProvider>
       <IntroProvider>
-        <PersonJsonLd />
-        <main id="main" className="bg-black block relative">
-          <div
-            className="overflow-hidden responsive-scale will-change-[transform,opacity] origin-[0px_0px]"
-            style={{
-              height: toPx(Config.layout.height),
-              width: toPx(Config.layout.width),
-            }}
-          >
-            {children}
-          </div>
-        </main>
+        <div id="main" className="relative block h-full w-full bg-black">
+          <Scene />
+          {children}
+        </div>
         <ControlsDock />
       </IntroProvider>
     </SoundProvider>
