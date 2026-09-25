@@ -28,7 +28,9 @@ export const plane = new PlaneGeometry(1, 1)
 export const glass = {
   uBackdrop: {value: null as Texture | null},
   uDim: {value: 0},
+  uPixelRatio: {value: 1},
   uResolution: {value: new Vector2(1, 1)},
+  uWorldScale: {value: 1},
 }
 
 const withCommon = (source: string) => `${common}\n${source}`

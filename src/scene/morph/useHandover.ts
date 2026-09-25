@@ -1,6 +1,4 @@
 import {useFrame} from '@react-three/fiber'
-import {type RefObject, useRef} from 'react'
-import type {Group} from 'three'
 
 import {morph, morphTargets} from '../state'
 
@@ -12,22 +10,10 @@ const setShown = (element: HTMLElement, shown: boolean) => {
   }
 }
 
-export const useHandover = (): RefObject<Group | null> => {
-  const group = useRef<Group>(null)
-
+export const useHandover = () => {
   useFrame(() => {
-    const dom = morph.stage === 'dom'
-
     for (const element of morphTargets.swap) {
       setShown(element, morph.stage !== 'webgl')
     }
-
-    morphTargets.surface?.classList.toggle('card-modal', dom)
-
-    if (group.current) {
-      group.current.visible = !dom
-    }
   }, -0.5)
-
-  return group
 }

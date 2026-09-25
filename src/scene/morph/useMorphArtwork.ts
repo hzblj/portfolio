@@ -26,7 +26,9 @@ export const useMorphArtwork = (entry: EntryShot, source: CardSource, frame: Mor
   }, [material, media])
 
   useFrame(() => {
-    if (morph.stage === 'dom') {
+    showArtwork(mesh.mesh.current)
+
+    if (morph.stage !== 'webgl') {
       return
     }
 
@@ -36,8 +38,6 @@ export const useMorphArtwork = (entry: EntryShot, source: CardSource, frame: Mor
     const natural = naturalSize(media)
 
     placeInWorld(mesh.mesh.current, rect)
-    showArtwork(mesh.mesh.current)
-
     material.uniforms.uRect.value.set(rect.x, rect.y, rect.width, rect.height)
     material.uniforms.uRadius.value = lerp(15, targets?.mediaRadius ?? 15, t)
     material.uniforms.uRingWidth.value = (0.75 / view.scale) * t

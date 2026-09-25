@@ -48,8 +48,10 @@ export const Renderer: FC = () => {
 
     if (render) {
       glass.uResolution.value.copy(gl.getDrawingBufferSize(buffer))
+      glass.uWorldScale.value = ratio
+      glass.uPixelRatio.value = gl.getPixelRatio()
 
-      if (morphing) {
+      if (card) {
         renderGlass(state)
       }
 

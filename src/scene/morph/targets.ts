@@ -3,8 +3,28 @@ import {CV_REVEAL_LINE} from '../cards'
 import type {Rect} from '../grid'
 import {morphTargets} from '../state'
 
-const radiusOf = (element: HTMLElement | null) =>
-  element ? Number.parseFloat(getComputedStyle(element).borderTopLeftRadius) || 0 : 0
+let radii = new WeakMap<HTMLElement, number>()
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('resize', () => {
+    radii = new WeakMap()
+  })
+}
+
+const radiusOf = (element: HTMLElement | null) => {
+  if (!element) {
+    return 0
+  }
+
+  let radius = radii.get(element)
+
+  if (radius === undefined) {
+    radius = Number.parseFloat(getComputedStyle(element).borderTopLeftRadius) || 0
+    radii.set(element, radius)
+  }
+
+  return radius
+}
 
 export type MorphTargets = {
   media: Rect | null

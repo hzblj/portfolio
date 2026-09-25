@@ -29,7 +29,6 @@ const placeLayer = (
   opacity: number
 ) => {
   placeInWorld(mesh, rect)
-  showArtwork(mesh)
 
   material.uniforms.uRect.value.set(rect.x, rect.y, rect.width, rect.height)
   material.uniforms.uClip.value.set(clip.x, clip.y, clip.width, clip.height)
@@ -54,7 +53,10 @@ export const useMorphFoot = (source: CardSource, frame: MorphFrame) => {
   }, [labelMaterial, ramp, rampMaterial, text])
 
   useFrame(() => {
-    if (morph.stage === 'dom') {
+    showArtwork(rampMesh.mesh.current)
+    showArtwork(labelMesh.mesh.current)
+
+    if (morph.stage !== 'webgl') {
       return
     }
 

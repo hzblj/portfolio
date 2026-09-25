@@ -10,14 +10,14 @@ import {useHandover} from './useHandover'
 export const MorphLayer: FC = () => {
   const card = useSceneStore(state => state.card)
   const source = useSceneStore(state => state.source)
-  const group = useHandover()
+  useHandover()
 
   if (!card || !source) {
     return null
   }
 
   return (
-    <group ref={group}>
+    <group>
       {card.kind === 'shot' ? (
         <ShotMorph key={source.slug} entry={card.entry} source={source} />
       ) : (

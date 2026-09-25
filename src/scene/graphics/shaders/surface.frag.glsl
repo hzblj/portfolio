@@ -8,13 +8,19 @@ uniform float uBorderAngle;
 uniform float uGlass;
 uniform sampler2D uBackdrop;
 uniform vec2 uResolution;
+uniform float uWorldScale;
+uniform float uPixelRatio;
 uniform float uDim;
 uniform float uSolid;
 
 varying vec2 vUv;
 
-const vec3 SMOKE = vec3(10.0 / 255.0);
-const float SMOKE_ALPHA = 0.6;
+const vec3 SMOKE = vec3(20.0 / 255.0);
+const float SMOKE_ALPHA = 0.7;
+const float HAIRLINE = 1.1;
+const float LINE_ALPHA = 0.2;
+const float LINE_PICKUP = 0.35;
+const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float gradientAt(vec2 p, vec2 size, float degrees) {
   float angle = radians(degrees);
@@ -40,6 +46,14 @@ float cardBorder(vec2 p, float degrees) {
   return stops(gradientAt(p, uSize, degrees), vec4(0.0856, 0.3796, 0.5019, 0.8006), vec4(0.45, 0.0001, 0.0001, 0.15));
 }
 
+vec3 frostedGlass(float d) {
+  vec3 behind = texture2D(uBackdrop, gl_FragCoord.xy / uResolution).rgb * (1.0 - uDim);
+  vec3 glass = mix(behind, SMOKE, SMOKE_ALPHA);
+  float line = coverage(d) - coverage(d + HAIRLINE * uPixelRatio / uWorldScale);
+
+  return mix(glass, vec3(1.0), line * (LINE_ALPHA + LINE_PICKUP * dot(behind, LUMA)));
+}
+
 void main() {
   vec2 p = (vec2(vUv.x, 1.0 - vUv.y) - 0.5) * uSize;
   float d = roundedBox(p, uSize * 0.5, uRadius);
@@ -51,9 +65,8 @@ void main() {
   vec4 edge = premultiply(uBorder.a < 0.0 ? vec4(1.0, 1.0, 1.0, cardBorder(p, uBorderAngle)) : uBorder);
 
   if (uGlass > 0.0) {
-    vec3 behind = mix(texture2D(uBackdrop, gl_FragCoord.xy / uResolution).rgb * (1.0 - uDim), SMOKE, SMOKE_ALPHA);
-    body = mix(body, vec4(behind, 1.0), uGlass);
-    edge = mix(edge, premultiply(vec4(1.0, 1.0, 1.0, cardBorder(p, 134.62))), uGlass);
+    body = mix(body, vec4(frostedGlass(d), 1.0), uGlass);
+    edge = mix(edge, vec4(0.0), uGlass);
   }
 
   vec4 bodyColor = body * shape;

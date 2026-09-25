@@ -36,10 +36,6 @@ export const useMorphSurface = (source: CardSource, frame: MorphFrame, {fill, bo
   }, [border, fill, material])
 
   useFrame(() => {
-    if (morph.stage === 'dom') {
-      return
-    }
-
     const {targets} = frame
     const t = morph.progress
     const card = targets ? lerpRect(source.rect, targets.surface, t) : source.rect

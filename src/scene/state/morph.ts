@@ -2,7 +2,7 @@ import type {Rect} from '../grid'
 
 type MorphStage = 'webgl' | 'glass' | 'dom'
 
-export const MODAL_BACKDROP = 0.5
+export const MODAL_BACKDROP = 0.47
 export const PAGE_BACKDROP = 1
 export const PAGE_TOP = 116
 

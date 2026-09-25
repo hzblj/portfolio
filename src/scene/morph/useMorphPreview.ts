@@ -25,7 +25,9 @@ export const useMorphPreview = (source: CardSource, frame: MorphFrame) => {
   }, [material, preview])
 
   useFrame(() => {
-    if (morph.stage === 'dom') {
+    showArtwork(mesh.mesh.current)
+
+    if (morph.stage !== 'webgl') {
       return
     }
 
@@ -37,8 +39,6 @@ export const useMorphPreview = (source: CardSource, frame: MorphFrame) => {
     const clip = targets ? lerpRect(fromClip, revealedPart(targets.surface), t) : fromClip
 
     placeInWorld(mesh.mesh.current, sheet)
-    showArtwork(mesh.mesh.current)
-
     material.uniforms.uRect.value.set(sheet.x, sheet.y, sheet.width, sheet.height)
     material.uniforms.uClip.value.set(clip.x, clip.y, clip.width, clip.height)
     material.uniforms.uClipRadius.value = lerp(16, targets?.surfaceRadius ?? 16, t)
