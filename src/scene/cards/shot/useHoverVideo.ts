@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 import {LinearFilter, NoColorSpace, VideoTexture} from 'three'
 
 import type {EntryShotVideos} from '@/db'
+import {isLent, lendVideo} from '@/lib/lent-video'
 
 import type {VideoSource} from '../../entity'
 
@@ -43,7 +44,7 @@ const createVideoTexture = (element: HTMLVideoElement) => {
 
 export const useHoverVideo = (videos?: EntryShotVideos) => {
   const [source] = useState<VideoSource>(() => ({mix: 0, texture: null}))
-  const [player] = useState(() => ({element: null as HTMLVideoElement | null}))
+  const [player] = useState(() => ({element: null as HTMLVideoElement | null, hovered: false}))
 
   useEffect(
     () => () => {
@@ -54,6 +55,8 @@ export const useHoverVideo = (videos?: EntryShotVideos) => {
   )
 
   const play = useCallback(() => {
+    player.hovered = true
+
     if (!videos) {
       return
     }
@@ -77,7 +80,7 @@ export const useHoverVideo = (videos?: EntryShotVideos) => {
     player.element.play().catch(() => undefined)
   }, [player, source, videos])
 
-  const stop = useCallback(() => {
+  const rewind = useCallback(() => {
     if (!player.element) {
       return
     }
@@ -86,5 +89,29 @@ export const useHoverVideo = (videos?: EntryShotVideos) => {
     player.element.currentTime = 0
   }, [player])
 
-  return {play, source, stop}
+  const stop = useCallback(() => {
+    player.hovered = false
+
+    if (player.element && !isLent(player.element)) {
+      rewind()
+    }
+  }, [player, rewind])
+
+  const lend = useCallback(() => {
+    const element = player.element
+
+    if (!element) {
+      return
+    }
+
+    lendVideo(element, () => {
+      if (player.hovered) {
+        element.play().catch(() => undefined)
+      } else {
+        rewind()
+      }
+    })
+  }, [player, rewind])
+
+  return {lend, play, source, stop}
 }

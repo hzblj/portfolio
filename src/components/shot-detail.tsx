@@ -36,7 +36,8 @@ export const ShotDetail: FC<ShotDetailProps> = ({properties, title, description,
   // No card here, the way the CV has none: on its own page the shot is the page,
   // and a pane of glass around it only draws a second frame inside the first.
   // The open card on the grid renders this same markup, so the page it hands
-  // over to lines up exactly; `data-morph` marks the parts the morph flies.
+  // over to lines up exactly; `data-morph` marks the parts the morph flies and
+  // `data-reveal` the sections it staggers in once the card has landed.
   <div className="flex flex-col w-full">
     <div
       data-morph="media"
@@ -51,16 +52,22 @@ export const ShotDetail: FC<ShotDetailProps> = ({properties, title, description,
     </div>
     <div data-morph="details">
       <div>
-        <h2 className="text-[16px] font-normal tracking-normal align-middle mt-[40px] text-white leading-[100%]">
+        <h2
+          data-reveal
+          className="text-[16px] font-normal tracking-normal align-middle mt-[40px] text-white leading-[100%]"
+        >
           {title}
         </h2>
-        <p className="text-[15px] md:text-[16px] font-normal tracking-normal align-middle mt-[8px] mb-[24px] text-white/50 leading-[20px]">
+        <p
+          data-reveal
+          className="text-[15px] md:text-[16px] font-normal tracking-normal align-middle mt-[8px] mb-[24px] text-white/50 leading-[20px]"
+        >
           {description}
         </p>
       </div>
       <div>
         {properties.map((item, index) => (
-          <div key={item.name}>
+          <div key={item.name} data-reveal>
             <ShotProperty {...item} />
             {properties.length - 1 > index && <div className="h-[1px] w-full bg-white/15" />}
           </div>

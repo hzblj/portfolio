@@ -38,7 +38,7 @@ const shot: EntryShot = {
   title: 'Queens - Splash Screen',
   variant: 'shot',
   videos: {
-    mp4: '/webm/shot-small-12.mp4',
+    mp4: '/mp4/shot-small-12.mp4',
     webm: '/webm/shot-small-12.webm',
   },
 }

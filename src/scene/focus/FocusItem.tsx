@@ -25,14 +25,14 @@ export const FocusItem: FC<FocusItemProps> = ({target}) => {
 
   if (target.kind === 'external') {
     return (
-      <a href={target.href} target="_blank" rel="noopener noreferrer" className={LINK} {...handlers}>
+      <a href={target.href} target="_blank" rel="noopener noreferrer" tabIndex={0} className={LINK} {...handlers}>
         {target.label}
       </a>
     )
   }
 
   return (
-    <a href={target.href} className={LINK} {...handlers}>
+    <a href={target.href} tabIndex={0} className={LINK} {...handlers}>
       {target.label}
     </a>
   )

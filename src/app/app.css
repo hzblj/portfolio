@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* The ring the canvas draws around a focused card, so keyboard focus looks the
+   same wherever it lands. In a layer so a control can still restyle its own. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid rgb(255 255 255 / 0.9);
+    outline-offset: 4px;
+  }
+}
+
 @theme {
   --card-radius: 16px;
   --card-blur: 136px;

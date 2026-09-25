@@ -44,7 +44,11 @@ export const MorphModalView: FC<MorphModalViewProps> = ({card}) => {
           )}
           onClick={event => event.stopPropagation()}
         >
-          <div ref={surfaceRef} className="relative overflow-hidden rounded-[44px] md:rounded-[52px]">
+          <div
+            ref={surfaceRef}
+            tabIndex={-1}
+            className="relative overflow-hidden rounded-[44px] outline-none md:rounded-[52px]"
+          >
             <div className="relative z-20">
               <CardModalBody card={card} />
             </div>

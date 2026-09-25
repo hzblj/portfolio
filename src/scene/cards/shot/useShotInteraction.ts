@@ -50,6 +50,7 @@ export const useShotInteraction = (entry: EntryShot) => {
 
   const onClick = useCallback(() => {
     trackProjectView(entry.title)
+    video.lend()
     openCard(
       {entry, kind: 'shot'},
       {media: video.source.texture ?? undefined, rect: worldRect(), slot, slug: entry.slug}

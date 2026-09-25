@@ -42,16 +42,31 @@ const CONTROLS_IN = {
 
 const CONTROLS_OUT = {autoAlpha: 0, duration: Config.controls.exitDuration, ease: Config.controls.exitEase}
 
+const HIDDEN = {autoAlpha: 0, filter: 'blur(6px)', y: 16}
+const REVEALED = {autoAlpha: 1, clearProps: 'filter,transform', filter: 'blur(0px)', y: 0}
+const REVEAL = {...REVEALED, duration: 0.6, ease: 'power3.out', stagger: 0.06}
+const REVEAL_AT = 0.4
+
 const isElement = (element: HTMLElement | null): element is HTMLElement => element !== null
 
 const focusFirstControl = (container: HTMLElement | null) => {
   container?.querySelector<HTMLElement>('a, button')?.focus({preventScroll: true})
 }
 
+const openedFromKeyboard = () => document.activeElement?.matches(':focus-visible') ?? false
+
 const restoreFocus = (element: HTMLElement | null) => {
-  if (element?.isConnected && element !== document.body) {
-    element.focus({preventScroll: true})
-  }
+  requestAnimationFrame(() => {
+    if (element?.isConnected && element !== document.body) {
+      element.focus({preventScroll: true})
+    }
+  })
+}
+
+const revealTargets = (details: HTMLElement | null) => {
+  const sections = details ? [...details.querySelectorAll<HTMLElement>('[data-reveal]')] : []
+
+  return sections.length > 0 ? sections : [details].filter(isElement)
 }
 
 const offsetToPage = () => PAGE_TOP - (morphTargets.media?.getBoundingClientRect().top ?? PAGE_TOP)
@@ -67,10 +82,12 @@ export const useMorphModal = (card: OpenCard) => {
   const overlayRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLDivElement>(null)
   const detailsRef = useRef<HTMLElement | null>(null)
+  const revealRef = useRef<HTMLElement[]>([])
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
   const busyRef = useRef(false)
   const openedRef = useRef(false)
   const returnFocusRef = useRef<HTMLElement | null>(null)
+  const keyboardRef = useRef(false)
   const wasActiveRef = useRef(active)
 
   const reflowsOnPage = card.kind === 'cv'
@@ -89,7 +106,9 @@ export const useMorphModal = (card: OpenCard) => {
 
     setCursor(false)
     detailsRef.current = details
+    revealRef.current = revealTargets(details)
     returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    keyboardRef.current = openedFromKeyboard()
     morphTargets.surface = surface
     morphTargets.media = media
     morphTargets.swap = swap
@@ -102,7 +121,7 @@ export const useMorphModal = (card: OpenCard) => {
     }
 
     if (!swapsContent) {
-      gsap.set(details, {autoAlpha: 0})
+      gsap.set(revealRef.current, HIDDEN)
     }
 
     gsap.set([overlayRef.current, closeRef.current], {autoAlpha: 0})
@@ -128,12 +147,17 @@ export const useMorphModal = (card: OpenCard) => {
       .to(morph, {...OPEN, progress: 1}, 0)
       .call(() => {
         morph.stage = 'dom'
-        focusFirstControl(overlayRef.current)
+
+        if (keyboardRef.current) {
+          focusFirstControl(overlayRef.current)
+        } else {
+          surfaceRef.current?.focus({preventScroll: true})
+        }
       })
       .to([overlayRef.current, closeRef.current], CONTROLS_IN, 0)
 
     if (!morph.swapsContent) {
-      timeline.to(detailsRef.current, {autoAlpha: 1, duration: 0.3, ease: 'power2.out'}, OPEN.duration)
+      timeline.to(revealRef.current, REVEAL, REVEAL_AT)
     }
 
     timelineRef.current = timeline
@@ -204,6 +228,8 @@ export const useMorphModal = (card: OpenCard) => {
 
       if (reflowsOnPage) {
         timeline.to(detailsRef.current, {autoAlpha: 0, duration: 0.25, ease: 'power2.in'}, 0)
+      } else {
+        timeline.to(revealRef.current, {...REVEALED, duration: 0.25, ease: 'power2.out'}, 0)
       }
 
       timelineRef.current = timeline

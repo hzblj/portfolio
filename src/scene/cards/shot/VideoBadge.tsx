@@ -7,7 +7,8 @@ import type {RGBA} from '../../graphics'
 import {useSvg} from '../../graphics'
 import {insetRect} from '../../grid'
 
-const BADGE: RGBA = [1, 1, 1, 0.15]
+const BADGE: RGBA = [0, 0, 0, 0.42]
+const BADGE_EDGE: RGBA = [1, 1, 1, 0.22]
 const ICON = {height: 12, width: 12}
 
 type VideoBadgeProps = {
@@ -22,7 +23,7 @@ export const VideoBadge: FC<VideoBadgeProps> = ({motion}) => {
 
   return (
     <>
-      <Layer rect={circle} radius={11} color={BADGE} order={2} motion={motion} />
+      <Layer rect={circle} radius={11} color={BADGE} ringWidth={1} ringColor={BADGE_EDGE} order={2} motion={motion} />
       <Layer rect={glyph} map={icon} fit="fill" order={3} motion={motion} />
     </>
   )
