@@ -1,5 +1,7 @@
 'use client'
 
+import {trackLoad} from './uploads'
+
 let family: string | null = null
 
 const fontFamily = () => {
@@ -11,8 +13,8 @@ const fontFamily = () => {
 let fontsReady: Promise<void> | null = null
 
 export const loadFonts = () => {
-  fontsReady ??= Promise.all([400, 500].map(weight => document.fonts.load(`${weight} 16px ${fontFamily()}`))).then(
-    () => undefined
+  fontsReady ??= trackLoad(
+    Promise.all([400, 500].map(weight => document.fonts.load(`${weight} 16px ${fontFamily()}`))).then(() => undefined)
   )
 
   return fontsReady

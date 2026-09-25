@@ -4,7 +4,7 @@ import {useFrame} from '@react-three/fiber'
 import {type FC, useState} from 'react'
 import {Vector2} from 'three'
 
-import {glass} from '../graphics'
+import {flushUploads, glass} from '../graphics'
 import {morph, useSceneStore} from '../state'
 import {useCanvasProbe} from './useCanvasProbe'
 import {useGlassBlur} from './useGlassBlur'
@@ -16,6 +16,7 @@ export const Renderer: FC = () => {
 
   useFrame(state => {
     const {gl, scene, camera} = state
+    flushUploads(gl)
     glass.uResolution.value.copy(gl.getDrawingBufferSize(buffer))
 
     if (useSceneStore.getState().card && morph.stage !== 'dom') {

@@ -5,6 +5,7 @@ import {use} from 'react'
 import {CanvasTexture, LinearFilter, LinearMipmapLinearFilter, NoColorSpace, type Texture, TextureLoader} from 'three'
 
 import {drawText, glyphExtent, loadFonts, measureText, type TextStyle} from './text'
+import {queueUpload, trackLoad} from './uploads'
 
 type Size = {width: number; height: number}
 
@@ -19,6 +20,7 @@ const prepare = <T extends Texture>(texture: T, size: Size) => {
   texture.anisotropy = 8
   texture.userData.size = size
   texture.needsUpdate = true
+  queueUpload(texture)
 
   return texture
 }
@@ -32,14 +34,29 @@ class PreparedTextureLoader extends TextureLoader {
     onProgress?: (event: ProgressEvent) => void,
     onError?: (error: unknown) => void
   ) {
+    let settle: () => void = () => undefined
+    trackLoad(
+      new Promise<void>(resolve => {
+        settle = resolve
+      })
+    )
+
     return super.load(
       url,
       texture => {
         const {naturalHeight, naturalWidth} = texture.image
-        onLoad?.(prepare(texture, {height: naturalHeight, width: naturalWidth}))
+        const ready = () => {
+          onLoad?.(prepare(texture, {height: naturalHeight, width: naturalWidth}))
+          settle()
+        }
+
+        texture.image.decode().then(ready, ready)
       },
       onProgress,
-      onError
+      error => {
+        settle()
+        onError?.(error)
+      }
     )
   }
 }
@@ -120,19 +137,21 @@ const rasterize = (src: string, box: Size) => {
   let raster = rasters.get(key)
 
   if (!raster) {
-    raster = new Promise<CanvasTexture>((resolve, reject) => {
-      const image = new Image()
+    raster = trackLoad(
+      new Promise<CanvasTexture>((resolve, reject) => {
+        const image = new Image()
 
-      image.onload = () => {
-        const natural = {height: image.naturalHeight, width: image.naturalWidth}
-        const cover = Math.max(box.width / natural.width, box.height / natural.height)
-        const size = {height: natural.height * cover, width: natural.width * cover}
+        image.onload = () => {
+          const natural = {height: image.naturalHeight, width: image.naturalWidth}
+          const cover = Math.max(box.width / natural.width, box.height / natural.height)
+          const size = {height: natural.height * cover, width: natural.width * cover}
 
-        resolve(paint(size, natural, ctx => ctx.drawImage(image, 0, 0, size.width, size.height)))
-      }
-      image.onerror = reject
-      image.src = src
-    })
+          resolve(paint(size, natural, ctx => ctx.drawImage(image, 0, 0, size.width, size.height)))
+        }
+        image.onerror = reject
+        image.src = src
+      })
+    )
 
     rasters.set(key, raster)
   }
