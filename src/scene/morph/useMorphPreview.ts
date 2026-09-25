@@ -3,7 +3,7 @@ import {useLayoutEffect, useMemo, useState} from 'react'
 
 import {CV_PREVIEW_HEIGHT, CV_WIDTH, cvPreviewClip, cvPreviewRect, useCvPreview} from '../cards'
 import {createLayerMaterial, useDisposable} from '../graphics'
-import {lerp, lerpRect} from '../grid'
+import {lerp, lerpRect, offsetRect} from '../grid'
 import {type CardSource, morph} from '../state'
 import {placeInWorld, showArtwork} from './placement'
 import {revealedPart} from './targets'
@@ -12,18 +12,12 @@ import {useOverlayMesh} from './useOverlayMesh'
 
 const fadeOut = (t: number) => 1 - Math.min(1, Math.max(0, (t - 0.5) / 0.4))
 
-const offsetBy = <T extends {x: number; y: number}>(rect: T, {x, y}: {x: number; y: number}): T => ({
-  ...rect,
-  x: rect.x + x,
-  y: rect.y + y,
-})
-
 export const useMorphPreview = (source: CardSource, frame: MorphFrame) => {
   const preview = useCvPreview()
   const material = useDisposable(useMemo(() => createLayerMaterial(), []))
   const mesh = useOverlayMesh()
-  const [from] = useState(() => offsetBy(cvPreviewRect(), source.rect))
-  const [fromClip] = useState(() => offsetBy(cvPreviewClip(source.rect.width), source.rect))
+  const [from] = useState(() => offsetRect(cvPreviewRect(), source.rect))
+  const [fromClip] = useState(() => offsetRect(cvPreviewClip(source.rect.width), source.rect))
 
   useLayoutEffect(() => {
     material.uniforms.uMap.value = preview

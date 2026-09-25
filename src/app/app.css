@@ -149,6 +149,9 @@ body {
 
 .card-modal {
   position: relative;
+  /* Smoked, so whatever bright card sits behind tints the glass instead of
+     washing it out. `surface.frag.glsl` lays the same shade over its blur. */
+  background-color: rgb(10 10 10 / 0.6);
   background-blend-mode: luminosity;
   -webkit-backdrop-filter: blur(var(--card-blur));
   backdrop-filter: blur(var(--card-blur));

@@ -2,12 +2,9 @@
 
 import {type FC, useMemo} from 'react'
 
-import type {TextStyle} from '../graphics'
-import {useText} from '../graphics'
+import {TEXT_ALPHA_GAMMA, type TextStyle, useText} from '../graphics'
 import {Layer} from './Layer'
 import type {LayerOptions} from './useLayer'
-
-const TEXT_GAMMA = 1.45
 
 type TextLayerProps = Omit<LayerOptions, 'rect' | 'map' | 'fit' | 'mapPosition'> & {
   text: string
@@ -26,5 +23,5 @@ export const TextLayer: FC<TextLayerProps> = ({text, style, x, top, align = 'lef
     [box, left, top]
   )
 
-  return <Layer alphaGamma={TEXT_GAMMA} {...layer} rect={rect} map={texture} fit="fill" />
+  return <Layer alphaGamma={TEXT_ALPHA_GAMMA} {...layer} rect={rect} map={texture} fit="fill" />
 }

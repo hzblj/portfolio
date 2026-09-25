@@ -86,7 +86,7 @@ export const useCanvasTexture = (
   return texture
 }
 
-type TextTexture = {
+export type TextTexture = {
   texture: CanvasTexture
   width: number
   box: {x: number; y: number; width: number; height: number}

@@ -13,6 +13,15 @@ export const cvPreviewRect = () => ({
 
 export const cvPreviewClip = (width: number) => ({height: 681 - 4, width: width - 4, x: 3, y: 3})
 
+export const cvLabelHost = ({width, height}: {width: number; height: number}) => ({height, width, x: 0, y: -1})
+
+export const cvLabelClip = ({width, height}: {width: number; height: number}) => ({
+  height: height - 2,
+  width: width - 2,
+  x: 1,
+  y: 0,
+})
+
 export const RAMP = [
   [0, 'rgba(0, 0, 0, 0)'],
   [0.7283, 'rgba(0, 0, 0, 1)'],

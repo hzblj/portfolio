@@ -19,6 +19,7 @@ export const useMorphSurface = (source: CardSource, frame: MorphFrame, {fill, bo
 
   useLayoutEffect(() => {
     const {uniforms} = material
+    uniforms.uSolid.value = 1
 
     if (fill === 'card') {
       uniforms.uFill.value.set(0, 0, 0, -1)

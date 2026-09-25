@@ -27,10 +27,11 @@ import {alignPill, isDesktop, pageAlignment, turnGlyph} from './pill'
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(CustomEase)
   CustomEase.create('card-morph', 'M0,0 C0.32,0.72 0,1 1,1')
+  CustomEase.create('card-morph-close', 'M0,0 C0.25,0.6 0.3,1 1,1')
 }
 
 const OPEN = {duration: 0.6, ease: 'card-morph'}
-const CLOSE = {duration: 0.5, ease: 'card-morph'}
+const CLOSE = {duration: 0.45, ease: 'card-morph-close'}
 const PAGE = {duration: 0.7, ease: 'card-morph'}
 
 const CONTROLS_IN = {

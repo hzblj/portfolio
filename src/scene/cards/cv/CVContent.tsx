@@ -7,7 +7,7 @@ import type {EntryCV} from '@/db'
 import {FocusRing, Layer, Surface, useEntity} from '../../entity'
 import {focusIds} from '../../state'
 import {FootLabel} from '../shared'
-import {CV_BORDER_ANGLE, cvPreviewClip, cvPreviewRect, RAMP} from './preview'
+import {CV_BORDER_ANGLE, cvLabelClip, cvLabelHost, cvPreviewClip, cvPreviewRect, RAMP} from './preview'
 import {useCvPeek} from './useCvPeek'
 import {useCvPreview} from './useCvPreview'
 
@@ -23,8 +23,8 @@ export const CVContent: FC<CVContentProps> = ({entry}) => {
   const rect = useMemo(cvPreviewRect, [])
   const card = useMemo(() => ({x: 0, y: 0, ...size}), [size])
   const clip = useMemo(() => cvPreviewClip(size.width), [size])
-  const labelHost = useMemo(() => ({height: size.height, width: size.width, x: 0, y: -1}), [size])
-  const labelClip = useMemo(() => ({height: size.height - 2, width: size.width - 2, x: 1, y: 0}), [size])
+  const labelHost = useMemo(() => cvLabelHost(size), [size])
+  const labelClip = useMemo(() => cvLabelClip(size), [size])
 
   return (
     <>

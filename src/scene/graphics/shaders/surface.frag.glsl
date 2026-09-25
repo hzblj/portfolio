@@ -9,8 +9,12 @@ uniform float uGlass;
 uniform sampler2D uBackdrop;
 uniform vec2 uResolution;
 uniform float uDim;
+uniform float uSolid;
 
 varying vec2 vUv;
+
+const vec3 SMOKE = vec3(10.0 / 255.0);
+const float SMOKE_ALPHA = 0.6;
 
 float gradientAt(vec2 p, vec2 size, float degrees) {
   float angle = radians(degrees);
@@ -42,17 +46,18 @@ void main() {
   float shape = coverage(d);
   float ring = max(shape - coverage(d + uBorderWidth), 0.0);
 
-  vec4 body = uFill.a < 0.0 ? vec4(1.0, 1.0, 1.0, cardFill(p)) : uFill;
-  vec4 edge = uBorder.a < 0.0 ? vec4(1.0, 1.0, 1.0, cardBorder(p, uBorderAngle)) : uBorder;
+  vec4 body = premultiply(uFill.a < 0.0 ? vec4(1.0, 1.0, 1.0, cardFill(p)) : uFill);
+  body.a = mix(body.a, 1.0, uSolid);
+  vec4 edge = premultiply(uBorder.a < 0.0 ? vec4(1.0, 1.0, 1.0, cardBorder(p, uBorderAngle)) : uBorder);
 
   if (uGlass > 0.0) {
-    vec3 behind = texture2D(uBackdrop, gl_FragCoord.xy / uResolution).rgb * (1.0 - uDim);
+    vec3 behind = mix(texture2D(uBackdrop, gl_FragCoord.xy / uResolution).rgb * (1.0 - uDim), SMOKE, SMOKE_ALPHA);
     body = mix(body, vec4(behind, 1.0), uGlass);
-    edge = mix(edge, vec4(1.0, 1.0, 1.0, cardBorder(p, 134.62)), uGlass);
+    edge = mix(edge, premultiply(vec4(1.0, 1.0, 1.0, cardBorder(p, 134.62))), uGlass);
   }
 
-  vec4 bodyColor = premultiply(body) * shape;
-  vec4 edgeColor = premultiply(edge) * ring;
+  vec4 bodyColor = body * shape;
+  vec4 edgeColor = edge * ring;
 
   gl_FragColor = (edgeColor + bodyColor * (1.0 - edgeColor.a)) * uOpacity;
 }

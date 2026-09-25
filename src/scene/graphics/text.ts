@@ -133,6 +133,8 @@ export const drawText = (ctx: CanvasRenderingContext2D, text: string, x: number,
   ctx.restore()
 }
 
+export const TEXT_ALPHA_GAMMA = 1.45
+
 export const INK = ['#ffffff', 'rgba(255, 255, 255, 0.72)'] as const
 export const INK_STRONG = ['#ffffff', 'rgba(255, 255, 255, 0.48)'] as const
 export const INK_BLUE = ['#1CEDFC', 'rgba(28, 237, 252, 0.72)'] as const

@@ -54,6 +54,7 @@ export const createSurfaceMaterial = () =>
       uOpacity: {value: 1},
       uRadius: {value: 16},
       uSize: {value: new Vector2(1, 1)},
+      uSolid: {value: 0},
     },
   })
 
