@@ -37,9 +37,6 @@ export const CameraSession = () => {
 
     hasRestoredRef.current = true
 
-    // Restored after hydration rather than seeded into the initial state, so the
-    // server render and the first client render agree. A layout effect still
-    // lands it before the first paint, so there is no jump to see.
     const {camera: parkedCamera, scale: parkedScale} = parked
 
     dispatch(draft => ({...draft, camera: parkedCamera, scale: parkedScale}))

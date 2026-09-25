@@ -7,14 +7,6 @@ import {findScroller} from '@/utils'
 
 const readScroll = (scroller: HTMLElement | undefined) => scroller?.scrollTop ?? window.scrollY
 
-/**
- * The page's end of the hand-over with an open card. Opens the page scrolled to
- * wherever the modal was, and leaves the page's scroll behind for the modal on
- * the way out.
- *
- * Render it ahead of anything that measures the page on mount — layout effects
- * run in document order, and the scroll has to be in place before they read it.
- */
 export const PageArrival: FC = () => {
   const ref = useRef<HTMLDivElement>(null)
 

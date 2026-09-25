@@ -61,10 +61,6 @@ export default async function Cv() {
           outside the smoother, whose transform would carry it along. */}
       <CardCollapseLink />
 
-      {/* The column is the open card's, to the pixel: its 12px margin and 32px
-          inset on a phone, its 572 cap on a desktop. The card expands into this
-          page with the CV held where it is, and a column even slightly narrower
-          would wrap the text differently and give the swap away. */}
       <SmoothScroll>
         <div className="relative flex w-full justify-center pt-[116px]">
           <div className="flex w-full max-w-[660px] flex-col items-center px-[44px] md:max-w-[572px] md:px-0">

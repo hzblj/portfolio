@@ -16,7 +16,6 @@ type BorrowedVideoProps = {
   src: string
 }
 
-// The card's own element keeps playing in here, styled like the one below.
 const BorrowedVideo: FC<BorrowedVideoProps> = ({src}) => {
   const ref = useRef<HTMLDivElement | null>(null)
 
@@ -80,8 +79,6 @@ const OwnVideo: FC<LoopVideoProps> = ({srcMp4, srcWebm, poster, muted = true, au
 }
 
 export const LoopVideo: FC<LoopVideoProps> = props => {
-  // Settled once: a clip carried over from its card stays the card's element for
-  // as long as this frame is up, rather than swapping to a fresh one mid-play.
   const [borrowed] = useState(() => hasLentVideo(props.srcMp4))
 
   if (borrowed) {

@@ -207,10 +207,6 @@ export type CanvasSampler = (x: number, y: number) => Rgb | null
 
 const canvasSamplers = new WeakMap<HTMLCanvasElement, CanvasSampler>()
 
-/**
- * A canvas has no DOM to read, so whoever draws it can answer for it: a WebGL
- * scene hands in a function that reads its own last frame at a viewport point.
- */
 export const registerCanvasSampler = (canvas: HTMLCanvasElement, sampler: CanvasSampler) => {
   canvasSamplers.set(canvas, sampler)
 

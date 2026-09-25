@@ -273,8 +273,6 @@ const Section = ({year, ...props}: CVSection) => (
   </div>
 )
 
-// Painted through the text, so it goes on each word rather than the line: see
-// `SplitWords`.
 const GRADIENT_INK = 'bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-transparent'
 
 const GradientText: FC<{children: string}> = ({children}) => (
@@ -349,11 +347,6 @@ const REVEAL_LINE = 0.92
 const NODE_STAGGER = 0.05
 const INTRO_STAGGER = 0.055
 
-// The profile card's split reveal, in the DOM: words lift in as their line comes
-// out of a blur. The blur is the line's, not each word's — a filter on every one
-// of a few hundred words is a few hundred filtered layers repainted each frame,
-// where the words themselves only move and fade, which the compositor does for
-// free.
 const HIDDEN = {autoAlpha: 0, filter: 'blur(6px)', y: 10}
 const SHOWN = {autoAlpha: 1, clearProps: 'filter,transform', filter: 'blur(0px)', y: 0}
 const REVEAL = {...SHOWN, duration: 0.6, ease: 'quart.out'}
@@ -361,9 +354,6 @@ const WORD_HIDDEN = {opacity: 0, y: 10}
 const WORD_SHOWN = {clearProps: 'opacity,transform', opacity: 1, y: 0}
 const WORD_REVEAL = {...WORD_SHOWN, duration: 0.6, ease: 'quart.out', force3D: true}
 const WORD_STAGGER = 0.06
-// However long the line, its words have swept in within this — a paragraph
-// staggered word by word at the heading's pace would take the best part of ten
-// seconds.
 const WORDS_SPAN = 0.45
 
 const wordsOf = (node: HTMLElement) => gsap.utils.toArray<HTMLElement>(node.querySelectorAll(WORD_SELECTOR))
@@ -380,9 +370,6 @@ const hideNode = (node: HTMLElement) => {
   gsap.set(words, WORD_HIDDEN)
 }
 
-// A line without words to split — an underlined link, the rail beside a list of
-// positions — moves as one word. One with words shows its own frame quickly and
-// leaves the motion to them.
 const revealNode = (node: HTMLElement, delay: number) => {
   const words = wordsOf(node)
 
@@ -407,7 +394,6 @@ const showNode = (node: HTMLElement) => {
   }
 }
 
-/** Everything in the CV at once — for a hand-over, where nothing should arrive twice. */
 export const showCvRevealed = (root: HTMLElement | null) => {
   for (const node of root ? gsap.utils.toArray<HTMLElement>(root.querySelectorAll(NODE_SELECTOR)) : []) {
     gsap.killTweensOf([node, ...wordsOf(node)])
@@ -461,8 +447,6 @@ const useCvSequentialReveal = ({root, enable = true, skipIntro = false}: RevealO
         ;(node.getBoundingClientRect().top < revealLine ? onScreen : belowFold).push(node)
       })
 
-      // Opened in place of content that was already on screen — a card handed
-      // over, a modal restored — so its first screen is simply already there.
       if (skipIntro) {
         onScreen.forEach(showNode)
       } else {

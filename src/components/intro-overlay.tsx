@@ -18,7 +18,6 @@ type IntroParts = {
   fill: RefObject<HTMLDivElement | null>
 }
 
-// power3.inOut and power2.out, the eases the reveal was drawn with.
 const IN_OUT = 'cubic-bezier(0.65, 0, 0.35, 1)'
 const OUT = 'cubic-bezier(0.5, 1, 0.89, 1)'
 
@@ -26,21 +25,12 @@ const LINE = 500
 const OPEN = 300
 const FADE = 400
 const CARD_FADE = 300
-// Hands over to the grid a little before the card has fully opened, so the
-// cards start their entrance while the overlay is still black.
 const HAND_OVER = LINE + OPEN - 200
 const RADIUS = 16
 const BORDER = 1
 
 const inset = (y: number, x: number, radius: number) => `inset(${y}px ${x}px round ${radius}px)`
 
-// The card is drawn at its full size once and only its clip moves: a line
-// across the middle, then a box opening out of it. The clip is two layers, the
-// border colour and the fill one pixel inside it, so the edge always carries
-// its border and its rounded corners — the radius shrinks on its own while the
-// box is shorter than the corners, the way `border-radius` does. Nothing lays
-// out while it plays, and every step is on the Web Animations timeline from the
-// start instead of being stepped from a busy main thread.
 const playReveal = ({overlay, card, ring, fill}: IntroParts, rect: TargetRect) => {
   const line = (rect.height - BORDER * 2) / 2
   const opensAt = LINE / (LINE + OPEN)

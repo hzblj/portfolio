@@ -1,15 +1,11 @@
 @import "tailwindcss";
 
-/* The ring the canvas draws around a focused card, so keyboard focus looks the
-   same wherever it lands. In a layer so a control can still restyle its own. */
 @layer base {
   :focus-visible {
     outline: 2px solid rgb(255 255 255 / 0.9);
     outline-offset: 4px;
   }
 
-  /* A hairline of a scrollbar, the colour of the site's other rules. The
-     standard pair for Chrome and Firefox; Safari only takes the prefixed one. */
   * {
     scrollbar-width: thin;
     scrollbar-color: rgb(255 255 255 / 0.2) transparent;
@@ -170,18 +166,12 @@ body {
 
 .card-modal {
   position: relative;
-  /* Smoked, so whatever bright card sits behind tints the glass instead of
-     washing it out. `surface.frag.glsl` lays the same shade over its blur. */
   background-color: rgb(10 10 10 / 0.6);
   background-blend-mode: luminosity;
   -webkit-backdrop-filter: blur(var(--card-blur));
   backdrop-filter: blur(var(--card-blur));
 }
 
-/* The pages entered through a view transition — /ico, from the dock — move the
-   way iOS pushes context around, and which way depends on where you are
-   heading. `data-view-transition` is set on <html> for the duration of the
-   navigation. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 400ms;
