@@ -7,6 +7,27 @@
     outline: 2px solid rgb(255 255 255 / 0.9);
     outline-offset: 4px;
   }
+
+  /* A hairline of a scrollbar, the colour of the site's other rules. The
+     standard pair for Chrome and Firefox; Safari only takes the prefixed one. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.2) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.2);
+  }
 }
 
 @theme {

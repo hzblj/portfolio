@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 
-import {CardCollapseLink, CV, PersonJsonLd, SmoothScroll} from '@/components'
+import {CardCollapseLink, CVPage, PersonJsonLd, SmoothScroll} from '@/components'
 
 const description =
   'The full CV of Jan Blazej — work experience, side projects and education. Lead Mobile Developer specialising in React Native, Expo and TypeScript, based in Prague, Czechia.'
@@ -61,12 +61,14 @@ export default async function Cv() {
           outside the smoother, whose transform would carry it along. */}
       <CardCollapseLink />
 
+      {/* The column is the open card's, to the pixel: its 12px margin and 32px
+          inset on a phone, its 572 cap on a desktop. The card expands into this
+          page with the CV held where it is, and a column even slightly narrower
+          would wrap the text differently and give the swap away. */}
       <SmoothScroll>
         <div className="relative flex w-full justify-center pt-[116px]">
-          <div className="max-w-[572px] w-full flex flex-col items-center px-5">
-            <CV animated>
-              <div className="flex h-[116px] w-full flex-shrink-0" />
-            </CV>
+          <div className="flex w-full max-w-[660px] flex-col items-center px-[44px] md:max-w-[572px] md:px-0">
+            <CVPage />
           </div>
         </div>
       </SmoothScroll>

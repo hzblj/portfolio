@@ -3,8 +3,10 @@ import {CustomEase} from 'gsap/CustomEase'
 import {useRouter} from 'next/navigation'
 import {useCallback, useEffect, useLayoutEffect, useRef} from 'react'
 
+import {showCvRevealed} from '@/components/cv'
 import {Config} from '@/config'
 import {useSound} from '@/hooks/use-sound'
+import {handOffToPage, takeModalReturn} from '@/lib/page-handoff'
 import {actionToggleModal, useCameraDispatch} from '@/providers/CameraProvider/context'
 
 import {setCursor} from '../interaction'
@@ -70,7 +72,20 @@ const revealTargets = (details: HTMLElement | null) => {
   return sections.length > 0 ? sections : [details].filter(isElement)
 }
 
-const offsetToPage = () => PAGE_TOP - (morphTargets.media?.getBoundingClientRect().top ?? PAGE_TOP)
+const mediaTop = () => morphTargets.media?.getBoundingClientRect().top ?? PAGE_TOP
+
+const alignWithPage = (scroller: HTMLElement | null, surface: HTMLElement | null, pageScroll: number) => {
+  if (!scroller || !surface) {
+    return
+  }
+
+  const off = mediaTop() - (PAGE_TOP - pageScroll)
+  const before = scroller.scrollTop
+  scroller.scrollTop = before + off
+  const left = off - (scroller.scrollTop - before)
+
+  gsap.set(surface, {y: Number(gsap.getProperty(surface, 'y')) - left})
+}
 
 export const useMorphModal = (card: OpenCard) => {
   const router = useRouter()
@@ -79,6 +94,7 @@ export const useMorphModal = (card: OpenCard) => {
   const active = useSceneActive()
   const away = useSceneStore(state => state.away)
 
+  const scrollerRef = useRef<HTMLDivElement>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLDivElement>(null)
@@ -90,8 +106,6 @@ export const useMorphModal = (card: OpenCard) => {
   const returnFocusRef = useRef<HTMLElement | null>(null)
   const keyboardRef = useRef(false)
   const wasActiveRef = useRef(active)
-
-  const reflowsOnPage = card.kind === 'cv'
 
   useLayoutEffect(() => {
     const surface = surfaceRef.current
@@ -178,6 +192,12 @@ export const useMorphModal = (card: OpenCard) => {
 
     timelineRef.current?.kill()
 
+    const handBack = takeModalReturn()
+
+    if (handBack) {
+      alignWithPage(scrollerRef.current, surfaceRef.current, handBack.scroll)
+    }
+
     const timeline = gsap
       .timeline()
       .to(surfaceRef.current, {...PAGE, y: 0}, 0)
@@ -194,12 +214,8 @@ export const useMorphModal = (card: OpenCard) => {
     turnGlyph(timeline, overlayRef.current, 'expand')
     alignPill(timeline, overlayRef.current, 0)
 
-    if (reflowsOnPage) {
-      timeline.to(detailsRef.current, {autoAlpha: 1, duration: 0.35, ease: 'power2.out'}, 0.25)
-    }
-
     timelineRef.current = timeline
-  }, [active, away, reflowsOnPage])
+  }, [active, away])
 
   const expand = useCallback(
     (href: string) => {
@@ -212,30 +228,30 @@ export const useMorphModal = (card: OpenCard) => {
       morph.stage = 'glass'
       prepareAmbient(card.kind)
 
+      const top = mediaTop()
+      handOffToPage(Math.max(0, PAGE_TOP - top))
+
       const timeline = gsap
         .timeline()
         .to(closeRef.current, CONTROLS_OUT, 0)
-        .to(surfaceRef.current, {...PAGE, y: offsetToPage()}, 0)
+        .to(surfaceRef.current, {...PAGE, y: Math.min(0, PAGE_TOP - top)}, 0)
         .to(morph, {...PAGE, page: 1}, 0)
         .to(morphTargets.ambient, {...PAGE, opacity: 1}, 0)
         .to(morph, {backdrop: PAGE_BACKDROP, duration: PAGE.duration, ease: 'power2.inOut'}, 0)
         .call(() => {
           leaveForPage()
-          router.push(href)
+          showCvRevealed(detailsRef.current)
+          router.push(href, {scroll: false})
         })
 
       turnGlyph(timeline, overlayRef.current, 'collapse')
       alignPill(timeline, overlayRef.current, pageAlignment(overlayRef.current))
 
-      if (reflowsOnPage) {
-        timeline.to(detailsRef.current, {autoAlpha: 0, duration: 0.25, ease: 'power2.in'}, 0)
-      } else {
-        timeline.to(revealRef.current, {...REVEALED, duration: 0.25, ease: 'power2.out'}, 0)
-      }
+      timeline.to(revealRef.current, {...REVEALED, duration: 0.25, ease: 'power2.out'}, 0)
 
       timelineRef.current = timeline
     },
-    [card.kind, reflowsOnPage, router]
+    [card.kind, router]
   )
 
   const startClose = useCallback(() => {
@@ -274,5 +290,5 @@ export const useMorphModal = (card: OpenCard) => {
     timelineRef.current = timeline
   }, [dispatch, sound])
 
-  return {closeRef, expand, overlayRef, startClose, surfaceRef}
+  return {closeRef, expand, overlayRef, scrollerRef, startClose, surfaceRef}
 }

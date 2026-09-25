@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 
-import {CardCollapseLink, PersonJsonLd, ShotDetail} from '@/components'
+import {CardCollapseLink, PageArrival, PersonJsonLd, ShotDetail} from '@/components'
 import {entries, getEntryBySlug} from '@/db'
 
 type Props = {
@@ -88,6 +88,7 @@ export default async function SlugPage({params}: Props) {
           identical frame and the swap cannot be seen. */}
       <div className="relative flex min-h-full w-full justify-center px-3 pt-[116px] md:px-0">
         <div className="flex w-full max-w-[512px] flex-col px-[20px] md:px-8">
+          <PageArrival />
           <ShotDetail
             title={entry.title}
             image={entry.image}

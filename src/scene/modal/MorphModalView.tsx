@@ -21,7 +21,7 @@ const HIDDEN = {opacity: 0, pointerEvents: 'none'} as const
 
 export const MorphModalView: FC<MorphModalViewProps> = ({card}) => {
   const active = useSceneActive()
-  const {closeRef, expand, overlayRef, startClose, surfaceRef} = useMorphModal(card)
+  const {closeRef, expand, overlayRef, scrollerRef, startClose, surfaceRef} = useMorphModal(card)
   const root = document.getElementById('main')
 
   useEscape(startClose, active)
@@ -32,6 +32,7 @@ export const MorphModalView: FC<MorphModalViewProps> = ({card}) => {
 
   return createPortal(
     <div
+      ref={scrollerRef}
       className="fixed inset-0 z-40 w-screen h-screen overflow-auto block"
       style={active ? undefined : HIDDEN}
       inert={!active}
