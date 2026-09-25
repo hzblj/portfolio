@@ -9,6 +9,7 @@ import {bakeSlots, bumpGridVersion, bumpSceneVersion, takeSceneChanged} from '..
 import {flushUploads, glass} from '../graphics'
 import {morph, useSceneStore} from '../state'
 import {frameDue, morphChanged, viewMoved} from './renderGate'
+import {takeSnapshot} from './snapshot'
 import {useCanvasProbe} from './useCanvasProbe'
 import {useGlassBlur} from './useGlassBlur'
 
@@ -60,6 +61,7 @@ export const Renderer: FC = () => {
       bumpSceneVersion()
     }
 
+    takeSnapshot(gl, scene, camera)
     probeCanvas(state)
   }, 1)
 

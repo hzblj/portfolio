@@ -367,7 +367,6 @@ const hideNode = (node: HTMLElement) => {
   }
 
   gsap.set(node, {autoAlpha: 0, filter: 'blur(6px)'})
-  gsap.set(words, WORD_HIDDEN)
 }
 
 const revealNode = (node: HTMLElement, delay: number) => {
@@ -382,7 +381,7 @@ const revealNode = (node: HTMLElement, delay: number) => {
   const sweep = stagger * (words.length - 1)
 
   gsap.to(node, {...SHOWN, delay, duration: 0.5 + sweep, ease: 'power2.out', overwrite: 'auto'})
-  gsap.to(words, {...WORD_REVEAL, delay, overwrite: 'auto', stagger})
+  gsap.fromTo(words, WORD_HIDDEN, {...WORD_REVEAL, delay, overwrite: 'auto', stagger})
 }
 
 const showNode = (node: HTMLElement) => {
@@ -390,7 +389,7 @@ const showNode = (node: HTMLElement) => {
   gsap.set(node, SHOWN)
 
   if (words.length > 0) {
-    gsap.set(words, WORD_SHOWN)
+    gsap.set(words, {clearProps: 'opacity,transform'})
   }
 }
 
@@ -438,18 +437,16 @@ const useCvSequentialReveal = ({root, enable = true, skipIntro = false}: RevealO
       // Both rects are viewport-relative, so this works the same whether the
       // scrolling thing is a container part-way down the screen or the document.
       const bounds = scroller?.getBoundingClientRect()
-      const revealLine = (bounds?.top ?? 0) + (scroller?.clientHeight ?? window.innerHeight) * REVEAL_LINE
+      const fold = (bounds?.top ?? 0) + (scroller?.clientHeight ?? window.innerHeight)
 
       const onScreen: HTMLElement[] = []
       const belowFold: HTMLElement[] = []
 
       nodes.forEach(node => {
-        ;(node.getBoundingClientRect().top < revealLine ? onScreen : belowFold).push(node)
+        ;(node.getBoundingClientRect().top < fold ? onScreen : belowFold).push(node)
       })
 
-      if (skipIntro) {
-        onScreen.forEach(showNode)
-      } else {
+      if (!skipIntro) {
         onScreen.forEach(hideNode)
         onScreen.forEach((node, index) => revealNode(node, index * INTRO_STAGGER))
       }
@@ -499,7 +496,7 @@ export const CV: FC<CVProps> = ({children, animated = false, instant = false}) =
   return (
     <div className="h-full w-full flex flex-col max-w-[572px]">
       <div ref={ref} className="w-full h-full flex flex-col gap-[44px] md:gap-[56px]">
-        <div className="h-[17px]">
+        <div data-reveal="true" className="h-[17px]">
           <h1 data-cv-reveal="true" className="block font-normal text-[14px] leading-[100%] tracking-[0px] text-white">
             <SplitWords>Work Experience</SplitWords>
           </h1>
@@ -507,13 +504,13 @@ export const CV: FC<CVProps> = ({children, animated = false, instant = false}) =
 
         <div className="flex flex-col gap-[56px]">
           {workExperience.map((section, index) => (
-            <div key={index.toString()} className="flex flex-col w-full">
+            <div key={index.toString()} data-reveal="true" className="flex flex-col w-full">
               <Section {...section} />
             </div>
           ))}
         </div>
 
-        <div className="flex flex-col gap-[56px]">
+        <div data-reveal="true" className="flex flex-col gap-[56px]">
           <div className="h-[17px]">
             <h1
               data-cv-reveal="true"
@@ -529,7 +526,7 @@ export const CV: FC<CVProps> = ({children, animated = false, instant = false}) =
           ))}
         </div>
 
-        <div className="flex flex-col gap-[56px]">
+        <div data-reveal="true" className="flex flex-col gap-[56px]">
           <div className="h-[17px]">
             <h1
               data-cv-reveal="true"
@@ -545,7 +542,7 @@ export const CV: FC<CVProps> = ({children, animated = false, instant = false}) =
           ))}
         </div>
 
-        <div className="flex flex-col gap-[56px]">
+        <div data-reveal="true" className="flex flex-col gap-[56px]">
           <div className="h-[17px]">
             <h1
               data-cv-reveal="true"
@@ -557,9 +554,11 @@ export const CV: FC<CVProps> = ({children, animated = false, instant = false}) =
           <SectionConnect />
         </div>
 
-        <SectionLanguagesAndLocations />
+        <div data-reveal="true">
+          <SectionLanguagesAndLocations />
+        </div>
 
-        <div data-cv-section="true" className="flex justify-center">
+        <div data-cv-section="true" data-reveal="true" className="flex justify-center">
           <LinkExternal url="/pdf/cv.pdf">
             <span data-cv-reveal="true" className="inline-block">
               <GradientText>Download CV in PDF</GradientText>

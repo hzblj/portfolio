@@ -21,7 +21,7 @@ const HIDDEN = {opacity: 0, pointerEvents: 'none'} as const
 
 export const MorphModalView: FC<MorphModalViewProps> = ({card}) => {
   const active = useSceneActive()
-  const {closeRef, expand, overlayRef, scrollerRef, startClose, surfaceRef} = useMorphModal(card)
+  const {closeRef, expand, overlayRef, scrollerRef, snapshotRef, startClose, surfaceRef} = useMorphModal(card)
   const root = document.getElementById('main')
 
   useEscape(startClose, active)
@@ -53,6 +53,7 @@ export const MorphModalView: FC<MorphModalViewProps> = ({card}) => {
             <div className="relative z-20">
               <CardModalBody card={card} />
             </div>
+            <canvas ref={snapshotRef} aria-hidden="true" className="pointer-events-none absolute z-30 hidden" />
           </div>
         </div>
       </div>

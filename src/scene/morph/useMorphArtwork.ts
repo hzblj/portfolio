@@ -3,9 +3,8 @@ import {useLayoutEffect, useMemo, useState} from 'react'
 
 import type {EntryShot} from '@/db'
 
-import {view} from '../camera'
 import {shotImageWidth} from '../cards'
-import {createLayerMaterial, HAIRLINE, naturalSize, setRGBA, useDisposable, useImage} from '../graphics'
+import {createLayerMaterial, naturalSize, useDisposable, useImage} from '../graphics'
 import {insetRect, lerp, lerpRect} from '../grid'
 import {type CardSource, morph} from '../state'
 import {placeInWorld, showArtwork} from './placement'
@@ -22,7 +21,6 @@ export const useMorphArtwork = (entry: EntryShot, source: CardSource, frame: Mor
   useLayoutEffect(() => {
     material.uniforms.uMap.value = media
     material.uniforms.uHasMap.value = 1
-    setRGBA(material.uniforms.uRingColor.value, HAIRLINE)
   }, [material, media])
 
   useFrame(() => {
@@ -40,7 +38,6 @@ export const useMorphArtwork = (entry: EntryShot, source: CardSource, frame: Mor
     placeInWorld(mesh.mesh.current, rect)
     material.uniforms.uRect.value.set(rect.x, rect.y, rect.width, rect.height)
     material.uniforms.uRadius.value = lerp(15, targets?.mediaRadius ?? 15, t)
-    material.uniforms.uRingWidth.value = (0.75 / view.scale) * t
     material.uniforms.uMapSize.value.set(natural.width, natural.height)
   })
 

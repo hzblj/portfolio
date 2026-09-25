@@ -6,7 +6,6 @@ import {createLayerMaterial, useDisposable} from '../graphics'
 import {lerp, lerpRect, offsetRect} from '../grid'
 import {type CardSource, morph} from '../state'
 import {placeInWorld, showArtwork} from './placement'
-import {revealedPart} from './targets'
 import type {MorphFrame} from './useMorphFrame'
 import {useOverlayMesh} from './useOverlayMesh'
 
@@ -36,13 +35,13 @@ export const useMorphPreview = (source: CardSource, frame: MorphFrame) => {
     const column = targets?.media
     const to = column ? {...column, height: CV_PREVIEW_HEIGHT * (column.width / CV_WIDTH)} : from
     const sheet = lerpRect(from, to, t)
-    const clip = targets ? lerpRect(fromClip, revealedPart(targets.surface), t) : fromClip
+    const clip = targets ? lerpRect(fromClip, targets.surface, t) : fromClip
 
     placeInWorld(mesh.mesh.current, sheet)
     material.uniforms.uRect.value.set(sheet.x, sheet.y, sheet.width, sheet.height)
     material.uniforms.uClip.value.set(clip.x, clip.y, clip.width, clip.height)
     material.uniforms.uClipRadius.value = lerp(16, targets?.surfaceRadius ?? 16, t)
-    material.uniforms.uOpacity.value = morph.swapsContent ? 1 : fadeOut(t)
+    material.uniforms.uOpacity.value = morph.keepsPreview ? 1 : fadeOut(t)
   })
 
   return {material, mesh}

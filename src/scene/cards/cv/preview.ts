@@ -2,7 +2,6 @@ export const CV_WIDTH = 572
 export const CV_PREVIEW_HEIGHT = 1600
 const CV_SCALE = 0.576923
 export const CV_BORDER_ANGLE = 134.62
-export const CV_REVEAL_LINE = 0.92
 
 export const cvPreviewRect = () => ({
   height: CV_PREVIEW_HEIGHT * CV_SCALE,

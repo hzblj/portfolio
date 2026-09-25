@@ -1,5 +1,4 @@
 import {screenToWorld, view} from '../camera'
-import {CV_REVEAL_LINE} from '../cards'
 import type {Rect} from '../grid'
 import {morphTargets} from '../state'
 
@@ -46,10 +45,4 @@ export const measureTargets = (): MorphTargets | null => {
     surface: screenToWorld(surface.getBoundingClientRect()),
     surfaceRadius: radiusOf(surface) / view.scale,
   }
-}
-
-export const revealedPart = (surface: Rect): Rect => {
-  const line = view.y + (view.height * CV_REVEAL_LINE - view.height / 2) / view.scale
-
-  return {...surface, height: Math.max(0, Math.min(surface.height, line - surface.y))}
 }

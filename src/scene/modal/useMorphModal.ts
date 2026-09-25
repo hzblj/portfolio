@@ -11,6 +11,7 @@ import {actionToggleModal, useCameraDispatch} from '@/providers/CameraProvider/c
 
 import {setCursor} from '../interaction'
 import {
+  cancelSnapshot,
   closeCard,
   leaveForPage,
   MODAL_BACKDROP,
@@ -20,11 +21,13 @@ import {
   PAGE_BACKDROP,
   PAGE_TOP,
   prepareAmbient,
+  requestSnapshot,
   returnFromPage,
   useSceneActive,
   useSceneStore,
 } from '../state'
 import {alignPill, isDesktop, pageAlignment, turnGlyph} from './pill'
+import {hideSnapshot, paintSnapshot, visibleRegion} from './snapshotOverlay'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(CustomEase)
@@ -49,6 +52,7 @@ const HIDDEN = {autoAlpha: 0, filter: 'blur(6px)', y: 16}
 const REVEALED = {autoAlpha: 1, clearProps: 'filter,transform', filter: 'blur(0px)', y: 0}
 const REVEAL = {...REVEALED, duration: 0.6, ease: 'power3.out', stagger: 0.06}
 const REVEAL_AT = 0.4
+const UNVEIL = {delay: 0.05, duration: 0.3, ease: 'power1.inOut', opacity: 0}
 
 const isElement = (element: HTMLElement | null): element is HTMLElement => element !== null
 
@@ -101,6 +105,9 @@ export const useMorphModal = (card: OpenCard) => {
   const detailsRef = useRef<HTMLElement | null>(null)
   const revealRef = useRef<HTMLElement[]>([])
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const startRef = useRef(0)
+  const snapshotRef = useRef<HTMLCanvasElement>(null)
+  const landingRef = useRef(0)
   const busyRef = useRef(false)
   const openedRef = useRef(false)
   const returnFocusRef = useRef<HTMLElement | null>(null)
@@ -116,8 +123,8 @@ export const useMorphModal = (card: OpenCard) => {
 
     const media = surface.querySelector<HTMLElement>('[data-morph="media"]')
     const details = surface.querySelector<HTMLElement>('[data-morph="details"]')
-    const swapsContent = card.kind === 'cv' && isDesktop()
-    const swap = [card.kind === 'shot' ? media : null, swapsContent ? details : null].filter(isElement)
+    const keepsPreview = card.kind === 'cv' && isDesktop()
+    const swap = [card.kind === 'shot' ? media : null, keepsPreview ? details : null].filter(isElement)
 
     setCursor(false)
     detailsRef.current = details
@@ -127,15 +134,15 @@ export const useMorphModal = (card: OpenCard) => {
     morphTargets.surface = surface
     morphTargets.media = media
     morphTargets.swap = swap
-    morph.swapsContent = swapsContent
     morph.stage = 'webgl'
     morph.page = 0
+    morph.keepsPreview = keepsPreview
 
     for (const element of swap) {
       element.style.visibility = 'hidden'
     }
 
-    if (!swapsContent) {
+    if (!keepsPreview) {
       gsap.set(revealRef.current, HIDDEN)
     }
 
@@ -148,6 +155,13 @@ export const useMorphModal = (card: OpenCard) => {
     }
   }, [card])
 
+  const stopLanding = useCallback(() => {
+    landingRef.current += 1
+    cancelSnapshot()
+    gsap.killTweensOf(snapshotRef.current)
+    hideSnapshot(snapshotRef.current)
+  }, [])
+
   useEffect(() => {
     actionToggleModal(dispatch, true)
 
@@ -156,31 +170,66 @@ export const useMorphModal = (card: OpenCard) => {
       sound.open()
     }
 
-    const timeline = gsap
-      .timeline()
-      .to(morph, {backdrop: MODAL_BACKDROP, duration: 0.35, ease: 'power2.out'}, 0)
-      .to(morph, {...OPEN, progress: 1}, 0)
-      .call(() => {
-        morph.stage = 'dom'
+    const settle = () => {
+      morph.stage = 'dom'
 
-        if (keyboardRef.current) {
-          focusFirstControl(overlayRef.current)
-        } else {
-          surfaceRef.current?.focus({preventScroll: true})
-        }
-      })
-      .to([overlayRef.current, closeRef.current], CONTROLS_IN, 0)
-
-    if (!morph.swapsContent) {
-      timeline.to(revealRef.current, REVEAL, REVEAL_AT)
+      if (keyboardRef.current) {
+        focusFirstControl(overlayRef.current)
+      } else {
+        surfaceRef.current?.focus({preventScroll: true})
+      }
     }
 
-    timelineRef.current = timeline
+    const land = () => {
+      const surface = surfaceRef.current
+      const canvas = snapshotRef.current
+
+      if (!morph.keepsPreview || !surface || !canvas) {
+        settle()
+        return
+      }
+
+      const landing = ++landingRef.current
+
+      requestSnapshot(visibleRegion(surface)).then(snapshot => {
+        if (landing !== landingRef.current) {
+          return
+        }
+
+        if (snapshot) {
+          paintSnapshot(canvas, surface, snapshot)
+          gsap.to(canvas, {...UNVEIL, onComplete: () => hideSnapshot(canvas)})
+        }
+
+        settle()
+      })
+    }
+
+    const open = () => {
+      const timeline = gsap
+        .timeline()
+        .to(morph, {backdrop: MODAL_BACKDROP, duration: 0.35, ease: 'power2.out'}, 0)
+        .to(morph, {...OPEN, progress: 1}, 0)
+        .call(land)
+        .to([overlayRef.current, closeRef.current], CONTROLS_IN, 0)
+
+      if (!morph.keepsPreview) {
+        timeline.to(revealRef.current, REVEAL, REVEAL_AT)
+      }
+
+      timelineRef.current = timeline
+    }
+
+    startRef.current = requestAnimationFrame(() => {
+      startRef.current = requestAnimationFrame(open)
+    })
 
     return () => {
-      timeline.kill()
+      cancelAnimationFrame(startRef.current)
+      timelineRef.current?.kill()
+      stopLanding()
     }
-  }, [dispatch, sound])
+  }, [dispatch, sound, stopLanding])
 
   useEffect(() => {
     const returning = active && !wasActiveRef.current && away
@@ -190,6 +239,7 @@ export const useMorphModal = (card: OpenCard) => {
       return
     }
 
+    cancelAnimationFrame(startRef.current)
     timelineRef.current?.kill()
 
     const handBack = takeModalReturn()
@@ -224,7 +274,9 @@ export const useMorphModal = (card: OpenCard) => {
       }
 
       busyRef.current = true
+      cancelAnimationFrame(startRef.current)
       timelineRef.current?.kill()
+      stopLanding()
       morph.stage = 'glass'
       prepareAmbient(card.kind)
 
@@ -251,7 +303,7 @@ export const useMorphModal = (card: OpenCard) => {
 
       timelineRef.current = timeline
     },
-    [card.kind, router]
+    [card.kind, router, stopLanding]
   )
 
   const startClose = useCallback(() => {
@@ -261,12 +313,14 @@ export const useMorphModal = (card: OpenCard) => {
 
     busyRef.current = true
     sound.close()
+    cancelAnimationFrame(startRef.current)
     timelineRef.current?.kill()
+    stopLanding()
 
-    const fade = morph.swapsContent ? 0 : 0.15
+    const fade = morph.keepsPreview ? 0 : 0.15
     const timeline = gsap.timeline()
 
-    if (!morph.swapsContent) {
+    if (!morph.keepsPreview) {
       timeline.to(detailsRef.current, {autoAlpha: 0, duration: fade, ease: 'power2.in'}, 0)
     }
 
@@ -288,7 +342,7 @@ export const useMorphModal = (card: OpenCard) => {
       })
 
     timelineRef.current = timeline
-  }, [dispatch, sound])
+  }, [dispatch, sound, stopLanding])
 
-  return {closeRef, expand, overlayRef, scrollerRef, startClose, surfaceRef}
+  return {closeRef, expand, overlayRef, scrollerRef, snapshotRef, startClose, surfaceRef}
 }

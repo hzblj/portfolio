@@ -9,10 +9,10 @@ export const PAGE_TOP = 116
 export const morph = {
   backdrop: 0,
   glassRect: null as Rect | null,
+  keepsPreview: false,
   page: 0,
   progress: 0,
   stage: 'webgl' as MorphStage,
-  swapsContent: false,
 }
 
 export const morphTargets = {
