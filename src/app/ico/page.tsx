@@ -7,7 +7,8 @@ import {AmbientWaves} from '@/scene/ambient/AmbientWaves'
 
 /**
  * A headless render of the live card itself, so the social preview keeps the
- * frosted glass, the waves and the metal ring that CSS-in-SVG can't reproduce.
+ * WebGL plate, the holographic type and the metal ring that CSS-in-SVG can't
+ * reproduce.
  * To refresh it, screenshot /ico in a 720×378 viewport at a 1.667 device pixel
  * ratio with everything below the card hidden, emulating reduced motion and
  * keeping the pointer off the card — that renders it flat and unhovered. The
