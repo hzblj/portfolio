@@ -1,6 +1,8 @@
 'use client'
 
-import {FC, useEffect, useRef} from 'react'
+import {FC, useEffect, useLayoutEffect, useRef, useState} from 'react'
+
+import {borrowVideo, hasLentVideo} from '@/lib/lent-video'
 
 export type LoopVideoProps = {
   srcMp4: string
@@ -10,7 +12,32 @@ export type LoopVideoProps = {
   autoPlay?: boolean
 }
 
-export const LoopVideo: FC<LoopVideoProps> = ({srcMp4, srcWebm, poster, muted = true, autoPlay = true}) => {
+type BorrowedVideoProps = {
+  src: string
+}
+
+const BorrowedVideo: FC<BorrowedVideoProps> = ({src}) => {
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useLayoutEffect(() => {
+    const holder = ref.current
+
+    if (!holder) {
+      return
+    }
+
+    return borrowVideo(src, holder) ?? undefined
+  }, [src])
+
+  return (
+    <div
+      ref={ref}
+      className="h-full w-full [&>video]:block [&>video]:h-full [&>video]:w-full [&>video]:rounded-[20px] [&>video]:object-cover"
+    />
+  )
+}
+
+const OwnVideo: FC<LoopVideoProps> = ({srcMp4, srcWebm, poster, muted = true, autoPlay = true}) => {
   const ref = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
@@ -49,4 +76,14 @@ export const LoopVideo: FC<LoopVideoProps> = ({srcMp4, srcWebm, poster, muted = 
       Your browser does not support the video tag.
     </video>
   )
+}
+
+export const LoopVideo: FC<LoopVideoProps> = props => {
+  const [borrowed] = useState(() => hasLentVideo(props.srcMp4))
+
+  if (borrowed) {
+    return <BorrowedVideo src={props.srcMp4} />
+  }
+
+  return <OwnVideo {...props} />
 }

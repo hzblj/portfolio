@@ -38,7 +38,7 @@ const shot: EntryShot = {
   title: 'Lapz - Map',
   variant: 'shot',
   videos: {
-    mp4: '/webm/shot-small-18.mp4',
+    mp4: '/mp4/shot-small-18.mp4',
     webm: '/webm/shot-small-18.webm',
   },
 }

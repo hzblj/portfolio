@@ -62,11 +62,10 @@ export const NavigationProvider = ({children}: Props) => {
 
 export type Navigation = {
   /**
-   * Which way the transition reads. The shared elements morph the same either
-   * way, but the context around them must not: going in, the page you leave
-   * pulls towards you; coming out, the page you return to settles back down.
-   * Published as `data-view-transition` on `<html>` for the stylesheet to hang
-   * the two root animations off.
+   * Which way the transition reads: going in, the page you leave pulls towards
+   * you; coming out, the page you return to settles back down. Published as
+   * `data-view-transition` on `<html>` for the stylesheet to hang the two root
+   * animations off.
    */
   direction: 'forward' | 'back'
   /** Where to go. Omitted means back through history. */
@@ -74,10 +73,9 @@ export type Navigation = {
 }
 
 /**
- * Navigates inside a view transition, so elements sharing a
- * `view-transition-name` across the two pages morph into each other instead of
- * the page hard-cutting. Falls back to a plain navigation wherever the API is
- * missing or the visitor asked for reduced motion.
+ * Navigates inside a view transition, so leaving a page and arriving on the next
+ * read as one movement instead of a hard cut. Falls back to a plain navigation
+ * wherever the API is missing or the visitor asked for reduced motion.
  */
 export const useViewTransitionNavigate = () => {
   const router = useRouter()

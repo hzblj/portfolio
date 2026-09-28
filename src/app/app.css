@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+@layer base {
+  :focus-visible {
+    outline: 2px solid rgb(255 255 255 / 0.9);
+    outline-offset: 4px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.2) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.2);
+  }
+}
+
 @theme {
   --card-radius: 16px;
   --card-blur: 136px;
@@ -29,33 +55,6 @@
   background-blend-mode: luminosity;
   -webkit-backdrop-filter: blur(var(--card-blur));
   backdrop-filter: blur(var(--card-blur));
-}
-
-@utility card-cv {
-  --card-border-angle: 134.62deg;
-  --card-border-gradient: linear-gradient(
-    var(--card-border-angle),
-    rgba(255, 255, 255, 0.45) 8.56%,
-    rgba(255, 255, 255, 0.0001) 37.96%,
-    rgba(255, 255, 255, 0.0001) 50.19%,
-    rgba(255, 255, 255, 0.15) 80.06%
-  );
-}
-
-@utility card-map {
-  --card-bg: var(--color-black, #000);
-}
-@utility card-radius-24 {
-  --card-radius: 24px;
-}
-@utility card-no-blur {
-  --card-blur: 0px;
-}
-@utility card-border-2 {
-  --card-border-width: 2px;
-}
-@utility card-angle-160 {
-  --card-border-angle: 160deg;
 }
 
 /* Frosted glass for the floating controls — the corner dock and the expand and
@@ -106,76 +105,6 @@
   pointer-events: none;
 }
 
-/* Canvas previews. Soft-light lifts the blacks of a photo, which at card size
-   reads as haze rather than paper — multiply only deepens where the sheet has
-   tooth, so the artwork keeps its contrast. */
-@utility texture-paper-dark {
-  --texture-blend: multiply;
-  --texture-opacity: 0.14;
-}
-
-@layer utilities {
-  .responsive-scale {
-    @apply scale-100;
-  }
-
-  /* Mobile */
-  @media (width <= 767px) {
-    .responsive-scale {
-      @apply scale-[0.86];
-    }
-  }
-
-  /* Tablet (768–1023) → stays 1.0 */
-  @media (768px <= width <= 1023px) {
-    .responsive-scale {
-      @apply scale-100;
-    }
-  }
-
-  /* Small desktop (1024–1919) → stays 1.0 */
-  @media (1024px <= width <= 1919px) {
-    .responsive-scale {
-      @apply scale-100;
-    }
-  }
-
-  /* Full HD (1920–2559) → stays 1.0 */
-  @media (1920px <= width <= 2559px) {
-    .responsive-scale {
-      @apply scale-100;
-    }
-  }
-
-  /* QHD / 4xl (2560–3439) */
-  @media (2560px <= width <= 3439px) {
-    .responsive-scale {
-      @apply scale-[1.10];
-    }
-  }
-
-  /* Ultrawide (3440–3839) */
-  @media (3440px <= width <= 3839px) {
-    .responsive-scale {
-      @apply scale-[1.5];
-    }
-  }
-
-  /* 5xl / 4K (3840–5119) */
-  @media (3840px <= width <= 5119px) {
-    .responsive-scale {
-      @apply scale-[1.75];
-    }
-  }
-
-  /* 6xl / 5K+ (>=5120) */
-  @media (width >= 5120px) {
-    .responsive-scale {
-      @apply scale-[2];
-    }
-  }
-}
-
 html {
   width: 100%;
   height: 100%;
@@ -216,19 +145,6 @@ body {
   background-color: var(--color-black);
 }
 
-.content-grid {
-  grid-template-columns: repeat(8, 290px);
-  grid-template-rows: repeat(7, 218px);
-  grid-template-areas:
-    "s1 s2 l1 l1 s3 s4 s5 s6"
-    "gallery gallery l1 l1 contact contact s7 s8"
-    "gallery gallery s9 s10 s11 s12 cv s13"
-    "s14 s15 s16 profile profile s17 cv s18"
-    "map map s19 s20 s21 s22 cv s23"
-    "s24 l2 l2 technologies technologies s25 l3 l3"
-    "s26 l2 l2 s27 s28 s29 l3 l3";
-}
-
 .card::before {
   content: "";
   position: absolute;
@@ -248,197 +164,28 @@ body {
   mask-composite: exclude;
 }
 
-.card-modal {
-  position: relative;
-  background-blend-mode: luminosity;
-  -webkit-backdrop-filter: blur(var(--card-blur));
-  backdrop-filter: blur(var(--card-blur));
-}
-
-/* ---------------------------------------------------------------------------
-   Shot modal → /[slug] detail — shared-element morph
-
-   The artwork carries the same view-transition name on both pages, so the
-   browser hands us one group for the pair and animates the box between the two
-   positions. Everything around it — the card on the grid, the page it lands on
-   — is left to the root cross-fade, since the page wears no card of its own for
-   a card to morph into. Timings borrow the iOS sheet curve: quick to leave,
-   long to settle.
---------------------------------------------------------------------------- */
-
-::view-transition-group(shot-media),
-::view-transition-old(shot-media),
-::view-transition-new(shot-media) {
-  animation-duration: 440ms;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-/* Snapshots are replaced elements sized to the box they were captured from, so
-   they stretch if the group resizes. The artwork is the same width on both
-   sides, so this only has to cover the odd viewport where they differ by a
-   pixel — cropping there beats squashing the picture. */
-::view-transition-old(shot-media),
-::view-transition-new(shot-media) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-}
-
-/* The open card is glass — no background of its own, just `backdrop-filter` —
-   and glass does not survive being snapshotted. Left inside the root capture it
-   comes out as a hole, and only turns back into glass once the transition is
-   over and the live card paints again, which reads as the surface blinking on.
-
-   So it is lifted out under a name of its own and the glass is rebuilt one
-   level up. The group box is a real box, exactly the card, and what sits behind
-   it in the transition layer is the root snapshot — still holding the grid,
-   since only the card's own painting was taken out of it. Blurring that gives
-   the same frosted result the live card produces. A flat colour could not: the
-   glass takes its colour from wherever the camera happens to be parked.
-
-   The card exists on one side only, so the group would otherwise hold a frosted
-   rectangle over the page it is not part of — before the card arrives coming
-   back, after it has gone on the way out. Fading the group takes the frost with
-   the card, on the curve the rest of the page moves on. */
-html[data-view-transition]::view-transition-group(modal-surface) {
-  border-radius: 44px;
-  transform-origin: center;
-  -webkit-backdrop-filter: blur(var(--card-blur));
-  backdrop-filter: blur(var(--card-blur));
-}
-
-@media (width >= 768px) {
-  html[data-view-transition]::view-transition-group(modal-surface) {
-    border-radius: 52px;
-  }
-}
-
-/* Groups paint in the order they were captured, and that order is not the same
-   in both directions: coming back, the artwork is captured from the page while
-   the card is only captured from the modal that follows it, so the card lands
-   on top and its 136px of frost flattens the picture to grey for the length of
-   the morph. Going in the two are captured together and fall the right way
-   round, which is why it only ever showed on the way back. Stacked by hand, so
-   the order is the same whichever way you are heading: the card is a surface,
-   and everything the card carries sits on it. */
-html[data-view-transition]::view-transition-group(modal-surface) {
-  z-index: 1;
-}
-
-html[data-view-transition]::view-transition-group(shot-media) {
-  z-index: 2;
-}
-
-html[data-view-transition]::view-transition-group(card-toggle),
-html[data-view-transition]::view-transition-group(card-toggle-icon) {
-  z-index: 3;
-}
-
-/* The group carries the fade, for the frost and for what is printed on it
-   alike — a second fade on the snapshot would only double it up. */
-html[data-view-transition]::view-transition-old(modal-surface),
-html[data-view-transition]::view-transition-new(modal-surface) {
-  animation: none;
-}
-
-/* `scale` rather than `transform`: the group is positioned by its transform,
-   and writing to that would drop the card out of its own place. */
-html[data-view-transition="forward"]::view-transition-group(modal-surface) {
-  animation: modal-surface-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
-}
-
-html[data-view-transition="back"]::view-transition-group(modal-surface) {
-  animation: modal-surface-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
-}
-
-@keyframes modal-surface-out {
-  to {
-    opacity: 0;
-    scale: 1.06;
-  }
-}
-
-@keyframes modal-surface-in {
-  from {
-    opacity: 0;
-    scale: 1.06;
-  }
-}
-
-/* The expand and collapse arrows sit in the same pill, in the same corner, so
-   the default cross-fade shows both sets at once and reads as a blink rather
-   than a change. Handing over instead — one spins out before the other spins in
-   — turns it into the control flipping. The pill around them needs no rule: it
-   is identical on both sides, so its own cross-fade is invisible. */
-/* The pill is frosted glass, and a snapshot cannot carry a `backdrop-filter` —
-   same story as the card. Rebuilt on the group, which is the pill's box at every
-   frame, so it stays glass across the morph instead of thinning to its 10 %
-   white. Keep the blur in step with `iconButtonClassName`. */
-::view-transition-group(card-toggle) {
-  border-radius: 9999px;
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-}
-
-::view-transition-old(card-toggle-icon),
-::view-transition-new(card-toggle-icon) {
-  transform-origin: center;
-}
-
-::view-transition-old(card-toggle-icon) {
-  animation: card-toggle-icon-out 170ms cubic-bezier(0.4, 0, 1, 1) both;
-}
-
-::view-transition-new(card-toggle-icon) {
-  animation: card-toggle-icon-in 250ms 170ms cubic-bezier(0, 0, 0.2, 1) both;
-}
-
-@keyframes card-toggle-icon-out {
-  to {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0.5);
-  }
-}
-
-@keyframes card-toggle-icon-in {
-  from {
-    opacity: 0;
-    transform: rotate(90deg) scale(0.5);
-  }
-}
-
-/* Everything that is not the card — the grid behind the modal, the backdrop —
-   moves the way iOS pushes context around, and which way depends on where you
-   are heading. `data-view-transition` is set on <html> for the duration of the
-   navigation; without a direction only the shared elements move, which is the
-   right fallback for any transition that is not this one. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Going in: the grid you are leaving lifts towards you and gets out of the way,
-   so the card reads as the thing you moved into. */
 html[data-view-transition="forward"]::view-transition-old(root) {
-  animation: shot-context-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: page-context-out 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
-/* Coming out: the mirror. The grid you are returning to settles back down from
-   where the card left it, rather than fading up out of nothing. */
 html[data-view-transition="back"]::view-transition-new(root) {
-  animation: shot-context-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: page-context-in 400ms cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
-@keyframes shot-context-out {
+@keyframes page-context-out {
   to {
     opacity: 0;
     transform: scale(1.06);
   }
 }
 
-@keyframes shot-context-in {
+@keyframes page-context-in {
   from {
     opacity: 0;
     transform: scale(1.06);
@@ -450,10 +197,7 @@ html[data-view-transition="back"]::view-transition-new(root) {
 --------------------------------------------------------------------------- */
 
 .ico-card {
-  --mx: 50%;
-  --my: 50%;
   --glare: 0;
-  --shift: 0;
   transform: var(--tilt, none);
   transform-style: preserve-3d;
 }
@@ -493,14 +237,6 @@ body:has([data-smooth-scroll]) {
   }
 }
 
-/* Anodised black metal instead of frosted glass. No border of its own: the
-   metal-fx ring is the edge, and the machined bevel sits just inside it. */
-.ico-plate {
-  background:
-    linear-gradient(147deg, #2b3138 0%, #171b20 7%, #0b0d10 20%, #060709 42%, #0a0d10 56%, #040506 72%, #15191e 100%),
-    #050607;
-}
-
 /* Ambient glow bleeding out from under the card — graphite, not chromatic.
    Three ramps rather than three shapes under a blur: the card tilts and scales
    under the pointer, and a filtered layer has to be re-rasterised every frame
@@ -520,264 +256,6 @@ body:has([data-smooth-scroll]) {
   transition: opacity 0.7s ease-out;
 }
 
-/* Light pooling on the plate — greyscale, so the black never picks up a hue.
-   Same story as the halo, and the morphing border-radius goes with the blur:
-   under 46px of it the shape was never legible anyway, and animating a radius
-   costs a repaint of the layer on every frame. The drift is what read as
-   organic, and the drift stays. */
-.ico-blob {
-  background-image: radial-gradient(
-    closest-side,
-    currentColor 0%,
-    color-mix(in srgb, currentColor 66%, transparent) 44%,
-    color-mix(in srgb, currentColor 24%, transparent) 72%,
-    transparent 100%
-  );
-  mix-blend-mode: screen;
-  opacity: 0.16;
-  will-change: transform;
-}
-
-.ico-blob-a {
-  animation: ico-blob-a 26s ease-in-out infinite;
-}
-
-.ico-blob-b {
-  animation: ico-blob-b 34s ease-in-out infinite;
-  opacity: 0.13;
-}
-
-.ico-blob-c {
-  animation: ico-blob-c 30s ease-in-out infinite;
-  opacity: 0.11;
-}
-
-/* Broad anisotropic band — the wide soft reflection brushed metal throws. */
-.ico-metal-drift {
-  animation: ico-metal-drift 30s ease-in-out infinite;
-  will-change: transform;
-}
-
-/* Screen, not overlay: on a near-black plate only additive light shows up.
-   Tight ramps keep the bands specular instead of washing into a gradient. */
-.ico-metal-sheen {
-  background: linear-gradient(
-    101deg,
-    rgba(255, 255, 255, 0) 4%,
-    rgba(202, 219, 240, 0.06) 8%,
-    rgba(226, 238, 252, 0.34) 11%,
-    rgba(202, 219, 240, 0.05) 15%,
-    rgba(255, 255, 255, 0) 21%,
-    rgba(255, 246, 232, 0.05) 32%,
-    rgba(255, 250, 240, 0.16) 35%,
-    rgba(255, 255, 255, 0) 41%,
-    rgba(168, 188, 212, 0.05) 56%,
-    rgba(214, 232, 252, 0.26) 60%,
-    rgba(168, 188, 212, 0.04) 64%,
-    rgba(255, 255, 255, 0) 72%,
-    rgba(228, 238, 250, 0.13) 86%,
-    rgba(255, 255, 255, 0) 93%
-  );
-  background-size: 150% 100%;
-  background-position: calc(50% + var(--shift) * 22%) 0;
-  mix-blend-mode: screen;
-  opacity: calc(0.8 + var(--glare) * 0.2);
-}
-
-@keyframes ico-metal-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(-4%, 1.5%, 0);
-  }
-}
-
-/* Fine brushed grain, masked to the lit bands: on real brushed metal the
-   grain only catches light where the band does. */
-.ico-metal-brush {
-  background-image:
-    repeating-linear-gradient(
-      101deg,
-      rgba(255, 255, 255, 0.16) 0px,
-      rgba(255, 255, 255, 0) 2px,
-      rgba(255, 255, 255, 0.1) 4px,
-      rgba(255, 255, 255, 0) 7px
-    ),
-    repeating-linear-gradient(
-      101deg,
-      rgba(255, 255, 255, 0.08) 0px,
-      rgba(255, 255, 255, 0) 1px,
-      rgba(255, 255, 255, 0.05) 2px,
-      rgba(255, 255, 255, 0) 3px
-    );
-  mix-blend-mode: screen;
-  opacity: calc(0.42 + var(--glare) * 0.4);
-  mask-image:
-    linear-gradient(
-      101deg,
-      rgba(255, 255, 255, 0.05) 3%,
-      #fff 11%,
-      rgba(255, 255, 255, 0.06) 20%,
-      rgba(255, 255, 255, 0.72) 35%,
-      rgba(255, 255, 255, 0.05) 45%,
-      #fff 60%,
-      rgba(255, 255, 255, 0.06) 71%,
-      rgba(255, 255, 255, 0.66) 86%,
-      rgba(255, 255, 255, 0.08) 96%
-    ), radial-gradient(170% 140% at 24% -12%, #fff 0%, rgba(255, 255, 255, 0.55) 55%, rgba(255, 255, 255, 0.18) 100%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
-}
-
-/* Machined edge: a lit top bevel, a dark base, and depth pulled into the middle. */
-.ico-metal-bevel {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.24),
-    inset 0 2px 5px -2px rgba(255, 255, 255, 0.16),
-    inset 1px 0 0 rgba(255, 255, 255, 0.09),
-    inset -1px 0 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.75),
-    inset 0 -6px 14px -8px rgba(0, 0, 0, 0.9),
-    inset 0 0 60px 6px rgba(0, 0, 0, 0.5);
-}
-
-@keyframes ico-blob-a {
-  0%,
-  100% {
-    transform: translate3d(calc(var(--shift) * 14px), 0, 0) rotate(0deg) scale(1);
-  }
-  33% {
-    transform: translate3d(calc(var(--shift) * 14px + 6%), -7%, 0) rotate(52deg) scale(1.12);
-  }
-  66% {
-    transform: translate3d(calc(var(--shift) * 14px - 5%), 5%, 0) rotate(-34deg) scale(0.94);
-  }
-}
-
-@keyframes ico-blob-b {
-  0%,
-  100% {
-    transform: translate3d(calc(var(--shift) * -18px), 0, 0) rotate(0deg) scale(1.04);
-  }
-  40% {
-    transform: translate3d(calc(var(--shift) * -18px - 7%), 6%, 0) rotate(-46deg) scale(0.9);
-  }
-  70% {
-    transform: translate3d(calc(var(--shift) * -18px + 4%), -5%, 0) rotate(38deg) scale(1.14);
-  }
-}
-
-@keyframes ico-blob-c {
-  0%,
-  100% {
-    transform: translate3d(calc(var(--shift) * 22px), 0, 0) rotate(0deg) scale(0.98);
-  }
-  45% {
-    transform: translate3d(calc(var(--shift) * 22px + 8%), -6%, 0) rotate(41deg) scale(1.16);
-  }
-  75% {
-    transform: translate3d(calc(var(--shift) * 22px - 6%), 4%, 0) rotate(-29deg) scale(0.92);
-  }
-}
-
-/* Organic waves flowing across the lower half of the card. */
-.ico-waves {
-  mix-blend-mode: screen;
-  opacity: 0.3;
-  mask-image: linear-gradient(163deg, transparent 14%, rgba(255, 255, 255, 0.42) 48%, #fff 100%);
-}
-
-.ico-waves-drift {
-  animation: ico-waves-drift 38s ease-in-out infinite;
-}
-
-@keyframes ico-waves-drift {
-  0%,
-  100% {
-    transform: translate3d(calc(var(--shift) * 9px), 0, 0);
-  }
-  50% {
-    transform: translate3d(calc(var(--shift) * 9px - 11px), 5px, 0);
-  }
-}
-
-.ico-wave {
-  animation-name: ico-wave-swell;
-  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-  animation-iteration-count: infinite;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-}
-
-@keyframes ico-wave-swell {
-  0%,
-  100% {
-    transform: translate(0, 0) scaleY(1);
-  }
-  50% {
-    transform: translate(-7px, -8px) scaleY(1.09);
-  }
-}
-
-/* Specular highlight tracking the pointer — tight and cold, the way metal
-   catches a light source compared with the soft bloom glass gives. */
-.ico-glare {
-  background:
-    radial-gradient(80px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.2) 0%, transparent 72%),
-    radial-gradient(
-      280px circle at var(--mx) var(--my),
-      rgba(230, 238, 248, 0.13) 0%,
-      rgba(170, 186, 206, 0.05) 38%,
-      transparent 68%
-    );
-  mix-blend-mode: screen;
-  opacity: var(--glare);
-}
-
-/* Iridescence refracting where the light hits, like a holographic foil. */
-.ico-holo {
-  background-image: repeating-linear-gradient(
-    102deg,
-    rgba(255, 90, 130, 0.55) 0%,
-    rgba(255, 214, 100, 0.55) 5%,
-    rgba(105, 255, 190, 0.55) 10%,
-    rgba(100, 190, 255, 0.55) 15%,
-    rgba(196, 130, 255, 0.55) 20%,
-    rgba(255, 90, 130, 0.55) 25%
-  );
-  background-size: 240% 100%;
-  background-position: calc(50% + var(--shift) * 26%) 0;
-  filter: blur(9px) saturate(0.5);
-  mix-blend-mode: color-dodge;
-  opacity: calc(0.012 + var(--glare) * 0.035);
-  mask-image: radial-gradient(
-    420px circle at var(--mx) var(--my),
-    #fff 0%,
-    rgba(255, 255, 255, 0.25) 45%,
-    transparent 72%
-  );
-}
-
-/* Diagonal sheen that slides with the pointer. */
-.ico-sheen::after {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  background: linear-gradient(
-    102deg,
-    transparent 36%,
-    rgba(196, 212, 232, 0.06) 46%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(196, 212, 232, 0.06) 54%,
-    transparent 64%
-  );
-  transform: translate3d(calc(var(--shift) * 46%), 0, 0);
-  opacity: calc(0.18 + var(--glare) * 0.7);
-  mix-blend-mode: screen;
-}
-
 /* Film grain so the gradients never band. */
 .scene-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -786,223 +264,40 @@ body:has([data-smooth-scroll]) {
   opacity: 0.09;
 }
 
-/* On the plate the noise has to add light, or the brushed lines stay a
-   perfectly regular screen door. */
-.scene-grain-metal {
-  mix-blend-mode: screen;
-  opacity: 0.055;
-}
-
-/* Etched into the plate: a dark bite below, a lit lip above. */
-.ico-engraved {
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.85)) drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.14))
-    drop-shadow(0 0 14px rgba(226, 236, 248, 0.16));
-}
-
-.ico-pulse {
-  animation: ico-pulse 2.8s ease-in-out infinite;
-  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
-}
-
-@keyframes ico-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.45);
-    opacity: 0.9;
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(74, 222, 128, 0);
-    opacity: 0.5;
-  }
-}
-
-/* Page-level ambient lights behind a card — the slow drift of colour a dark
-   macOS desktop has, so a standalone page reads as lit rather than switched
-   off. Shared by /ico and the project pages.
-
-   Painted as a ramp rather than as a shape under `filter: blur()`. A blur is
-   re-rasterised every time the compositor touches the layer, and arriving here
-   through the card-to-page morph touches it on every frame of the morph: three
-   vmax-sized blurs cost ten of the 440ms transition's frames on WebKit, which
-   is most of what made opening a card judder. A radial ramp is the same
-   softness resolved once, at no per-frame cost.
-
-   The ramp lives on a pseudo-element inset well past the box, because that is
-   what the blur did — spread the light far outside the element it came from.
-   The element keeps its own size, so each light stays placed where it was. */
-.scene-light {
-  position: absolute;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  will-change: translate, scale, rotate;
-}
-
-/* Stops are eyeballed against the blur they replace: a broad core, then a long
-   tail that is all but gone before the edge, so no light ends on a seam. */
-.scene-light::after {
-  content: "";
-  position: absolute;
-  inset: -52%;
-  background: radial-gradient(
-    closest-side,
-    currentColor 0%,
-    color-mix(in srgb, currentColor 72%, transparent) 31%,
-    color-mix(in srgb, currentColor 30%, transparent) 59%,
-    color-mix(in srgb, currentColor 7%, transparent) 81%,
-    transparent 100%
-  );
-}
-
-/* Three clocks per light instead of one, and no two of them share a factor, so
-   the pose only comes round again after tens of minutes — a single loop, however
-   long, eventually reads as a loop. They ride `translate`, `scale` and `rotate`
-   rather than `transform`: as separate properties they compose instead of
-   overwriting each other, and all three still animate on the compositor.
-   Shape is left alone on purpose. Under a 90px blur a morphing border-radius is
-   invisible at this size and only costs a repaint every frame. */
-.scene-light-a {
-  animation:
-    scene-wander-a 19s ease-in-out infinite,
-    scene-swell 17s ease-in-out infinite,
-    scene-turn 47s linear infinite;
-}
-
-.scene-light-b {
-  animation:
-    scene-wander-b 23s ease-in-out infinite,
-    scene-swell 13s ease-in-out -7s infinite,
-    scene-turn-back 41s linear infinite;
-}
-
-.scene-light-c {
-  animation:
-    scene-wander-c 17s ease-in-out infinite,
-    scene-swell 19s ease-in-out -5s infinite,
-    scene-turn 53s linear infinite;
-}
-
-/* Uneven stops: evenly spaced ones read as a pendulum however slow they are. */
-@keyframes scene-wander-a {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  21% {
-    translate: 9vmax -7vmax;
-  }
-  44% {
-    translate: 4vmax 11vmax;
-  }
-  63% {
-    translate: -11vmax 5vmax;
-  }
-  82% {
-    translate: -5vmax -9vmax;
-  }
-}
-
-@keyframes scene-wander-b {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  18% {
-    translate: -11vmax 5vmax;
-  }
-  41% {
-    translate: -4vmax -11vmax;
-  }
-  67% {
-    translate: 9vmax -4vmax;
-  }
-  86% {
-    translate: 5vmax 9vmax;
-  }
-}
-
-@keyframes scene-wander-c {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  26% {
-    translate: 7vmax 9vmax;
-  }
-  48% {
-    translate: -9vmax 7vmax;
-  }
-  71% {
-    translate: -7vmax -7vmax;
-  }
-  90% {
-    translate: 11vmax -4vmax;
-  }
-}
-
-@keyframes scene-swell {
-  0%,
-  100% {
-    scale: 1;
-  }
-  38% {
-    scale: 1.18;
-  }
-  71% {
-    scale: 0.88;
-  }
-}
-
-/* Only reads on the elliptical lights, which is the point — it turns their long
-   axis, so two lights crossing never overlap the same way twice. */
-@keyframes scene-turn {
-  to {
-    rotate: 1turn;
-  }
-}
-
-@keyframes scene-turn-back {
-  to {
-    rotate: -1turn;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ico-blob,
-  .ico-blob-a,
-  .ico-blob-b,
-  .ico-blob-c,
-  .ico-waves-drift,
-  .ico-wave,
-  .ico-metal-drift,
-  .ico-pulse,
-  .scene-light-a,
-  .scene-light-b,
-  .scene-light-c {
-    animation: none;
-  }
-}
-
-.card-modal::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: var(--card-border-width);
-  background: linear-gradient(
-    134.62deg,
-    rgba(255, 255, 255, 0.45) 8.56%,
-    rgba(255, 255, 255, 0.0001) 37.96%,
-    rgba(255, 255, 255, 0.0001) 50.19%,
-    rgba(255, 255, 255, 0.15) 80.06%
-  );
-  pointer-events: none;
-
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+/* Holographic foil lifted off the plate: a pale iridescence that slides with
+   the card's tilt, a faint glow of its own and the shadow it drops on the
+   metal below. Kept pastel so the black stays black. */
+.ico-holo-text {
+  background-image:
+    linear-gradient(
+      100deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.9) 47%,
+      rgba(255, 255, 255, 0.9) 50%,
+      transparent 59%
+    ),
+    linear-gradient(
+      110deg,
+      #e9edf6 0%,
+      #e9edf6 12%,
+      #a9c1ff 22%,
+      #93e4ef 31%,
+      #cdb6ff 40%,
+      #f3c3de 49%,
+      #e9edf6 58%,
+      #e9edf6 68%,
+      #a9c1ff 79%,
+      #cdb6ff 89%,
+      #e9edf6 100%
+    );
+  background-size:
+    260% 100%,
+    300% 100%;
+  background-position:
+    calc(50% - var(--hx, 0) * 90%) 0,
+    calc(50% + var(--hx, 0) * 42%) calc(50% + var(--hy, 0) * 20%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 12px rgba(168, 196, 255, 0.24)) drop-shadow(0 12px 10px rgba(0, 0, 0, 0.75));
 }

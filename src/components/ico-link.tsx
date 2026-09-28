@@ -45,10 +45,6 @@ const IconBusinessCard = () => (
  * A real anchor, so the route stays crawlable and middle-clickable; the click
  * handler only takes over to wrap the push in the same forward view transition
  * every other page is entered through.
- *
- * That the metal card survives the trip at all is down to `patches/metal-fx`:
- * stock, its shared WebGL renderer poisons its own replacement on teardown, and
- * every card after the first mount in a document comes up with no metal on it.
  */
 export const IcoLink = () => {
   const navigate = useViewTransitionNavigate()

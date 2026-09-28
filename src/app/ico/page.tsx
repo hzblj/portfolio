@@ -3,10 +3,12 @@ import type {Metadata} from 'next'
 import {IcoCard, PageCloseLink} from '@/components'
 import {Config} from '@/config'
 import {ico} from '@/db'
+import {AmbientWaves} from '@/scene/ambient/AmbientWaves'
 
 /**
  * A headless render of the live card itself, so the social preview keeps the
- * frosted glass, the waves and the metal ring that CSS-in-SVG can't reproduce.
+ * WebGL plate, the holographic type and the metal ring that CSS-in-SVG can't
+ * reproduce.
  * To refresh it, screenshot /ico in a 720×378 viewport at a 1.667 device pixel
  * ratio with everything below the card hidden, emulating reduced motion and
  * keeping the pointer off the card — that renders it flat and unhovered. The
@@ -81,11 +83,7 @@ export default function Ico() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
 
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
-        {/* The colour is the text colour: the glow is a gradient of
-            `currentColor`, not a fill — see `.scene-light` in app.css. */}
-        <div className="scene-light scene-light-a -top-[18%] left-[6%] size-[52vmax] text-[#1c4bd8] opacity-[0.22]" />
-        <div className="scene-light scene-light-b top-[34%] -right-[12%] size-[46vmax] text-[#6a24d6] opacity-[0.18]" />
-        <div className="scene-light -bottom-[22%] left-[24%] size-[44vmax] text-[#00a389] opacity-[0.14]" />
+        <AmbientWaves variant="ico" />
         <div className="scene-grain absolute inset-0 opacity-[0.06]" />
         <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_45%,transparent_0%,rgba(0,0,0,0.72)_100%)]" />
       </div>
