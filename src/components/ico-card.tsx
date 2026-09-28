@@ -5,6 +5,7 @@ import {MetalFx} from 'metal-fx'
 import {type FC, type PointerEvent, useCallback, useEffect, useLayoutEffect, useRef} from 'react'
 
 import {type IcoRecord, ico} from '@/db'
+import {useMetalPlate} from '@/hooks'
 import {cn} from '@/utils'
 
 import {CopyButton} from './copy-button'
@@ -27,101 +28,18 @@ const TOUCH_GAIN = 0.55
  *  holds the light for a beat — without it the gesture only reads while dragging. */
 const TOUCH_HOLD = 420
 
-/** Flowing organic waves — deterministic so server and client agree. */
-const WAVE_VIEWBOX = {height: 260, width: 480}
-const WAVE_SEGMENTS = 5
-const WAVE_COUNT = 9
+const RADIUS = 24
 
-const buildWave = (index: number) => {
-  const step = WAVE_VIEWBOX.width / WAVE_SEGMENTS
-  const handle = step / 2.6
-  const amplitude = 9 + index * 1.7
-  const phase = index * 0.78
-  const base = -14 + index * 34
+/** The metal ring's width: the plate sits inside it, never under it. */
+const RING = 2.5
 
-  let path = ''
-  let previous = {x: 0, y: 0}
-
-  for (let segment = 0; segment <= WAVE_SEGMENTS; segment += 1) {
-    const x = segment * step
-    const y =
-      base + Math.sin(segment * 1.15 + phase) * amplitude + Math.cos(segment * 0.62 + phase * 1.7) * amplitude * 0.45
-
-    if (segment === 0) {
-      path = `M${x.toFixed(1)},${y.toFixed(1)}`
-    } else {
-      path += ` C${(previous.x + handle).toFixed(1)},${previous.y.toFixed(1)} ${(x - handle).toFixed(1)},${y.toFixed(1)} ${x.toFixed(1)},${y.toFixed(1)}`
-    }
-
-    previous = {x, y}
-  }
-
-  return path
-}
-
-const WAVES = Array.from({length: WAVE_COUNT}, (_, index) => ({
-  d: buildWave(index),
-  delay: `${(index * -1.9).toFixed(1)}s`,
-  duration: `${(13 + index * 1.4).toFixed(1)}s`,
-  width: 1.1 - index * 0.05,
-}))
-
-const Waves = () => (
-  <div aria-hidden="true" className="ico-waves pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-    <svg
-      className="ico-waves-drift absolute inset-0 size-full"
-      viewBox={`0 0 ${WAVE_VIEWBOX.width} ${WAVE_VIEWBOX.height}`}
-      preserveAspectRatio="none"
-    >
-      <title>Organic waves</title>
-      <defs>
-        <linearGradient id="ico-wave" x1="0" y1="0" x2="1" y2="0.4">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.04" />
-          <stop offset="34%" stopColor="#c3ceda" stopOpacity="0.26" />
-          <stop offset="72%" stopColor="#ffffff" stopOpacity="0.34" />
-          <stop offset="100%" stopColor="#7c8794" stopOpacity="0.12" />
-        </linearGradient>
-      </defs>
-      {WAVES.map(wave => (
-        <path
-          key={wave.d}
-          className="ico-wave"
-          d={wave.d}
-          fill="none"
-          stroke="url(#ico-wave)"
-          strokeWidth={wave.width}
-          strokeLinecap="round"
-          style={{animationDelay: wave.delay, animationDuration: wave.duration}}
-        />
-      ))}
-    </svg>
-  </div>
-)
-
-/** Light pooling on the plate — steel greys, so nothing tints the black. */
-const Blobs = () => (
-  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-    {/* Sized for the spread the blur used to add, and coloured through `color`
-        rather than `background`: the pool is a gradient of `currentColor` —
-        see `.ico-blob` in app.css. Each one keeps the centre it had. */}
-    <div className="ico-blob ico-blob-a absolute -top-[40%] -left-[26%] size-[94%] text-[#8f9dae]" />
-    <div className="ico-blob ico-blob-b absolute top-[8%] -right-[30%] size-[90%] text-[#5d6673]" />
-    <div className="ico-blob ico-blob-c absolute -bottom-[43%] left-[13%] size-[82%] text-[#454a52]" />
-  </div>
-)
-
-/**
- * The metal itself: a broad anisotropic reflection band, the fine brushed
- * grain running with it, and a machined bevel around the edge.
- */
-const Metal = () => (
-  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-    <div className="ico-metal-drift absolute -inset-[18%]">
-      <div className="ico-metal-sheen absolute inset-0" />
-    </div>
-    <div className="ico-metal-brush absolute inset-0" />
-    <div className="ico-metal-bevel absolute inset-0 rounded-[inherit]" />
-  </div>
+/** The flag at the size of a word: 3:2, the wedge reaching half way in. */
+const CzechFlag = () => (
+  <svg aria-hidden="true" viewBox="0 0 18 12" className="block h-[10px] w-[15px]">
+    <path fill="#f4f5f7" d="M0 0h18v6H0z" />
+    <path fill="#d7141a" d="M0 6h18v6H0z" />
+    <path fill="#11457e" d="M0 0l9 6-9 6z" />
+  </svg>
 )
 
 const Label: FC<{children: string; className?: string}> = ({children, className}) => (
@@ -132,13 +50,10 @@ const Label: FC<{children: string; className?: string}> = ({children, className}
   </span>
 )
 
-const Field: FC<{label: string; value: string; className?: string}> = ({label, value, className}) => (
-  <div className={cn('flex min-w-0 flex-col gap-[6px]', className)}>
-    <Label>{label}</Label>
-    <span className="block truncate bg-[linear-gradient(180deg,#ffffff_0%,rgba(255,255,255,0.72)_100%)] bg-clip-text text-[13px] font-normal leading-[16px] tracking-[0.01em] text-transparent drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]">
-      {value}
-    </span>
-  </div>
+const Meta: FC<{label: string; value: string}> = ({label, value}) => (
+  <span className="block text-[11px] font-normal leading-[16px] tracking-[0.01em]">
+    <span className="text-white/35">{label}</span> <span className="text-white/70">{value}</span>
+  </span>
 )
 
 const Record: FC<IcoRecord> = ({label, hint, value, url}) => (
@@ -167,6 +82,8 @@ export const IcoCard: FC = () => {
   const state = useRef({hover: 0, x: 0, y: 0})
   const refRelease = useRef<ReturnType<typeof setTimeout>>(undefined)
   const refHeld = useRef(false)
+  const plate = useMetalPlate(RADIUS - RING)
+  const {paint} = plate
 
   // The entrance runs on the wrapper so the tilt ticker keeps sole ownership of
   // the card's own transform — two writers on one property fight each other.
@@ -205,14 +122,14 @@ export const IcoCard: FC = () => {
       const rotateX = -at.y * TILT.rotate * 0.7 * at.hover + idleX
       const scale = 1 + (TILT.scale - 1) * at.hover
 
-      card.style.setProperty('--mx', `${(50 + at.x * 46).toFixed(2)}%`)
-      card.style.setProperty('--my', `${(50 + at.y * 46).toFixed(2)}%`)
       card.style.setProperty('--glare', at.hover.toFixed(3))
-      card.style.setProperty('--shift', at.x.toFixed(3))
+      card.style.setProperty('--hx', (rotateY / TILT.rotate).toFixed(3))
+      card.style.setProperty('--hy', (rotateX / TILT.rotate).toFixed(3))
       card.style.setProperty(
         '--tilt',
         `translate3d(0,0,${(TILT.z * at.hover).toFixed(2)}px) rotateX(${rotateX.toFixed(3)}deg) rotateY(${rotateY.toFixed(3)}deg) scale(${scale.toFixed(4)})`
       )
+      paint({hover: at.hover, pointerX: at.x, pointerY: at.y, rotateX, rotateY})
     }
 
     gsap.ticker.add(update)
@@ -221,7 +138,7 @@ export const IcoCard: FC = () => {
       gsap.ticker.remove(update)
       clearTimeout(refRelease.current)
     }
-  }, [])
+  }, [paint])
 
   const aim = useCallback((event: PointerEvent<HTMLDivElement>) => {
     if (!refCard.current) {
@@ -305,10 +222,10 @@ export const IcoCard: FC = () => {
           // A cancel means the browser took the gesture over for a scroll — drop
           // it immediately rather than holding a tilt over a moving page.
           onPointerCancel={release}
-          preset="chromatic"
+          preset="silver"
           theme="dark"
-          borderRadius={24}
-          ringCssPx={2.5}
+          borderRadius={RADIUS}
+          ringCssPx={RING}
           scale={1.8}
           strength={0.9}
           disableGlow
@@ -324,57 +241,57 @@ export const IcoCard: FC = () => {
 
             <div aria-hidden="true" className="absolute inset-0 rounded-3xl shadow-[0_40px_110px_-34px_#000]" />
 
-            {/*
-              Everything opaque is inset by the metal ring's own width — the
-              MetalFx canvas paints at z-index 0, below this content, so a plate
-              drawn edge-to-edge would swallow the ring.
-            */}
-            <div
+            {/* Inset by the ring's width — the MetalFx canvas paints below this
+                content, so a plate drawn edge-to-edge would swallow the ring. */}
+            <canvas
+              ref={plate.canvasRef}
               aria-hidden="true"
-              className="pointer-events-none absolute inset-[2.5px] overflow-hidden rounded-[21.5px]"
-            >
-              <div className="ico-plate absolute inset-0" />
-              <Blobs />
-              <Metal />
-              <Waves />
-              <div className="ico-holo absolute inset-0" />
-              <div className="ico-glare absolute inset-0" />
-              <div className="ico-sheen absolute inset-0 overflow-hidden" />
-              <div className="scene-grain scene-grain-metal absolute inset-0" />
-            </div>
+              className="absolute top-[2.5px] left-[2.5px] h-[calc(100%-5px)] w-[calc(100%-5px)]"
+            />
 
             <div
               className="relative flex h-full flex-col justify-between p-[20px] sm:p-[28px]"
               style={{transform: 'translateZ(26px)', transformStyle: 'preserve-3d'}}
             >
-              <div className="flex items-start justify-between">
-                <Label>Business details</Label>
-                <div className="flex items-center gap-[7px]">
-                  <span className="ico-pulse size-[5px] rounded-full bg-[#4ade80]" />
-                  <Label>Active · CZ</Label>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-[9px]" style={{transform: 'translateZ(14px)'}}>
-                <Label>IČO · Business ID</Label>
-                {/* The button rides beside the number rather than out at the card's
-                    edge, so the pair reads as one thing: the ID and its copy. */}
-                <div className="flex items-center gap-[11px]">
-                  <span className="ico-engraved block bg-[linear-gradient(180deg,#ffffff_0%,rgba(226,232,240,0.62)_46%,rgba(255,255,255,0.9)_100%)] bg-clip-text text-[26px] font-medium leading-[100%] tracking-[0.06em] text-transparent tabular-nums sm:text-[32px]">
-                    {ico.ico}
+              <div className="flex items-start justify-between gap-4" style={{transform: 'translateZ(14px)'}}>
+                <div className="flex min-w-0 flex-col gap-[6px]">
+                  <span className="ico-holo-text block truncate text-[15px] font-medium leading-[18px] tracking-[0.01em]">
+                    {ico.name}
                   </span>
-                  {/* Inter's ascent and descent bracket the lining figures almost
-                      symmetrically at `leading-[100%]`, so the numerals' optical
-                      middle already is the box's middle — `items-center` centres
-                      the button on them without a nudge. */}
-                  <CopyButton value={ico.ico} label="Copy business ID" size="sm" />
+                  <span className="block truncate text-[11px] font-normal leading-[14px] tracking-[0.01em] text-white/40">
+                    {ico.headline}
+                  </span>
                 </div>
+                <span className="flex shrink-0 items-center gap-[7px] rounded-full bg-white/[0.05] py-[5px] pr-[9px] pl-[6px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09),inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <span className="overflow-hidden rounded-[2px] shadow-[0_0_0_0.5px_rgba(255,255,255,0.3)]">
+                    <CzechFlag />
+                  </span>
+                  <span className="text-[10px] font-semibold leading-none tracking-[0.12em] text-white/70">CZ</span>
+                </span>
               </div>
 
-              <div className="flex items-end justify-between gap-5">
-                <Field label="Name" value={ico.name} />
-                <Field label="Since" value={ico.since} className="items-center text-center" />
-                <Field label="VAT" value={ico.vat} className="items-end text-right" />
+              <div className="flex items-end justify-between gap-4" style={{transform: 'translateZ(46px)'}}>
+                <div className="flex flex-col gap-[10px]">
+                  <Label>IČO · Business ID</Label>
+                  {/* The button rides beside the number rather than out at the card's
+                      edge, so the pair reads as one thing: the ID and its copy. */}
+                  <div className="flex items-center gap-[11px]">
+                    <span className="ico-holo-text block text-[26px] font-medium leading-[100%] tracking-[0.06em] tabular-nums sm:text-[32px]">
+                      {ico.ico}
+                    </span>
+                    {/* Inter's ascent and descent bracket the lining figures almost
+                        symmetrically at `leading-[100%]`, so the numerals' optical
+                        middle already is the box's middle — `items-center` centres
+                        the button on them without a nudge. */}
+                    <CopyButton value={ico.ico} label="Copy business ID" size="sm" />
+                  </div>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-[2px] pb-[1px] text-right">
+                  <Meta label="Since" value={ico.since} />
+                  <span className="block text-[11px] font-normal leading-[16px] tracking-[0.01em] text-white/70">
+                    {ico.vat}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

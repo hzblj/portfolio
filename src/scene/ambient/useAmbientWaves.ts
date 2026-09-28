@@ -1,53 +1,9 @@
 import {type RefObject, useEffect, useRef} from 'react'
 
+import {bindScreenTriangle, createProgram} from '@/lib/webgl'
+import screenVertex from '../graphics/shaders/screen.vert.glsl'
 import wavesFragment from '../graphics/shaders/waves.frag.glsl'
-import wavesVertex from '../graphics/shaders/waves.vert.glsl'
 import {WAVE_FRAME, WAVE_MAX_DPR, WAVE_MIRROR, WAVE_SPEED, WAVE_START, type WaveVariant} from './waves'
-
-const compile = (gl: WebGL2RenderingContext, type: number, source: string) => {
-  const shader = gl.createShader(type)
-
-  if (!shader) {
-    return null
-  }
-
-  gl.shaderSource(shader, source)
-  gl.compileShader(shader)
-
-  return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null
-}
-
-const createProgram = (gl: WebGL2RenderingContext) => {
-  const vertex = compile(gl, gl.VERTEX_SHADER, wavesVertex)
-  const fragment = compile(gl, gl.FRAGMENT_SHADER, wavesFragment)
-  const program = gl.createProgram()
-
-  if (!vertex || !fragment || !program) {
-    return null
-  }
-
-  gl.attachShader(program, vertex)
-  gl.attachShader(program, fragment)
-  gl.linkProgram(program)
-  gl.deleteShader(vertex)
-  gl.deleteShader(fragment)
-
-  return gl.getProgramParameter(program, gl.LINK_STATUS) ? program : null
-}
-
-const bindTriangle = (gl: WebGL2RenderingContext, program: WebGLProgram) => {
-  const buffer = gl.createBuffer()
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
-
-  const position = gl.getAttribLocation(program, 'aPosition')
-  // biome-ignore lint/correctness/useHookAtTopLevel: WebGL's useProgram, not a React hook
-  gl.useProgram(program)
-  gl.enableVertexAttribArray(position)
-  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
-
-  return buffer
-}
 
 const isShown = (host: HTMLElement | null) => Number.parseFloat(host?.style.opacity || '1') > 0.001
 
@@ -62,13 +18,13 @@ export const useAmbientWaves = (variant: WaveVariant): RefObject<HTMLCanvasEleme
   useEffect(() => {
     const canvas = canvasRef.current
     const gl = canvas?.getContext('webgl2', {alpha: false, antialias: false, powerPreference: 'low-power'})
-    const program = gl ? createProgram(gl) : null
+    const program = gl ? createProgram(gl, screenVertex, wavesFragment) : null
 
     if (!canvas || !gl || !program) {
       return
     }
 
-    const buffer = bindTriangle(gl, program)
+    const buffer = bindScreenTriangle(gl, program)
 
     const uniforms = {
       mirror: gl.getUniformLocation(program, 'uMirror'),
