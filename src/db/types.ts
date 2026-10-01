@@ -162,3 +162,39 @@ export type Ico = {
     updatedAt: string
   }
 }
+
+// A paragraph, or a bulleted list when one sentence would turn into a run-on.
+export type LegalBlock = string | string[]
+
+export type LegalSection = {
+  title: string
+  body: LegalBlock[]
+}
+
+export type LegalDocument = {
+  title: string
+  description: string
+  intro: string
+  sections: LegalSection[]
+}
+
+export type AppStep = {
+  title: string
+  description: string
+}
+
+// A tool of mine that a platform wants to see described, with the terms and
+// privacy policy it reviews alongside it.
+export type AppListing = {
+  name: string
+  slug: string
+  logo: string
+  description: string
+  about: string
+  steps: AppStep[]
+  scope: string
+  contact: string
+  updatedAt: string
+  terms: LegalDocument
+  privacy: LegalDocument
+}

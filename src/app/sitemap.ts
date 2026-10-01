@@ -23,6 +23,12 @@ export default function sitemap() {
       priority: 0.4,
       url: `${baseUrl}/ico`,
     },
+    ...['', '/terms', '/privacy'].map(path => ({
+      changeFrequency: 'yearly' as const,
+      lastModified: new Date(),
+      priority: 0.2,
+      url: `${baseUrl}/klipito${path}`,
+    })),
   ]
 
   const shotRoutes = entries
