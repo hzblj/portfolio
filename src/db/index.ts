@@ -82,6 +82,7 @@ export const entries: Entries = [
 
 export * from './cv'
 export * from './ico'
+export * from './klipito'
 export * from './types'
 
 export const getEntryBySlug = (slug: string) => {
