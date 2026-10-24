@@ -29,6 +29,7 @@ export const Cards: FC<CardsProps> = ({entries}) => {
         return <MapCard key={entry.area} entry={entry} />
       case 'profile':
         return <ProfileCard key={entry.area} entry={entry} />
+      case 'link':
       case 'shot':
         return <ShotCard key={entry.area} entry={entry} />
       case 'technologies':

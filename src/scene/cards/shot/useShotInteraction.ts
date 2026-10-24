@@ -1,11 +1,11 @@
 import gsap from 'gsap'
 import {useCallback} from 'react'
 
-import type {EntryShot} from '@/db'
+import type {EntryLink, EntryShot} from '@/db'
 import {trackProjectView} from '@/lib/analytics'
 
 import {useEntity, useMotion} from '../../entity'
-import {setCursor} from '../../interaction'
+import {openExternal, setCursor} from '../../interaction'
 import {openCard} from '../../state'
 import {useHoverVideo} from './useHoverVideo'
 
@@ -13,7 +13,7 @@ const HOVER_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 
 type PointerLike = {pointerType: string}
 
-export const useShotInteraction = (entry: EntryShot) => {
+export const useShotInteraction = (entry: EntryShot | EntryLink) => {
   const {slot, worldRect} = useEntity()
   const title = useMotion({opacity: 0, y: 88})
   const badge = useMotion({opacity: 1, scale: 1})
@@ -49,6 +49,11 @@ export const useShotInteraction = (entry: EntryShot) => {
   )
 
   const onClick = useCallback(() => {
+    if (entry.variant === 'link') {
+      openExternal(entry.url)
+      return
+    }
+
     trackProjectView(entry.title)
     video.lend()
     openCard(

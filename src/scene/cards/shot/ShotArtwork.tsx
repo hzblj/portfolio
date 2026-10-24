@@ -2,7 +2,7 @@
 
 import type {FC} from 'react'
 
-import type {EntryShot} from '@/db'
+import type {EntryLink, EntryShot} from '@/db'
 
 import {Layer, type VideoSource} from '../../entity'
 import {useImage} from '../../graphics'
@@ -10,7 +10,7 @@ import type {Rect} from '../../grid'
 import {shotImageWidth} from './imageWidth'
 
 type ShotArtworkProps = {
-  entry: EntryShot
+  entry: EntryShot | EntryLink
   rect: Rect
   video: VideoSource
 }

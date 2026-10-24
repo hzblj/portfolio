@@ -1,4 +1,4 @@
-export type EntryVariant = 'shot' | 'contact' | 'map' | 'cv' | 'profile' | 'gallery' | 'technologies'
+export type EntryVariant = 'shot' | 'link' | 'contact' | 'map' | 'cv' | 'profile' | 'gallery' | 'technologies'
 
 export type ShotSize = 's' | 'l'
 export type ShotArea = `${ShotSize}${number}`
@@ -50,6 +50,12 @@ export type EntryShot = {
   animation?: AnimationConfig
 }
 
+/** A card that looks like a shot but leads elsewhere: clicking it opens `url` instead of a case study. */
+export type EntryLink = Pick<EntryShot, 'title' | 'image' | 'videos' | 'area' | 'size' | 'slug' | 'animation'> & {
+  url: string
+  variant: Extract<EntryVariant, 'link'>
+}
+
 export type Contact = {
   type: string
   url: string
@@ -99,7 +105,15 @@ export type EntryTechnologies = {
   animation?: AnimationConfig
 }
 
-export type Entry = EntryShot | EntryContact | EntryMap | EntryCV | EntryProfile | EntryGallery | EntryTechnologies
+export type Entry =
+  | EntryShot
+  | EntryLink
+  | EntryContact
+  | EntryMap
+  | EntryCV
+  | EntryProfile
+  | EntryGallery
+  | EntryTechnologies
 
 export type Entries = Entry[]
 

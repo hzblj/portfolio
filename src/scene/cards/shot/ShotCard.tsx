@@ -2,13 +2,13 @@
 
 import type {FC} from 'react'
 
-import type {EntryShot} from '@/db'
+import type {EntryLink, EntryShot} from '@/db'
 
 import {Entity} from '../../entity'
 import {ShotContent} from './ShotContent'
 
 type ShotCardProps = {
-  entry: EntryShot
+  entry: EntryShot | EntryLink
 }
 
 export const ShotCard: FC<ShotCardProps> = ({entry}) => {

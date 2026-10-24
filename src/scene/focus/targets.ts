@@ -34,6 +34,8 @@ const targetsOf = (entry: Entry): FocusTarget[] => {
           label: entry.title,
         },
       ]
+    case 'link':
+      return [{area, href: entry.url, id: focusIds.shot(entry.slug), kind: 'external', label: entry.title}]
     case 'cv':
       return [{area, card: {entry, kind: 'cv'}, href: '/cv', id: focusIds.cv, kind: 'card', label: 'CV'}]
     case 'gallery':
