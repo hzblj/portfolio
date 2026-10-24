@@ -2,7 +2,7 @@
 
 import {type FC, useMemo} from 'react'
 
-import type {EntryShot} from '@/db'
+import type {EntryLink, EntryShot} from '@/db'
 import {useHasHover} from '@/hooks/use-has-hover'
 
 import {SafeSuspense} from '../../boundary'
@@ -16,7 +16,7 @@ import {useShotInteraction} from './useShotInteraction'
 import {VideoBadge} from './VideoBadge'
 
 type ShotContentProps = {
-  entry: EntryShot
+  entry: EntryShot | EntryLink
 }
 
 export const ShotContent: FC<ShotContentProps> = ({entry}) => {

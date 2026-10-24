@@ -1,6 +1,7 @@
 import contact from './entries/contact'
 import cv from './entries/cv'
 import gallery from './entries/gallery'
+import libraries from './entries/libraries'
 import map from './entries/map'
 import profile from './entries/profile'
 import large1 from './entries/shot-large-1'
@@ -33,7 +34,6 @@ import small24 from './entries/shot-small-24'
 import small25 from './entries/shot-small-25'
 import small26 from './entries/shot-small-26'
 import small27 from './entries/shot-small-27'
-import small28 from './entries/shot-small-28'
 import small29 from './entries/shot-small-29'
 import technologies from './entries/technologies'
 
@@ -68,7 +68,7 @@ export const entries: Entries = [
   small25,
   small26,
   small27,
-  small28,
+  libraries,
   small3,
   small4,
   small5,
