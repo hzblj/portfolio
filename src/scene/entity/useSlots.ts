@@ -86,12 +86,18 @@ export const useSlots = (entry: Entry) => {
 
       const x = rect.x + (firstX + mod((slot & 1) - firstX, 2)) * PERIOD.x
       const y = rect.y + (firstY + mod((slot >> 1) - firstY, 2)) * PERIOD.y
-      const visible = x < right && y < bottom && !isSourceSlot(entry.slug, slot)
+      const open = isSourceSlot(entry.slug, slot)
+      const visible = x < right && y < bottom && !open
 
       if (visible !== record.visible || x !== placed[slot].x || y !== placed[slot].y) {
         record.hiddenAt = visible ? record.hiddenAt : now
         record.visible = visible
         markSceneChanged()
+      }
+
+      // The open card keeps its bake for the way back, however long it stays open.
+      if (open) {
+        record.hiddenAt = now
       }
 
       placed[slot].x = x
@@ -102,7 +108,12 @@ export const useSlots = (entry: Entry) => {
       inner.visible = false
 
       const quadSize = bakedQuadSize(record)
-      quad.visible = quadSize !== null
+
+      // A bake lands after this frame's check, so the quad turns on a frame later and that frame must draw too.
+      if (quad.visible !== (quadSize !== null)) {
+        quad.visible = quadSize !== null
+        markSceneChanged()
+      }
 
       if (!quadSize) {
         continue
